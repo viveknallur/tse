@@ -1,0 +1,40 @@
+start Decompose_Constraints
+invis env environment
+agent ba Buyer_A
+agent ma Market_A
+agent app Application
+agent mb Market_B
+agent bb Buyer_B
+
+message app ba get_last_k_transaction_data
+backup
+message app bb get_last_k_transaction_data
+message ba ma get_last_data
+message ba ma get_last_data
+backup
+message bb mb get_last_data
+message ma ba last_data
+backup
+message mb bb last_data
+message ba app last_k_transaction_data
+backup
+message bb app last_k_transaction_data
+box Loop
+	guard [All_Combinations_Checked]
+	sub Apply_SWR_to_Combination
+	sub Save_Valid_Combination
+end Loop
+box alt
+	guard [Valid_Combinations_Exist?]
+	sub Create_local_constraints
+next	
+	guard [else]	
+	message app env Possible_Infeasibility
+end alt
+
+finish
+		
+	
+
+
+

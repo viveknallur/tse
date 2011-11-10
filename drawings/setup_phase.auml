@@ -1,0 +1,15 @@
+start Setup Phase
+agent ba Buyer_A
+agent ma Market_A
+agent app Application
+agent mb Market_B
+agent bb Buyer_B
+sub Decompose_Constraints
+message app ba local_constraints
+backup
+message app bb local_constraints
+sub Compute_Endowment
+message app ba local_endowment
+backup
+message app bb local_endowment
+finish

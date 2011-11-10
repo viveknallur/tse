@@ -1,0 +1,113 @@
+#!/usr/local/bin/wish
+set epsfile "setup_phase.auml.eps"
+
+
+# code from http://wiki.tcl.tk/1416
+proc roundRect { w x0 y0 x3 y3 radius args } {
+    set r [winfo pixels $w $radius]
+    set d [expr { 2 * $r }]
+
+    # Make sure that the radius of the curve is less than 3/8
+    # size of the box!
+
+    set maxr 0.75
+
+    if { $d > $maxr * ( $x3 - $x0 ) } {
+        set d [expr { $maxr * ( $x3 - $x0 ) }]
+    }
+    if { $d > $maxr * ( $y3 - $y0 ) } {
+        set d [expr { $maxr * ( $y3 - $y0 ) }]
+    }
+
+    set x1 [expr { $x0 + $d }]
+    set x2 [expr { $x3 - $d }]
+    set y1 [expr { $y0 + $d }]
+    set y2 [expr { $y3 - $d }]
+
+    set cmd [list $w create polygon]
+    lappend cmd $x0 $y0
+    lappend cmd $x1 $y0
+    lappend cmd $x2 $y0
+    lappend cmd $x3 $y0
+    lappend cmd $x3 $y1
+    lappend cmd $x3 $y2
+    lappend cmd $x3 $y3
+    lappend cmd $x2 $y3
+    lappend cmd $x1 $y3
+    lappend cmd $x0 $y3
+    lappend cmd $x0 $y2
+    lappend cmd $x0 $y1
+    lappend cmd -smooth 1
+    return [eval $cmd $args]
+ }
+canvas .c
+frame .f
+button .f.quit -text "Quit" -command finishup
+pack .f -side top
+pack .f.quit -fill x -side left
+pack .c -side bottom -fill both -expand 1
+focus .c
+proc finishup {} {
+        global epsfile
+        set bb [.c bbox all]
+        if {[llength $bb] == 0} return
+        set x1 [lindex $bb 0]
+        set y1 [lindex $bb 1]
+        set w [expr [lindex $bb 2]-$x1]
+        set h [expr [lindex $bb 3]-$y1]
+        .c postscript -file $epsfile  -x $x1 -y $y1 -height $h -width $w
+	exit
+}
+# agent ba (Buyer_A )
+.c create rectangle 65 30 145 50
+.c create text 105 40 -text "Buyer_A "
+# agent ma (Market_A )
+.c create rectangle 185 30 265 50
+.c create text 225 40 -text "Market_A "
+# agent app (Application )
+.c create rectangle 305 30 385 50
+.c create text 345 40 -text "Application "
+# agent mb (Market_B )
+.c create rectangle 425 30 505 50
+.c create text 465 40 -text "Market_B "
+# agent bb (Buyer_B )
+.c create rectangle 545 30 625 50
+.c create text 585 40 -text "Buyer_B "
+proc delay1 {} {
+  .c create rectangle 10 75 660 105 -width 2 -fill white
+  .c create polygon 10 75 75 75 75 88 68 95 10 95 -fill {} -outline black -width 2
+  .c create text 42.5 85 -text "ref"
+  .c create text 335 90 -font {Helvetica 14} -text "Decompose_Constraints"
+}
+# message app ba local_constraints
+.c create line 345 125 105 125 -arrow last
+.c create text 225 117 -text "local_constraints"
+# message app bb local_constraints
+.c create line 345 125 585 125 -arrow last
+.c create text 465 117 -text "local_constraints"
+proc delay2 {} {
+  .c create rectangle 10 145 660 175 -width 2 -fill white
+  .c create polygon 10 145 75 145 75 158 68 165 10 165 -fill {} -outline black -width 2
+  .c create text 42.5 155 -text "ref"
+  .c create text 335 160 -font {Helvetica 14} -text "Compute_Endowment"
+}
+# message app ba local_endowment
+.c create line 345 195 105 195 -arrow last
+.c create text 225 187 -text "local_endowment"
+# message app bb local_endowment
+.c create line 345 195 585 195 -arrow last
+.c create text 465 187 -text "local_endowment"
+.c create rectangle 5 5 665 215 -width 2
+.c create polygon 5 5 85 5 85 18 78 25 5 25 -fill {} -outline black -width 2
+.c create text 45 15 -text "Setup Phase "
+
+# Create life lines
+.c create line 345 50 345 215 -dash -
+.c create line 225 50 225 215 -dash -
+.c create line 105 50 105 215 -dash -
+.c create line 585 50 585 215 -dash -
+.c create line 465 50 465 215 -dash -
+delay1
+delay2
+# uncomment for automatic printout and quit
+finishup

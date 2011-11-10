@@ -1,0 +1,178 @@
+#!/usr/local/bin/wish
+set epsfile "trading_phase.auml.eps"
+
+
+# code from http://wiki.tcl.tk/1416
+proc roundRect { w x0 y0 x3 y3 radius args } {
+    set r [winfo pixels $w $radius]
+    set d [expr { 2 * $r }]
+
+    # Make sure that the radius of the curve is less than 3/8
+    # size of the box!
+
+    set maxr 0.75
+
+    if { $d > $maxr * ( $x3 - $x0 ) } {
+        set d [expr { $maxr * ( $x3 - $x0 ) }]
+    }
+    if { $d > $maxr * ( $y3 - $y0 ) } {
+        set d [expr { $maxr * ( $y3 - $y0 ) }]
+    }
+
+    set x1 [expr { $x0 + $d }]
+    set x2 [expr { $x3 - $d }]
+    set y1 [expr { $y0 + $d }]
+    set y2 [expr { $y3 - $d }]
+
+    set cmd [list $w create polygon]
+    lappend cmd $x0 $y0
+    lappend cmd $x1 $y0
+    lappend cmd $x2 $y0
+    lappend cmd $x3 $y0
+    lappend cmd $x3 $y1
+    lappend cmd $x3 $y2
+    lappend cmd $x3 $y3
+    lappend cmd $x2 $y3
+    lappend cmd $x1 $y3
+    lappend cmd $x0 $y3
+    lappend cmd $x0 $y2
+    lappend cmd $x0 $y1
+    lappend cmd -smooth 1
+    return [eval $cmd $args]
+ }
+canvas .c
+frame .f
+button .f.quit -text "Quit" -command finishup
+pack .f -side top
+pack .f.quit -fill x -side left
+pack .c -side bottom -fill both -expand 1
+focus .c
+proc finishup {} {
+        global epsfile
+        set bb [.c bbox all]
+        if {[llength $bb] == 0} return
+        set x1 [lindex $bb 0]
+        set y1 [lindex $bb 1]
+        set w [expr [lindex $bb 2]-$x1]
+        set h [expr [lindex $bb 3]-$y1]
+        .c postscript -file $epsfile  -x $x1 -y $y1 -height $h -width $w
+	exit
+}
+# agent m (Market )
+.c create rectangle 65 30 145 50
+.c create text 105 40 -text "Market "
+# agent b (Buyer )
+.c create rectangle 185 30 265 50
+.c create text 225 40 -text "Buyer "
+# agent A (Application )
+.c create rectangle 305 30 385 50
+.c create text 345 40 -text "Application "
+# message b m Get_Last_Transaction_Price
+.c create line 225 100 105 100 -arrow last
+.c create text 165 92 -text "Get_Last_Transaction_Price"
+# message m b Last_Transaction_Price
+.c create line 105 120 225 120 -arrow last
+.c create text 165 112 -text "Last_Transaction_Price"
+# message b m Reg_Bid
+.c create line 225 140 105 140 -arrow last
+.c create text 165 132 -text "Reg_Bid"
+proc delay1 {} {
+  .c create rectangle 15 160 415 190 -width 2 -fill white
+  .c create polygon 15 160 80 160 80 173 73 180 15 180 -fill {} -outline black -width 2
+  .c create text 47.5 170 -text "ref"
+  .c create text 215 175 -font {Helvetica 14} -text "Market: Match_Bid_Ask "
+}
+proc delay2 {} {
+  .c create rectangle 103 235 107 245 -outline {} -fill white 
+  .c create text 105 240 -text "\[Prov_Trans_Possible\]"
+}
+# message b a Transaction_Details
+.c create line 225 265 105 265 -arrow last
+.c create text 165 257 -text "Transaction_Details"
+# message b a Trust_Seller?
+.c create line 225 285 105 285 -arrow last
+.c create text 165 277 -text "Trust_Seller?"
+proc delay3 {} {
+  .c create rectangle 103 330 107 340 -outline {} -fill white 
+  .c create text 105 335 -text "\[Yes\]"
+}
+# message b m Accept_Transaction
+.c create line 225 360 105 360 -arrow last
+.c create text 165 352 -text "Accept_Transaction"
+proc delay4 {} {
+  .c create rectangle 25 380 405 410 -width 2 -fill white
+  .c create polygon 25 380 90 380 90 393 83 400 25 400 -fill {} -outline black -width 2
+  .c create text 57.5 390 -text "ref"
+  .c create text 215 395 -font {Helvetica 14} -text "Application: Calculate_Budget_Surplus "
+}
+.c create line 20 415 410 415 -width 2 -dash -
+# message b m Cancel_Transaction
+.c create line 225 450 105 450 -arrow last
+.c create text 165 442 -text "Cancel_Transaction"
+.c create rectangle 20 305 410 470 -width 2
+.c create polygon 20 305 85 305 85 318 78 325 20 325 -fill {} -outline black -width 2
+.c create text 52.5 315 -text "alt"
+.c create line 15 475 415 475 -width 2 -dash -
+# message b a Failed_to_Transact
+.c create line 225 510 105 510 -arrow last
+.c create text 165 502 -text "Failed_to_Transact"
+# message b a Last_Transaction_Price
+.c create line 225 530 105 530 -arrow last
+.c create text 165 522 -text "Last_Transaction_Price"
+proc delay5 {} {
+  .c create rectangle 20 550 410 580 -width 2 -fill white
+  .c create polygon 20 550 85 550 85 563 78 570 20 570 -fill {} -outline black -width 2
+  .c create text 52.5 560 -text "ref"
+  .c create text 215 565 -font {Helvetica 14} -text "Application: Redistribute_Budget? "
+}
+proc delay6 {} {
+  .c create rectangle 103 650 107 660 -outline {} -fill white 
+  .c create text 105 655 -text "\[Surplus_Available?\]"
+}
+# message a b New_Budget
+.c create line 105 680 225 680 -arrow last
+.c create text 165 672 -text "New_Budget"
+.c create line 25 700 405 700 -width 2 -dash -
+proc delay7 {} {
+  .c create rectangle 30 720 400 750 -width 2 -fill white
+  .c create polygon 30 720 95 720 95 733 88 740 30 740 -fill {} -outline black -width 2
+  .c create text 62.5 730 -text "ref"
+  .c create text 215 735 -font {Helvetica 14} -text "Application: Raise_Error "
+}
+.c create rectangle 25 625 405 755 -width 2
+.c create polygon 25 625 90 625 90 638 83 645 25 645 -fill {} -outline black -width 2
+.c create text 57.5 635 -text "alt"
+.c create line 20 760 410 760 -width 2 -dash -
+# message a b Revise_Bid
+.c create line 105 795 225 795 -arrow last
+.c create text 165 787 -text "Revise_Bid"
+.c create rectangle 20 600 410 815 -width 2
+.c create polygon 20 600 85 600 85 613 78 620 20 620 -fill {} -outline black -width 2
+.c create text 52.5 610 -text "alt"
+proc delay8 {} {
+  .c create rectangle 20 835 410 865 -width 2 -fill white
+  .c create polygon 20 835 85 835 85 848 78 855 20 855 -fill {} -outline black -width 2
+  .c create text 52.5 845 -text "ref"
+  .c create text 215 850 -font {Helvetica 14} -text "Buyer: Revise_Bid "
+}
+.c create rectangle 15 210 415 870 -width 2
+.c create polygon 15 210 80 210 80 223 73 230 15 230 -fill {} -outline black -width 2
+.c create text 47.5 220 -text "alt"
+.c create rectangle 10 75 420 875 -width 2
+.c create polygon 10 75 90 75 90 88 83 95 10 95 -fill {} -outline black -width 2
+.c create text 50 85 -text "Loop"
+
+# Create life lines
+.c create line 345 50 345 875 -dash -
+.c create line 225 50 225 875 -dash -
+.c create line 105 50 105 875 -dash -
+delay1
+delay2
+delay3
+delay4
+delay5
+delay6
+delay7
+delay8
+# uncomment for automatic printout and quit
+finishup

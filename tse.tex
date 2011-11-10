@@ -47,44 +47,12 @@ Each of the above composite web-services is itself composed of simpler services 
 	    \item \textit{Violation of QoS}: When a QoS violation is detected at any of the web-services, the application needs to re-start its search for a new web-service to replace the old one.
 	     \item \textit{Changes in Runtime Requirements}: When the application's end-to-end QoS target changes, the application needs to trigger an adaptation, to ensure that its constituent web-services are able to meet the targetted QoS level.
 	\end{enumerate} 
-The timescales involved in both these conditions is different. In general, violation of QoS by constituent services is likely to be more frequent than changes in QoS requirements at runtime. Thus, a self-adaptation strategy must take into account these frequencies  and the corresponding expected response time.	
+%The timescales involved in both these conditions is different. In general, violation of QoS by constituent services is likely to be more frequent than changes in QoS requirements at runtime. Thus, a self-adaptation strategy must take into account these frequencies  and the corresponding expected response time.	
 According to Buyya, the cloud provider will also have to invest in self-managing resource management models that can adaptively service new QoS demands as well as existing QoS obligations\cite{Buyya2008Market-Oriented}. It is this scenario, of self-adaptive applications on one side and dynamic service provision from the cloud provider that we address in this paper. Current static models of provisioning and pricing will prove inadequate, as self-adapting applications mature.
   
 \subsection{Contributions of this paper}
 This paper contributes to the design of a decentralized mechanism for service-based application to self-adapt to changing QoS requirements. We use a market-based approach to map the problem of service selection to a utility achievement problem.  We show that this approach scales to hundreds of applications, with thousands of services (tested with 300 applications and 4800 services) being evaluated and selected. We do this by creating a multi-agent system that forms the ecosystem within which the application's agents perform their self-adaptation. We show that the services thus selected, meet the QoS criteria of the application as well as are within the budget that the application is willing to spend. 
   
-\section{Related Work}
-    
-\subsection{Dynamic Composition of Web-services}
-There has been a plethora of work on dynamic composition of web-services. Much early work has been done in AgFlow \cite{Zeng2001AgFlow} on Quality-Aware composition of web-services \cite{Benatallah2002Declarative} and \cite{Zeng2003Quality}. The authors propose a per-service-class optimisation as well as a global optimisation using integer programming.\\
-\cite{Canfora2005approach} proposed a genetic algorithm based approach where the genome length is determined by the number of abstract services that require a choice to be made. Constraints on QoS form a part of the fitness function, as do cost and other QoS attributes. A big advantage of GA-based approach is that it is able to handle non-linear constraints, as opposed to integer programming. Also, it is scalable when the number of concrete services per abstract service increase.\\
-\cite{Alrifai2010Selecting} propose an interesting mechanism for cutting through the search space of candidate web-services, by using skyline queries. Skyline queries identify \textit{non-dominated} web-services on at least one QoS criteria. A \textit{non-dominated} web-service means, a web-service that has at least one QoS dimension in which it is strictly better than any other web-service and at least equal on all other QoS dimensions. Determining skyline services for a particular abstract service, requires pairwise comparisons amongst the QoS vectors of all the concrete services. This process can be expensive if the number of candidate concrete services is large. Alrifai et al. consider the case where the process of selecting skyline services is done offline. This would lead to an inability to adjust to changing conditions of available services and their associated QoS values. 	
-\cite{Zhang2010QoS-Based} propose an interesting method to achieve a good set of concrete services, using Ant Colony Optimization (ACO). ACO involves creating virtual ants that mimic the foraging behaviour of real ants. The search space of optimal concrete services is modelled as a graph, with sets of concrete services as vertices and edges being all the possible connections between different concrete service sets. The ants attempt to complete a traversal of the graph, dropping pheromones on the edge of each concrete service visited. The path through the graph that accumulates the most pheromones represents the near-optimal path of services to use.
-Our approach differs from the above approaches in two respects:
- \begin{enumerate}
-     \item Consideration of time as a factor: In practice, the optimal set of concrete services may not be available at the time instant that an application is searching. The set of service providers changes with time, as does the set of service consumers. This means that the optimal matching of service providers to consumers changes with time. The approaches above do not take this into account.
-     \item Optimality not considered: Due to the infeasibility of computing the optimal set (being NP-hard), we concentrate on finding a good solution, rather than an optimal one. A good solution is one that does not violate any QoS constraints and meets the cost constraint within a certain margin.
- \end{enumerate}
-
-\subsection{Self-Adaptation}
-Applications that use dynamic service composition should be able to continuously monitor their current QoS levels and make adjustments when either the demand for QoS changes or the cost constraint changes. The application should thus be able to respond to both internal as well as external stimuli, to trigger a change in its constituent web-services. This change needs to be both timely, as well as correct, \textit{i.e.}, the new set of services should not violate any of the application's QoS constraints, and the change should happen as fast as possible.\\
-Self-Adaptation in software systems is the achievement of a stable, desirable configuration, in the presence of varying stimuli. These stimuli may be environmental (in the form of workload, failure of external components, etc.) or internal (failure of internal components, changed target states, etc.). Given that the range of stimuli that affect a software system is wide, Self-Adaptation has come to mean an umbrella term that covers multiple aspects of how a system reacts\cite{Salehie2009Self-adaptive}:
-	\begin{enumerate}
-	   \item Self-Awareness
-	\item Context-Awareness
-	\item Self-Configuring
-	\item Self-Optimizing
-	\item Self-Healing
-	\item Self-Protecting 
-	\end{enumerate}
-However, most approaches to self-adaptation follow a common pattern: Monitor -- Analyze -- Plan -- Execute, connected by a feedback loop. There are two approaches to self-adaptation: centralized and de-centralized.  
-In a centralized self-adaptive system, the analysis and planning part are concentrated in one entity. This form of self-adaptation has the advantage of cohesiveness and low communication overhead as compared to a decentralized mechanism. The analysis and the plan can be communicated to the effectors, and feedback from obeying the plan is communicated back through the monitors (or sensors). Rainbow\cite{Cheng2006Architecture-based} and \textit{The Autonomic Manager}\cite{IBM2006Architectural} are classic examples of centralized self-adaptation.\\
-Decentralized self-adaptation, on the other hand, distributes the analysis, planning or the feedback mechanism amongst different parts of the adapting system. This automatically implies a communication overhead, since all constituent parts must coordinate their actions. However, it also provides for robustness in the presence of node failure and scalability of application size. \cite{Cheng2009Softwarea} have advocated that the feedback loop, which is a critical part of the adaptation, be elevated to a first-class entity in terms of modelling, design and implementation. Although, this would allow for reasoning about properties of the adaptation, there are no systems that we currently know of, that provide an explicit focus on the feedback loop. Most decentralized self-adaptation systems are typically realised as a multi-agent systems wherein the agents are autonomous in their environments and implement strategies that collectively move the entire system into a desirable state. \cite{Cheng2005Making} have advocated separating the functional part of the system from the adaptive part, thus allowing for independent evolution of both. \cite{Baresi2008Towards} describes such a system, where adaptation is considered as a cross-cutting concern, and not a fundamental part of system computation. Baresi et al. use aspect-oriented programming to implement the Monitor and Execute part of the MAPE loop. They implement distributed analysis and planning by dividing the self-adaptive system into \textit{supervised elements}, that perform the business logic of the application and \textit{supervisors} that oversee how the supervised components behave and plan for adaptation. Aspect-probes form the sensors and actuators that link the supervised elements to the supervisors. \\
-\cite{Di2005Self-organization} describe another interesting approach to decentralized self-adaptation, through self-organization. DiMarzo et al. take a bio-inspired approach and use principles of holons (and holarchy) and stigmergy to get agents in a manufacturing department to perform coordination and control. A holon is defined by \cite{Koestler1990Ghost} to be both a part and a whole. Therefore, an agent is both autonomous as well as a part of a hierarchy, which influences it. The essential idea in their work is that with such structures, order emerges from disorder, as simple interactions build on each other, to produce progressively complex behaviour.\\
-\cite{Weyns2010decentralized} study a decentralized self-healing system and a QoS-driven self-optimized deployment framework. Weyns et al.'s approach is the nearest to ours. They suggest multiple decentralized models which feed into decentralized algorithms, which are in turn analyzed by decentralized analyzers. These analyzers then individually direct local effectors to make changes to the host system.\\
-These approaches, while interesting, have not explicitly considered scale of adaptation. Any approach that attempts self-adaptation on the cloud, must concern itself with scaling up to hundreds and possibly even thousands of entities. Another issue that needs to be considered, is the effect of other self-adapting systems operating in the same environment. 
-
-
 \section{Our Approach}
 We would like to create a mechanism that allows multiple applications, constructed across a federation of clouds, to self-adapt. We chose a market-based approach to self-adaptation, not only because it is decentralized, but also due to its easy applicability to the problem domain. Services in the cloud are moving from a fixed-price package to a more flexible, auction-based approach\cite{Amazon2010SpotInstance}. This enables a self-adaptive application to change the QoS exhibited, by switching to a different concrete service. Differences in pricing of the services, cost incurred for switching services, fees paid to the market, etc. provide a direct indication of the cost of adaptation. 
 \subsection{Market-Based Control}
@@ -106,6 +74,31 @@ Thus, in a market for clustering web-services, each seller will provide a web-se
 %  \end{figure}
 
 We populate several markets with buying agents and selling agents. As mentioned before, each service ($f_{x}$) is sold in a market that is specific to $f_{x}$. All the buying agents and selling agents in this market, trade web-services that deliver $f_{x}$. We assume that there exists a market for every $f_x$, that is needed.  
+
+\subsubsection{QoS constraints}
+We consider the following types of QoS constraints on the application:
+\begin{enumerate}
+\item One-of-list constraint: This type of constraint refers to QoS attributes that usually occur in the domain as a list of options. For e.g., encryption options such as SHA-128, SHA-256, Blowfish, Serpent, etc.
+\item Exactly-this constraint: This type of constraint refers to QoS attributes which are available at discrete levels. For e.g., bandwidth options like 1 mbps, 2 mbps, 10 mbps, 20 mbps.
+\item More-than constraint: With this type of constraint, the application seeks to maximize the value obtained in that QoS attribute domain. For e.g., reliability, performance, reputation. In this type of constraint, the value specified is a lower bound and even if a service does not deliver \textit{at least} the minimum specified level of constraint, then it cannot be considered for composition.
+\item Less-than constraint: With this type of constraint, the application seeks to minimize the value obtained. For e.g., cost. Similar to the previous constraint, if a service does not meet the constraint specified, then it cannot be considered for composition.
+\end{enumerate}
+These constraints are applied in the evaluation of services. Ranking amongst the services is done via calculation of utility that is calculated via the following rules:
+\begin{enumerate}
+\item The one-of-list and exactly-this constraints are boolean constraints, \textit{i.e.,} achieving these constraints results in a utility of exactly $1$ or $0$ (if not achieved). 
+\item More-than constraints and Less-than constraints (also called positive and negative constraints in \cite{Ardagna2007Adaptive}) are evaluated as in \cite{Ardagna2007Adaptive}: 
+\hspace{1cm}
+\begin{table}[h]
+\begin{tabular}{|p{1cm}p{5cm}|}
+\hline
+More-than & \[ \omega = \frac{QoS_{This} - QoS_{MinAvl}}{QoS_{MaxAvl} - QoS_{MinAvl}} \] \\
+\hline
+Less-than & \[ \omega = \frac{QoS_{MaxAvl} - QoS_{This}}{QoS_{MaxAvl} - QoS_{MinAvl}} \] \\
+\hline
+\end{tabular}
+\end{table}
+\end{enumerate}
+
 
 \subsubsection{Buyer}
 The Buyer is a trading agent that buys a web-service for an Application, \textit{i.e.,} it trades in a market for a specific $f_x$. Each web-service, available in $f_x$, exhibits the same QoS ($\omega \in QoS$). The only differentiating factor is the degree to which that is exhibited  ($ \omega_{i} \in \mathbb{R}_{0}^{1} $). Hence, if an application has $K$ QoS that it is concerned about, then the QoS that it gets for each of the $f_{x}$ that it buys is:
@@ -137,6 +130,8 @@ Figure \ref{orderbook} shows the state of the orderbook at some time \textit{$t_
 \label{orderbook-after-one-pass}
 \end{figure}
 
+%TODO: INSERT MODIFIED CDA: 2-STEP: 1 FOR TRADING AND 2 FOR APP TO CALCULATE BEFORE COMMITMENT. REFERENCE RAMCHURN'S PAPER ON 2-STEP CDA FOR EVIDENCE OF BETTERNESS
+
 \subsubsection{Applications}
 The Application is a composition of services from different markets. At the agent-level, the application agent communicates with each of the buying agents ($f_{x} \in F_{x}$) and communicates a budget ($B_{f_{x}}$). The buyer then initializes itself with a random $\Omega^{f_x}$ and starts trading. The adaptation occurs through the revision of bids, that happen after each round of trading. After each round of trading, depending on the $\Omega$ obtained by the buyer, the Application has procured a total QoS that is given by:
  
@@ -163,7 +158,7 @@ We assume that, for every application there exists a function that maps $TC_{f_x
 
 %After every round, the application compares the privately known $\Omega_{f_x}$ with the $\Omega^{b}_{f_x}$ and determines whether to punish/reward the buyer. From this piece of information, the buyer can only guess whether it needs to improve the $\Omega^{b}_{f_x}$ that it obtained or the price that it paid. Once the  $\Omega^{b}_{f_x}$ is close enough to the private $\Omega_{f_x}$, then the application refrains from trading any further, until it changes the privately known $\Omega_{f_x}$. Changing of the private $\Omega_{f_x}$ simulates the change in the environment, which has prompted adaptation by the application. The buyers have to now re-approximate the private $\Omega_{f_x}$.
 Traditionally, a CDA works on a single piece of information, price. However, we modify the bids and asks to be multi-attribute, \textit{i.e.,} each bid also contains the minimum QoS levels that the buyer wants and each ask contains the maximum QoS levels that the seller is willing to provide. Thus, a transaction between a buyer and a seller is now an agreement to provide a certain functionality, at a certain price, at pre-defined QoS levels.
-After every round of trading, the application calculates the total utility that it obtained after the trades and compares it to the previous utility it had. Depending on whether the utility in the current round is better or worse, the application provides an appropriate feedback to all the buying agents. This allows an agent to realize the effect of its action on the overall utility. It then modifies its bid, accordingly.
+%After every round of trading, the application calculates the total utility that it obtained after the trades and compares it to the previous utility it had. Depending on whether the utility in the current round is better or worse, the application provides an appropriate feedback to all the buying agents. This allows an agent to realize the effect of its action on the overall utility. It then modifies its bid, accordingly.
 
 \begin{figure} 
 %  \begin{minipage}[b]{0.5\linewidth}
@@ -231,9 +226,6 @@ In Figure \ref{marketplace}, we see the functionality being composed at the top 
 \end{algorithm}
 
 
-
-
-	
 % \begin{algorithm}
 %   \KwData{$Neighbour \in \{I,O\}$}
 %   \Begin{
@@ -266,8 +258,7 @@ whereas availability is calculated as:
 Thus, in a certain configuration, an application could potentially meet one of its target QoS, while not meeting another. The utility function must be able to reflect this. We use the \textit{Simple Additive Weighting} from \cite{Yoon1995Multiple} for this purpose.  For each application, the target level of QoS is also mapped onto a real value, that is designated as the ideal utility level (IUL) for that application. 
 
 \subsection{Calculating Achieved QoS and Feedback}
-% The application agent collects information from each of its buyer agents and calculates the cumulative QoS. It then compares the achieved cumulative QoS against the targetted QoS. On a per-QoS attribute basis, the difference between the achieved and the targetted, is computed and communicated back to the buyer agents.  In its feedback, the application agent indicates not only the  In current implementation, the computation of the feedback is done centrally via the application agent. However, we plan to implement a distributed aggregation algorithm to reduce reliance on the central entity. As of now, the communication of QoS and feedback occurs as given in algorithm \ref{Communication}.  
-Intuitively, the easiest way to calculate the application's cumulative QoS is through a central agent that collects QoS information, from each of the buying agents. However, this would lead to dependence on a centralized agent and thus become a bottleneck, in case of applications with a large number of services. We use a gossip-based algorithm, much like Push-Sum\cite{Kempe2003Gossip-Based}, to communicate QoS values. However, unlike Push-Sum, we make the agents gossip information, only to their neighbours' agent. A neighbour is defined as a service that is either in the input set or the output set, of a particular service. After each round of gossiping, each agent accumulates its neighbour's QoS information into the QoS calculation function. In the next round of gossip, it sends the new information to other neighbours. Each agent tags its QoS information with its name. This allows agents to recognize if they've seen/sent a particular message before. Agents only send out information that they haven't sent before. When an agent recognizes that it has received all QoS information from all other agents, it runs utility calculation procedures. Feedback is calculated as the difference between the obtained utility and the IUL. The feedback indicates not only the magnitude of the difference, but also the direction. That is, whether the buyer agents have undershot or overshot the target QoS.   
+% The application agent collects information from each of its buyer agents and calculates the cumulative QoS. It then compares the achieved cumulative QoS against the targetted QoS. On a per-QoS attribute basis, the difference between the achieved and the targetted, is computed and communicated back to the buyer agents.  Intuitively, the easiest way to calculate the application's cumulative QoS is through a central agent that collects QoS information, from each of the buying agents. However, this would lead to dependence on a centralized agent and thus become a bottleneck, in case of applications with a large number of services. We use a gossip-based algorithm, much like Push-Sum\cite{Kempe2003Gossip-Based}, to communicate QoS values. However, unlike Push-Sum, we make the agents gossip information, only to their neighbours' agent. A neighbour is defined as a service that is either in the input set or the output set, of a particular service. After each round of gossiping, each agent accumulates its neighbour's QoS information into the QoS calculation function. In the next round of gossip, it sends the new information to other neighbours. Each agent tags its QoS information with its name. This allows agents to recognize if they've seen/sent a particular message before. Agents only send out information that they haven't sent before. When an agent recognizes that it has received all QoS information from all other agents, it runs utility calculation procedures. Feedback is calculated as the difference between the obtained utility and the IUL. The feedback indicates not only the magnitude of the difference, but also the direction. That is, whether the buyer agents have undershot or overshot the target QoS.   
 	
 \begin{algorithm}
  \KwData{$Neighbour \in \{I,O\}$}
@@ -345,9 +336,74 @@ There are two conditions where an application that has already reached a satisfa
 	    \item Internal Stimulus: When a QoS violation is detected at any of the web-services, the application needs to re-start its search for a new web-service to replace the old one. This is not an application-wide adaptation, but localised to a particular web-service
 	     \item External Stimulus: When the application's end-to-end QoS target changes, the application triggers an adaptation in each of its web-services, whereby all the trading agents go through the trading process again, until the stopping criteria is met
 	\end{enumerate}
-Both these events occur at different time scales. The internal check for QoS violation is a continuous check and concerns itself with performance of the web-service across relatively shorter periods of time. The external stimulus, on the other hand, typically happens when budgets for operation change drastically or external events cause change in performance or reliability requirements. This happens at relatively rarer intervals. This implies that once an application reaches close to its desired level of QoS, most of the buying agents stop trading. 	
+Both these events occur at different time scales. The internal check for QoS violation is a continuous check and concerns itself with performance of the web-service across relatively shorter periods of time. The external stimulus, on the other hand, typically happens when budgets for operation change drastically or external events cause change in performance or reliability requirements. This happens at relatively rarer intervals. This implies that once an application reaches close to its desired level of QoS, most of the buying agents stop trading.
+\paragraph{QoS Monitoring} Monitoring a web-service for an SLA violation is a topic of research in its own right. There have been several attempts in this direction, most notably from {TODO: INSERT QOS VIOLATION REFERENCES}. In this paper, we do not attempt to devise our own scheme for QoS monitoring. Rather, we assume that one of the methods presented in {REFS JUST ABOVE} is used. 
 
+\subsection{Scalability Requirements for Dynamic Web-Service Composition}
+In none of the papers that we surveyed (in section \ref{dynamic_wsc}), did we find a single rigorous definition of what it would mean for a dynamic service composition technique to be scalable . In the absence of such a definition, it is difficult to judge, whether a technique is really scalable or not. To alleviate the problem of capricious definitions of scalability, we use a definition of scalability from \cite{Duboc2007}: \textit{a quality of software systems characterized by the causal impact that scaling aspects of the system environment and design have on certain measured system qualities as these aspects are varied over expected operational ranges}.\\
+According to \cite{Duboc2007}'s definition, when these variables change, they have an impact on the system's qualities. In our case, the system qualities that we want to measure are:
+	\begin{enumerate}
+		\item Efficacy, measured as a fraction of the total applications that are able to achieve their required QoS
+		\item Performance, measured as the amount of time taken to select services, when critical variables vary over an expected range.
+	\end{enumerate}	 
+	
+We further explicate the critical variables of the system as:
+	\begin{enumerate}
+		\item Tasks per workflow, \textit{i.e.}, the number of abstract services in a workflow
+		\item Number of candidate services, \textit{i.e.}, the number of concrete services available per abstract service
+		\item Number of QoS values per candidate service
+		\item Number of end-to-end QoS constraints
+		\item Number of markets available for acquiring concrete services
+	\end{enumerate}
+	
+Eliciting the 'normal' operational range of these variables is an involved task, and outside the scope of this paper. We present, however, the results of such a systematic elicitation. The ranges that we consider are shown in table \ref{scaling_range}:
+\begin{center}
+\begin{table}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Variable} &  \textbf{Range} \\ \hline
+Tasks-per-Workflow & 10 -- 100 \\ \hline
+Candidate-Services & 1 -- 100 \\ \hline
+Number-of-QoS & 1 -- 10 \\ \hline
+End-to-end Constraints & 1 -- 10 \\ \hline
+Number-of-Markets & 1 -- 5 \\ \hline
+\end{tabular}
+ \label{scaling_range}
+ \caption{Operational range of service parameters}
+\end{table}
+\end{center}
 
+\subsection{Design and Implementation}
+%In \citep{Cheng2009}, the authors comment on the engineering challenges of building a self-adaptive system, and emphasize the fact that the %feedback loop is of utmost importance. 
+The design of our implementation is based on the publish-subscribe architectural style. This style was chosen for its decoupling properties, such that each communicating entity in the system is independent of every other. This fits in well, with our notion of agents acting on the basis of their own goals and their environment, in a decentralized manner. Each type of agent described previously, is both an event publisher and an event subscriber. That is, each application agent generates events that describe when the application's QoS constraints have changed, when the budget has changed, etc. These events are subscribed to, by the buyer agents that belong to that application. The buyer agents, for their part, publish events relating to the market that they're registered with. Similarly, the market agents publish events relating to the start of trading, transaction events, etc. The event-based paradigm fits well with the QoS monitoring schemes, as well. {TODO: INSERT REF OF TWO PAPERS THAT USE EVENTS TO INDICATE SLA VIOLATIONS}\\
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[totalheight=0.5\textheight, angle=270]{drawings/class_and_package_diagram.pdf}
+	\label{class_diagram}
+	\caption{Simplified class diagram of core entities}
+\end{figure}
+
+In figure \ref{class_diagram}, we show a simplified class diagram of the main entities of the system. Each entity subscribes to, and publishes events through the use of sockets. In the figure, we show "Metric Computation Engine" as a black-box that generates events relating to SLA violations by services. The buyer agents listen to these events to decide whether to initiate an adaptation or not. The market agent listens to these very same events, to adjust its reliability ratings of each service. 
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{drawings/setup_phase.auml.pdf}
+	\label{setup_phase}
+	\caption{Sequence of messages during the initial setup phase}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{drawings/trading_phase.auml.pdf}
+	\label{trading_phase}
+	\caption{Sequence of messages during trading}
+\end{figure}
+
+In figures \ref{setup_phase} and \ref{trading_phase}, we show the sequence of messages passed between the agents in AUML. 
+
+\paragraph{Implementation of double auction}
+The most computationally intensive aspect of the entire system is the implementation of the double auction mechanism. Storing the bids and asks as simple lists results in a huge amount of searching for matching purposes. We modify {INSERT REF TO WURMAN'S IMPLEMENTATION} 4-heap data structure to store our multi-attribute bids and asks. In our python implementation, we use the heapq module to store bids in a descending order and asks in an ascending order. This decision allows for bids that are willing to pay a higher price, get matched first. 
 
 \section{Evaluation}
 \subsection{Empirical Study}
@@ -425,6 +481,8 @@ Once an application achieves its required QoS, it withdraws from trading until a
  %, based on a study conducted by Cloud Harmony \cite{2011CloudHarmonyStudy}
 % \subsection{Scalability}
 % The scalability of a self-adaptive approach is slightly difficult to measure, since we're concerned not only with time and space complexity, but also with goodness complexity. 
+
+
 \subsection{Results}
 There are two perspectives from which to evaluate our mechanism, the individual application and the collective view of all applications present. We present both perspectives, with an emphasis on the collective view since it provides a better idea on the scalability of our mechanism. All simulations are reported as an average of a 100 simulations.\\
 \subsubsection{Individual Perspective}
@@ -437,7 +495,8 @@ At the individual level, we measure the difference between the targetted QoS lev
 \subsubsection{Aggregate Perspective}
 \textbf{Performance}:\\
 We focus on the performance of the market as a whole in enabling applications to self-adapt. The market's performance is measured in terms of number of applications successfully able to achieve their target QoS. As a baseline, we first implement the Zero-Intelligence mechanism, as this represents the lower limit of the effectiveness of the CDA mechanism. The Zero-Intelligence scheme consists of agents randomly making bids and asks, with no history or learning or feedback(see figure \ref{pure_random_strategy}). As expected, it performs quite poorly, with only 10-20\% of applications managing to acquire the required QoS. Our mechanism achieves a much higher level of applications, able to attain their desired level of QoS(see figure \ref{marketperformance}). Adaptation using our mechanism allows 60-70\% of the applications in the market to adapt. Note, that this figure only indicates applications that have their QoS within the tolerance zone. There are many applications that have overshot their QoS requirements, but are unable to find sellers of services with lower QoS values. Depending on the distribution of QoS values amongst the sellers, this could represent skewedness in the market supply.\\
-\textbf{Scalability}:\\    
+\textbf{Scalability Evaluation}:\\    
+ADD TEXT HERE THAT DISCUSSES ALL THE AXES AND GRAPHS SHOWING PERFORMANCE ALONG THOSE AXES
 Another big advantage of our mechanism is its scalability. We measure the time taken for the market to perform matching with increasing number of concrete services available per abstract service in the application's workflow.  We see (in figure \ref{svc_scaling}), that the market mechanism is able to achieve an almost linear performance in time taken. Time is measured as the number of seconds taken for 300 rounds of trading.\\
 \begin{figure}
     \includegraphics[width=3.8in]{graphs/efficiency-of-zi.png}
@@ -504,7 +563,7 @@ Investigating the effect of market conditions on the self-adaptive mechanism is 
 As expected, the periodic external event causes the aggregate number of satisfied applications to drop precipitously. Interestingly, it also causes the mechanism to satisfy a much higher percentage of the total applications. This is an interesting event and needs more investigation.
 
 \subsection{Discussion}
-
+DISCUSS PROS-AND-CONS OF ADOPTED ARCHITECTURAL STYLE. 
 \subsubsection{Strengths}
 A big strength of our mechanism is the high scalability that it offers. As service-oriented applications mature and cloud offerings become more standardized, it is easy to envision applications being composed out of several third-party services. In such a scenario, a mechanism that scales up to accommodate many concrete services is essential. We see that our mechanism is easily able to scale up.\\
 Since the decision-making over which concrete service to instantiate is done in a de-centralized manner, the individual agents can be simple and easy to implement. \\    
@@ -518,11 +577,50 @@ Since the self-adaptive mechanism merely attempts to satisfy the application's Q
 
 
 The market mechanism does not achieve the optimum, neither from the individual perspective nor from the aggregate perspective. Given the bounded rationality of our agents, we aim only to achieve a satisficing result, that is, find a solution that satisfies the constraints. 
-% All satisficing problems can be trivially reformulated into optimization problems, but satisficing solutions need not be optimal solutions and vice-versa. 
+% All satisficing problems can be trivially reformulated into optimization problems, but satisficing solutions need not be optimal solutions and vice-versa.
+
+\paragraph{LIMITATIONS IMPOSED BY LACK OF TRUST BETWEEN BUYERS AND SELLERS}
+
+
+\paragraph{Limitations using QoS Monitoring by External Entities}
+
+\section{Related Work}
+    
+\subsection{Dynamic Composition of Web-services} \label{dynamic_wsc}
+There has been a plethora of work on dynamic composition of web-services. Much early work has been done in AgFlow \cite{Zeng2001AgFlow} on Quality-Aware composition of web-services \cite{Benatallah2002Declarative} and \cite{Zeng2003Quality}. The authors propose a per-service-class optimisation as well as a global optimisation using integer programming.\\
+\cite{Canfora2005approach} proposed a genetic algorithm based approach where the genome length is determined by the number of abstract services that require a choice to be made. Constraints on QoS form a part of the fitness function, as do cost and other QoS attributes. A big advantage of GA-based approach is that it is able to handle non-linear constraints, as opposed to integer programming. Also, it is scalable when the number of concrete services per abstract service increase.\\
+\cite{Alrifai2010Selecting} propose an interesting mechanism for cutting through the search space of candidate web-services, by using skyline queries. Skyline queries identify \textit{non-dominated} web-services on at least one QoS criteria. A \textit{non-dominated} web-service means, a web-service that has at least one QoS dimension in which it is strictly better than any other web-service and at least equal on all other QoS dimensions. Determining skyline services for a particular abstract service, requires pairwise comparisons amongst the QoS vectors of all the concrete services. This process can be expensive if the number of candidate concrete services is large. Alrifai et al. consider the case where the process of selecting skyline services is done offline. This would lead to an inability to adjust to changing conditions of available services and their associated QoS values. 	
+\cite{Zhang2010QoS-Based} propose an interesting method to achieve a good set of concrete services, using Ant Colony Optimization (ACO). ACO involves creating virtual ants that mimic the foraging behaviour of real ants. The search space of optimal concrete services is modelled as a graph, with sets of concrete services as vertices and edges being all the possible connections between different concrete service sets. The ants attempt to complete a traversal of the graph, dropping pheromones on the edge of each concrete service visited. The path through the graph that accumulates the most pheromones represents the near-optimal path of services to use.
+Our approach differs from the above approaches in two respects:
+ \begin{enumerate}
+     \item Consideration of time as a factor: In practice, the optimal set of concrete services may not be available at the time instant that an application is searching. The set of service providers changes with time, as does the set of service consumers. This means that the optimal matching of service providers to consumers changes with time. The approaches above do not take this into account.
+     \item Optimality not considered: Due to the infeasibility of computing the optimal set (being NP-hard), we concentrate on finding a good solution, rather than an optimal one. A good solution is one that does not violate any QoS constraints and meets the cost constraint within a certain margin.
+ \end{enumerate}
+
+\subsection{Self-Adaptation}
+Applications that use dynamic service composition should be able to continuously monitor their current QoS levels and make adjustments when either the demand for QoS changes or the cost constraint changes. The application should thus be able to respond to both internal as well as external stimuli, to trigger a change in its constituent web-services. This change needs to be both timely, as well as correct, \textit{i.e.}, the new set of services should not violate any of the application's QoS constraints, and the change should happen as fast as possible.\\
+Self-Adaptation in software systems is the achievement of a stable, desirable configuration, in the presence of varying stimuli. These stimuli may be environmental (in the form of workload, failure of external components, etc.) or internal (failure of internal components, changed target states, etc.). Given that the range of stimuli that affect a software system is wide, Self-Adaptation has come to mean an umbrella term that covers multiple aspects of how a system reacts\cite{Salehie2009Self-adaptive}:
+	\begin{enumerate}
+	   \item Self-Awareness
+	\item Context-Awareness
+	\item Self-Configuring
+	\item Self-Optimizing
+	\item Self-Healing
+	\item Self-Protecting 
+	\end{enumerate}
+However, most approaches to self-adaptation follow a common pattern: Monitor -- Analyze -- Plan -- Execute, connected by a feedback loop. There are two approaches to self-adaptation: centralized and de-centralized.  
+In a centralized self-adaptive system, the analysis and planning part are concentrated in one entity. This form of self-adaptation has the advantage of cohesiveness and low communication overhead as compared to a decentralized mechanism. The analysis and the plan can be communicated to the effectors, and feedback from obeying the plan is communicated back through the monitors (or sensors). Rainbow\cite{Cheng2006Architecture-based} and \textit{The Autonomic Manager}\cite{IBM2006Architectural} are classic examples of centralized self-adaptation.\\
+Decentralized self-adaptation, on the other hand, distributes the analysis, planning or the feedback mechanism amongst different parts of the adapting system. This automatically implies a communication overhead, since all constituent parts must coordinate their actions. However, it also provides for robustness in the presence of node failure and scalability of application size. \cite{Cheng2009Softwarea} have advocated that the feedback loop, which is a critical part of the adaptation, be elevated to a first-class entity in terms of modelling, design and implementation. Although, this would allow for reasoning about properties of the adaptation, there are no systems that we currently know of, that provide an explicit focus on the feedback loop. Most decentralized self-adaptation systems are typically realised as a multi-agent systems wherein the agents are autonomous in their environments and implement strategies that collectively move the entire system into a desirable state. \cite{Cheng2005Making} have advocated separating the functional part of the system from the adaptive part, thus allowing for independent evolution of both. \cite{Baresi2008Towards} describes such a system, where adaptation is considered as a cross-cutting concern, and not a fundamental part of system computation. Baresi et al. use aspect-oriented programming to implement the Monitor and Execute part of the MAPE loop. They implement distributed analysis and planning by dividing the self-adaptive system into \textit{supervised elements}, that perform the business logic of the application and \textit{supervisors} that oversee how the supervised components behave and plan for adaptation. Aspect-probes form the sensors and actuators that link the supervised elements to the supervisors. \\
+\cite{Di2005Self-organization} describe another interesting approach to decentralized self-adaptation, through self-organization. DiMarzo et al. take a bio-inspired approach and use principles of holons (and holarchy) and stigmergy to get agents in a manufacturing department to perform coordination and control. A holon is defined by \cite{Koestler1990Ghost} to be both a part and a whole. Therefore, an agent is both autonomous as well as a part of a hierarchy, which influences it. The essential idea in their work is that with such structures, order emerges from disorder, as simple interactions build on each other, to produce progressively complex behaviour.\\
+\cite{Weyns2010decentralized} study a decentralized self-healing system and a QoS-driven self-optimized deployment framework. Weyns et al.'s approach is the nearest to ours. They suggest multiple decentralized models which feed into decentralized algorithms, which are in turn analyzed by decentralized analyzers. These analyzers then individually direct local effectors to make changes to the host system.\\
+These approaches, while interesting, have not explicitly considered scale of adaptation. Any approach that attempts self-adaptation on the cloud, must concern itself with scaling up to hundreds and possibly even thousands of entities. Another issue that needs to be considered, is the effect of other self-adapting systems operating in the same environment. 
+ 
 
 \section{Conclusion and Future Work}
 Cloud-based service-oriented applications have the potential to self-adapt their QoS, depending on demand. Using a market-based mechanism maps nicely to the real-world situation of unpredictable change of QoS requirements, costs involved in adaptation and adaptation by competing applications. As the number of possible concrete services increase, the scalability of the self-adaptive mechanism becomes important. We see that the market-based mechanism consists of simple agents, is able to adapt well and yet scales linearly to the number of concrete services. We also see that it is robust in the presence of differences in demand and supply of QoS. Applications implemented as an ASN can thus scale and adapt to the changing business requirements of QoS.\\
 We have not modelled complex seller-side behaviour. Specifically, actions like deliberate violation of QoS to free up resources for making Asks with higher prices or mis-reporting of QoS available. Mechanisms like penalties and reputation management can be used to prevent seller agents from behaving dishonestly. Also, we have not modelled adaptation on the part of the market. Sellers that lie about their QoS or, are generally unattractive for transactions may lower the reputation of the marketplace. Hence, the market could take steps to ensure that it is populated, only with sellers that are likely to be sold. In future work, we aim to systematically add these adaptations to observe their effect on the collective economy. Also, future work involves experimenting with more decentralized market mechanisms such as posted-offer markets.\\
+  
+  DISCUSS CLOUD-SIM IMPLEMENTATION\\
   
 
 % Agile Service Networks embody the kind of structure, that this mechanism would be applicable in. Agile Service Networks are formed when organizations, outsource a part of their function to other organizations. These organizations may, in turn, outsource a part of their function to yet other organizations. Thus, an application or a business process being instantiated by one organization, uses the services of many organizations. This has several benefits in terms of efficiency, agility in response to business fluctuations etc.

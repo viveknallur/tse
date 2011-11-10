@@ -1,0 +1,23 @@
+start Compute_Endowment
+agent ba Buyer_A
+agent ma Market_A
+agent app Application
+agent mb Market_B
+agent bb Buyer_B
+
+message app ba get_last_transaction_price
+backup
+message app bb get_last_transaction_price
+message ba ma get_last_price
+backup
+message bb mb get_last_price
+message ma ba last_price
+backup
+message mb bb last_price
+message ba app last_transaction_price
+backup
+message bb app last_transaction_price
+sub Split_Budget_In_Corresponding_Ratio
+
+
+

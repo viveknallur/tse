@@ -1,0 +1,115 @@
+#!/usr/local/bin/wish
+set epsfile "compute_endowment.auml.eps"
+
+
+# code from http://wiki.tcl.tk/1416
+proc roundRect { w x0 y0 x3 y3 radius args } {
+    set r [winfo pixels $w $radius]
+    set d [expr { 2 * $r }]
+
+    # Make sure that the radius of the curve is less than 3/8
+    # size of the box!
+
+    set maxr 0.75
+
+    if { $d > $maxr * ( $x3 - $x0 ) } {
+        set d [expr { $maxr * ( $x3 - $x0 ) }]
+    }
+    if { $d > $maxr * ( $y3 - $y0 ) } {
+        set d [expr { $maxr * ( $y3 - $y0 ) }]
+    }
+
+    set x1 [expr { $x0 + $d }]
+    set x2 [expr { $x3 - $d }]
+    set y1 [expr { $y0 + $d }]
+    set y2 [expr { $y3 - $d }]
+
+    set cmd [list $w create polygon]
+    lappend cmd $x0 $y0
+    lappend cmd $x1 $y0
+    lappend cmd $x2 $y0
+    lappend cmd $x3 $y0
+    lappend cmd $x3 $y1
+    lappend cmd $x3 $y2
+    lappend cmd $x3 $y3
+    lappend cmd $x2 $y3
+    lappend cmd $x1 $y3
+    lappend cmd $x0 $y3
+    lappend cmd $x0 $y2
+    lappend cmd $x0 $y1
+    lappend cmd -smooth 1
+    return [eval $cmd $args]
+ }
+canvas .c
+frame .f
+button .f.quit -text "Quit" -command finishup
+pack .f -side top
+pack .f.quit -fill x -side left
+pack .c -side bottom -fill both -expand 1
+focus .c
+proc finishup {} {
+        global epsfile
+        set bb [.c bbox all]
+        if {[llength $bb] == 0} return
+        set x1 [lindex $bb 0]
+        set y1 [lindex $bb 1]
+        set w [expr [lindex $bb 2]-$x1]
+        set h [expr [lindex $bb 3]-$y1]
+        .c postscript -file $epsfile  -x $x1 -y $y1 -height $h -width $w
+	exit
+}
+# agent ba (Buyer_A )
+.c create rectangle 65 30 145 50
+.c create text 105 40 -text "Buyer_A "
+# agent ma (Market_A )
+.c create rectangle 185 30 265 50
+.c create text 225 40 -text "Market_A "
+# agent app (Application )
+.c create rectangle 305 30 385 50
+.c create text 345 40 -text "Application "
+# agent mb (Market_B )
+.c create rectangle 425 30 505 50
+.c create text 465 40 -text "Market_B "
+# agent bb (Buyer_B )
+.c create rectangle 545 30 625 50
+.c create text 585 40 -text "Buyer_B "
+# message app ba get_last_transaction_price
+.c create line 345 75 105 75 -arrow last
+.c create text 225 67 -text "get_last_transaction_price"
+# message app bb get_last_transaction_price
+.c create line 345 75 585 75 -arrow last
+.c create text 465 67 -text "get_last_transaction_price"
+# message ba ma get_last_price
+.c create line 105 95 225 95 -arrow last
+.c create text 165 87 -text "get_last_price"
+# message bb mb get_last_price
+.c create line 585 95 465 95 -arrow last
+.c create text 525 87 -text "get_last_price"
+# message ma ba last_price
+.c create line 225 115 105 115 -arrow last
+.c create text 165 107 -text "last_price"
+# message mb bb last_price
+.c create line 465 115 585 115 -arrow last
+.c create text 525 107 -text "last_price"
+# message ba app last_transaction_price
+.c create line 105 135 345 135 -arrow last
+.c create text 225 127 -text "last_transaction_price"
+# message bb app last_transaction_price
+.c create line 585 135 345 135 -arrow last
+.c create text 465 127 -text "last_transaction_price"
+proc delay1 {} {
+  .c create rectangle 10 155 660 185 -width 2 -fill white
+  .c create polygon 10 155 75 155 75 168 68 175 10 175 -fill {} -outline black -width 2
+  .c create text 42.5 165 -text "ref"
+  .c create text 335 170 -font {Helvetica 14} -text "Split_Budget_In_Corresponding_Ratio"
+}
+
+# Create life lines
+.c create line 345 50 345 190 -dash -
+.c create line 225 50 225 190 -dash -
+.c create line 105 50 105 190 -dash -
+.c create line 585 50 585 190 -dash -
+.c create line 465 50 465 190 -dash -
+delay1
+# uncomment for automatic printout and quit
+finishup

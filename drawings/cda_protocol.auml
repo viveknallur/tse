@@ -1,0 +1,46 @@
+start 2-Stage CDA
+invis env environment
+agent s Seller
+agent m Market
+agent b Buyer
+agent a Application
+message m b Mkt_Open
+backup
+message m s Mkt_Open
+
+box Loop
+	label Stage-1
+	message b m Reg_Bid
+	backup
+	message s m Reg_Ask
+	sub sub Match_Bid_Ask	
+	box alt
+		guard [All_Constraints_Met]
+		message m s Provisional_Transaction
+		backup
+		message m b Provisional_Transaction
+		message b a Trust_Seller?
+		box alt
+			label Stage-2
+			message a b Yes
+			message b m Cancel_Transaction
+			message m b Delete_Bid
+		next
+			message a b No
+			message b m Accept_Transaction
+			message m b New_Transaction
+			backup
+			message m s New_Transaction
+			message m b Delete_Bid
+			message b a Exit_Mkt	
+			message m s Delete_Ask
+		end alt		
+	next
+		guard [else]
+		message env s timeout!
+		backup
+		message a b timeout!
+	end alt
+end Loop	
+
+finish

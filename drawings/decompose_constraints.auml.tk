@@ -1,0 +1,161 @@
+#!/usr/local/bin/wish
+set epsfile "decompose_constraints.auml.eps"
+
+
+# code from http://wiki.tcl.tk/1416
+proc roundRect { w x0 y0 x3 y3 radius args } {
+    set r [winfo pixels $w $radius]
+    set d [expr { 2 * $r }]
+
+    # Make sure that the radius of the curve is less than 3/8
+    # size of the box!
+
+    set maxr 0.75
+
+    if { $d > $maxr * ( $x3 - $x0 ) } {
+        set d [expr { $maxr * ( $x3 - $x0 ) }]
+    }
+    if { $d > $maxr * ( $y3 - $y0 ) } {
+        set d [expr { $maxr * ( $y3 - $y0 ) }]
+    }
+
+    set x1 [expr { $x0 + $d }]
+    set x2 [expr { $x3 - $d }]
+    set y1 [expr { $y0 + $d }]
+    set y2 [expr { $y3 - $d }]
+
+    set cmd [list $w create polygon]
+    lappend cmd $x0 $y0
+    lappend cmd $x1 $y0
+    lappend cmd $x2 $y0
+    lappend cmd $x3 $y0
+    lappend cmd $x3 $y1
+    lappend cmd $x3 $y2
+    lappend cmd $x3 $y3
+    lappend cmd $x2 $y3
+    lappend cmd $x1 $y3
+    lappend cmd $x0 $y3
+    lappend cmd $x0 $y2
+    lappend cmd $x0 $y1
+    lappend cmd -smooth 1
+    return [eval $cmd $args]
+ }
+canvas .c
+frame .f
+button .f.quit -text "Quit" -command finishup
+pack .f -side top
+pack .f.quit -fill x -side left
+pack .c -side bottom -fill both -expand 1
+focus .c
+proc finishup {} {
+        global epsfile
+        set bb [.c bbox all]
+        if {[llength $bb] == 0} return
+        set x1 [lindex $bb 0]
+        set y1 [lindex $bb 1]
+        set w [expr [lindex $bb 2]-$x1]
+        set h [expr [lindex $bb 3]-$y1]
+        .c postscript -file $epsfile  -x $x1 -y $y1 -height $h -width $w
+	exit
+}
+# agent env (environment )
+# agent ba (Buyer_A )
+.c create rectangle 185 30 265 50
+.c create text 225 40 -text "Buyer_A "
+# agent ma (Market_A )
+.c create rectangle 305 30 385 50
+.c create text 345 40 -text "Market_A "
+# agent app (Application )
+.c create rectangle 425 30 505 50
+.c create text 465 40 -text "Application "
+# agent mb (Market_B )
+.c create rectangle 545 30 625 50
+.c create text 585 40 -text "Market_B "
+# agent bb (Buyer_B )
+.c create rectangle 665 30 745 50
+.c create text 705 40 -text "Buyer_B "
+# message app ba get_last_k_transaction_data
+.c create line 465 75 225 75 -arrow last
+.c create text 345 67 -text "get_last_k_transaction_data"
+# message app bb get_last_k_transaction_data
+.c create line 465 75 705 75 -arrow last
+.c create text 585 67 -text "get_last_k_transaction_data"
+# message ba ma get_last_data
+.c create line 225 95 345 95 -arrow last
+.c create text 285 87 -text "get_last_data"
+# message ba ma get_last_data
+.c create line 225 115 345 115 -arrow last
+.c create text 285 107 -text "get_last_data"
+# message bb mb get_last_data
+.c create line 705 115 585 115 -arrow last
+.c create text 645 107 -text "get_last_data"
+# message ma ba last_data
+.c create line 345 135 225 135 -arrow last
+.c create text 285 127 -text "last_data"
+# message mb bb last_data
+.c create line 585 135 705 135 -arrow last
+.c create text 645 127 -text "last_data"
+# message ba app last_k_transaction_data
+.c create line 225 155 465 155 -arrow last
+.c create text 345 147 -text "last_k_transaction_data"
+# message bb app last_k_transaction_data
+.c create line 705 155 465 155 -arrow last
+.c create text 585 147 -text "last_k_transaction_data"
+proc delay1 {} {
+  .c create rectangle 103 200 107 210 -outline {} -fill white 
+  .c create text 105 205 -text "\[All_Combinations_Checked\]"
+}
+proc delay2 {} {
+  .c create rectangle 15 230 775 260 -width 2 -fill white
+  .c create polygon 15 230 80 230 80 243 73 250 15 250 -fill {} -outline black -width 2
+  .c create text 47.5 240 -text "ref"
+  .c create text 395 245 -font {Helvetica 14} -text "Apply_SWR_to_Combination"
+}
+proc delay3 {} {
+  .c create rectangle 15 280 775 310 -width 2 -fill white
+  .c create polygon 15 280 80 280 80 293 73 300 15 300 -fill {} -outline black -width 2
+  .c create text 47.5 290 -text "ref"
+  .c create text 395 295 -font {Helvetica 14} -text "Save_Valid_Combination"
+}
+.c create rectangle 10 175 780 315 -width 2
+.c create polygon 10 175 75 175 75 188 68 195 10 195 -fill {} -outline black -width 2
+.c create text 42.5 185 -text "Loop"
+proc delay4 {} {
+  .c create rectangle 103 360 107 370 -outline {} -fill white 
+  .c create text 105 365 -text "\[Valid_Combinations_Exist?\]"
+}
+proc delay5 {} {
+  .c create rectangle 15 390 775 420 -width 2 -fill white
+  .c create polygon 15 390 80 390 80 403 73 410 15 410 -fill {} -outline black -width 2
+  .c create text 47.5 400 -text "ref"
+  .c create text 395 405 -font {Helvetica 14} -text "Create_local_constraints"
+}
+.c create line 10 425 780 425 -width 2 -dash -
+proc delay6 {} {
+  .c create rectangle 103 460 107 470 -outline {} -fill white 
+  .c create text 105 465 -text "\[else\]"
+}
+# message app env Possible_Infeasibility
+.c create line 465 490 105 490 -arrow last
+.c create text 285 482 -text "Possible_Infeasibility"
+.c create rectangle 10 335 780 510 -width 2
+.c create polygon 10 335 75 335 75 348 68 355 10 355 -fill {} -outline black -width 2
+.c create text 42.5 345 -text "alt"
+.c create rectangle 5 5 785 515 -width 2
+.c create polygon 5 5 85 5 85 18 78 25 5 25 -fill {} -outline black -width 2
+.c create text 45 15 -text "Decompose_Constraints"
+
+# Create life lines
+.c create line 465 50 465 515 -dash -
+.c create line 345 50 345 515 -dash -
+.c create line 225 50 225 515 -dash -
+.c create line 705 50 705 515 -dash -
+.c create line 585 50 585 515 -dash -
+delay1
+delay2
+delay3
+delay4
+delay5
+delay6
+# uncomment for automatic printout and quit
+finishup

@@ -1,0 +1,38 @@
+start
+agent m Market
+agent b Buyer
+agent A Application
+box Loop
+	message b m Get_Last_Transaction_Price
+	message m b Last_Transaction_Price
+	message b m Reg_Bid
+	sub Market: Match_Bid_Ask
+	box alt
+		guard [Prov_Trans_Possible]
+		message b a Transaction_Details
+		message b a Trust_Seller?
+		box alt
+			guard [Yes]
+			message b m Accept_Transaction
+			sub Application: Calculate_Budget_Surplus
+		next
+			message b m Cancel_Transaction
+		end alt
+	next
+		message b a Failed_to_Transact
+		message b a Last_Transaction_Price
+		sub Application: Redistribute_Budget?
+		box alt
+			guard[Enough_Attempts?]
+			box alt
+				guard [Surplus_Available?]
+				message a b New_Budget	
+			next
+				sub Application: Raise_Error
+			end alt
+		next
+			message a b Revise_Bid
+		end alt
+		sub Buyer: Revise_Bid
+	end alt
+finish
