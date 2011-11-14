@@ -57,12 +57,27 @@ This paper contributes to the design of a decentralized mechanism for service-ba
 We would like to create a mechanism that allows multiple applications, constructed across a federation of clouds, to self-adapt. We chose a market-based approach to self-adaptation, not only because it is decentralized, but also due to its easy applicability to the problem domain. Services in the cloud are moving from a fixed-price package to a more flexible, auction-based approach\cite{Amazon2010SpotInstance}. This enables a self-adaptive application to change the QoS exhibited, by switching to a different concrete service. Differences in pricing of the services, cost incurred for switching services, fees paid to the market, etc. provide a direct indication of the cost of adaptation. 
 \subsection{Market-Based Control}
 Market-Based Control (MBC) essentially involves modelling the system as a marketplace, where self-interested agents use simple economic strategies to compete for resources. The self-interested competition, along with well-designed utility functions allow for a decentralized means of decision making. These agents, via their competitive need to get resources, perform a parallel search through the space of decision points. MBC has been used in several contexts, as a mechanism for computing a good solution in a decentralized manner. Notable examples include Clearwater's bidding agents to control the temperature of a building\cite{Clearwater1996Saving}, Ho's center-free resource algorithms \cite{Ho1980class} and Cheriton's extension to operating systems to allow programs to bid for memory\cite{Harty1996market}. Wellman's WALRAS system \cite{Wellman1993market-oriented}, which is highly distributed, reports high scalability. More examples include distributed Monte-Carlo simulations\cite{Waldspurger1992Spawn}, distributed database design using market-methods for distributing sub-parts of queries \cite{Stonebraker1994Economic} and proportional-share resource management technique\cite{Waldspurger1994Lottery}. All of these systems provide evidence of market-based control being a good candidate for distributed decision making. 
-\subsection{Use of MBC for QoS adaptation}
+
+%\subsection{Use of CDA for efficient allocation}
+%TODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODO
+%TODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODO
+%TODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODO
+
+\subsection{Use of CDA for QoS adaptation}
 We design a marketplace that allows individual applications to select web-services. This is important from the view of robustness and even practicality. The cloud is designed to be an ultra-large collection of applications, web-services and raw computing power. Given this large scale, any solution that is implemented, must not rely on central knowledge or coordination. The design of the market that we chose, is the double-auction. A double-auction is an auction mechanism where, (unlike the traditional English or Dutch auction) both buyers and sellers place bids. In auction terminology, the buyer's bid is called a \textit{bid} and the seller's bid is called an \textit{ask}. We chose this mechanism because a double auction is known to be highly allocatively efficient \cite{Gode1993Allocative}, \textit{i.e.}, this mechanism achieves a very high percentage of all the possible trades, between buyers and sellers 
 \\
-We view an application as a directed graph of web-services. A web-service corresponds to a piece of functionality, along with associated QoS levels. Thus, a data-mining application can be visualised as a directed graph of a data-filtering service, a data-transformation service, a clustering service and visualization service. The total QoS exhibited by the application, is a function of the individual QoS exhibited by each of the services. Each service is assumed to be traded in its own market. 
+We view an application as a directed graph of abstract web-services. A concrete web-service corresponds to a piece of functionality described by the abstract web-service, along with associated QoS levels. Thus, a data-mining application can be visualised as a directed graph of abstract data-filtering service, a data-transformation service, a clustering service and visualization service. However, the total QoS actually exhibited by the application, is a function of the individual QoS exhibited by each of the concrete services that have been used in the composition. Each abstract service is assumed to be traded in its own market. 
 % There are six basic service composition patterns \cite{Yu2007Efficient} as shown in Fig \ref{composition_types}.  
-Thus, in a market for clustering web-services, each seller will provide a web-service that performs clustering, but offering varying performance and dependability levels. Varying levels of QoS require different implementations and depending on the complexity of the implementations, will be either scarce or common. This leads to a differentiation in pricing based on QoS levels. 
+Thus, in a market for clustering web-services, each seller will provide a concrete web-service that performs clustering, but offering varying performance and dependability levels. Varying levels of QoS require different implementations and depending on the complexity of the implementations, will be either scarce or common. This leads to a differentiation in pricing based on QoS levels. 
+
+\begin{figure} 
+%  \begin{minipage}[b]{0.5\linewidth}
+    \centering
+    \includegraphics[width=3in, height=3in]{drawings/buyers-and-market.png}
+  \caption{Web-services with agents that decide when to approach the market}
+ \label{marketplace}
+%   \end{minipage}
+ \end{figure}
   
 % \begin{figure}
 % %  \begin{minipage}[b]{0.4\linewidth}
@@ -73,10 +88,10 @@ Thus, in a market for clustering web-services, each seller will provide a web-se
 % %   \end{minipage}
 %  \end{figure}
 
-We populate several markets with buying agents and selling agents. As mentioned before, each service ($f_{x}$) is sold in a market that is specific to $f_{x}$. All the buying agents and selling agents in this market, trade web-services that deliver $f_{x}$. We assume that there exists a market for every $f_x$, that is needed.  
+We populate several markets with buying agents and selling agents. As mentioned before, each abstract service ($f_{x}$) is sold in a market that is specific to $f_{x}$. All the buying agents and selling agents in this market, trade web-services that deliver $f_{x}$ in functionality. We assume that there exists a market for every $f_x$, that is needed.  
 
 \subsubsection{QoS constraints}
-We consider the following types of QoS constraints on the application:
+For any application, it is not enough to have functionality. Rather, it requires to exhibit a certain QoS that determines whether it is acceptable to the user or not. For e.g., given a video-library sorting service, it is not enough to sort videos correctly but it must also sort fast enough for the user's purposes. Depending on the specific user, this expectation of performance will vary. It is this variation in expected QoS that we aim to self-adapt to. Now, the QoS exhibited by an application composed of services, is a function of the QoS exhibited by each of its constituent services. The selection of concrete services must therefore be guided by the QoS constraints that are contingent upon the entire application. We consider the following types of QoS constraints on the application:
 \begin{enumerate}
 \item One-of-list constraint: This type of constraint refers to QoS attributes that usually occur in the domain as a list of options. For e.g., encryption options such as SHA-128, SHA-256, Blowfish, Serpent, etc.
 \item Exactly-this constraint: This type of constraint refers to QoS attributes which are available at discrete levels. For e.g., bandwidth options like 1 mbps, 2 mbps, 10 mbps, 20 mbps.
@@ -98,13 +113,14 @@ Less-than & \[ \omega = \frac{QoS_{MaxAvl} - QoS_{This}}{QoS_{MaxAvl} - QoS_{Min
 \end{tabular}
 \end{table}
 \end{enumerate}
-
+The end-to-end QoS that the application experiences is influenced to a large extent by its structure. In \cite{Cardoso2004}, the authors describe Stochastic Workflow Reduction (SWR), a recursive method for calculating the end-to-end QoS, based on the individual services' QoS values as well as the structure of the application. We use SWR as our mechanism for evaluating whether the individual QoS of the services satisfies the application's constraints. 
 
 \subsubsection{Buyer}
 The Buyer is a trading agent that buys a web-service for an Application, \textit{i.e.,} it trades in a market for a specific $f_x$. Each web-service, available in $f_x$, exhibits the same QoS ($\omega \in QoS$). The only differentiating factor is the degree to which that is exhibited  ($ \omega_{i} \in \mathbb{R}_{0}^{1} $). Hence, if an application has $K$ QoS that it is concerned about, then the QoS that it gets for each of the $f_{x}$ that it buys is:
 	 \begin{equation}
 	  \Omega^{f_{x}} = \langle \omega_{1}^{f_x}, \omega_{2}^{f_x}, \omega_{3}^{f_x}, \ldots, \omega_{K}^{f_x} \rangle \label{eq:exhibited_qa}
 	 \end{equation}
+
 The amount that the buyer is prepared to pay is called the \textsl{bid price} and this is necessarily \textit{less than or equal to} the $B_{f_x}$, where $B_{f_x}$ is the budget available with the buyer. The combination of $\Omega$ demanded and the \textsl{bid price} is called a \textsl{Bid}.
 
 \subsubsection{Seller}
@@ -133,13 +149,7 @@ Figure \ref{orderbook} shows the state of the orderbook at some time \textit{$t_
 %TODO: INSERT MODIFIED CDA: 2-STEP: 1 FOR TRADING AND 2 FOR APP TO CALCULATE BEFORE COMMITMENT. REFERENCE RAMCHURN'S PAPER ON 2-STEP CDA FOR EVIDENCE OF BETTERNESS
 
 \subsubsection{Applications}
-The Application is a composition of services from different markets. At the agent-level, the application agent communicates with each of the buying agents ($f_{x} \in F_{x}$) and communicates a budget ($B_{f_{x}}$). The buyer then initializes itself with a random $\Omega^{f_x}$ and starts trading. The adaptation occurs through the revision of bids, that happen after each round of trading. After each round of trading, depending on the $\Omega$ obtained by the buyer, the Application has procured a total QoS that is given by:
- 
- 	 \begin{equation}
-	  \forall f_{x} \in F_{x}, \sum\Omega^{f_x} \label{eq:total_qa}
-	 \end{equation}
-
-Note, that (\ref{eq:total_qa}) is merely one way of calculating the total QoS that the application got. There are other, more complicated utility functions possible, but for the sake of simplicity, we use simple additive weighting\cite{Yoon1995Multiple} to calculate the total QoS achieved.\\
+The Application is a composition of services from different markets. At the agent-level, the application agent communicates with each of the buying agents ($f_{x} \in F_{x}$) and communicates a budget ($B_{f_{x}}$). The buyer then initializes itself with a random $\Omega^{f_x}$ and starts trading. The adaptation occurs through the revision of bids, that happen after each round of trading. After each round of trading, depending on the $\Omega$ obtained by the buyer, the Application has procured a total QoS that is calculated, using Stochastic Workflow Reduction\cite{Cardoso2004}.\\
 Buying and using a web-service involves many costs, and these must be compared against the projected utility gain to decide whether it is worthwhile to switch. These may be enumerated as:
 	\begin{itemize}
 	 \item \textit{Buying Cost:} The price of purchasing the web-service for \textsl{n} calls ($p_{f_x}$)
@@ -151,36 +161,44 @@ Thus, the total cost that the application must consider is:
 	 TC_{f_x} = p_{f_x} + t_{f_x} + s_{f_x}
 	\end{equation}
 	 
-We assume that, for every application there exists a function that maps $TC_{f_x}$ to an equivalent $\Omega^{f_x}$. The application could easily buy the best possible web-service(s) available, if it was prepared to spend a large amount of money. However, in reality, every application is constrained by a budget($B$) that it is willing to spend. Allocating $M$ amongst the functionalities that it is buying ($f_x \in F_x$) is a matter of strategy and/or the relative importance of each $f_x$. 
-	\begin{equation}
-	 \forall f_{x} \in F_{x}, \sum B_{f_x} = M 
-	\end{equation}
+We assume that, for every application there exists a function that maps $TC_{f_x}$ to an equivalent $\Omega^{f_x}$. The application could easily buy the best possible web-service(s) available, if it was prepared to spend a large amount of money. However, in reality, every application is constrained by a budget($B$) that it is willing to spend. The application apportions budget as well as QoS constraints to each of its constituent buyer agents (see algorithm \ref{Initialization}).
+
+%Allocating $B$ amongst the functionalities that it is buying ($f_x \in F_x$) is a matter of strategy and/or the relative importance of each $f_x$. 
+%	\begin{equation}
+%	 \forall f_{x} \in F_{x}, \sum B_{f_x} = M 
+%	\end{equation}
 
 %After every round, the application compares the privately known $\Omega_{f_x}$ with the $\Omega^{b}_{f_x}$ and determines whether to punish/reward the buyer. From this piece of information, the buyer can only guess whether it needs to improve the $\Omega^{b}_{f_x}$ that it obtained or the price that it paid. Once the  $\Omega^{b}_{f_x}$ is close enough to the private $\Omega_{f_x}$, then the application refrains from trading any further, until it changes the privately known $\Omega_{f_x}$. Changing of the private $\Omega_{f_x}$ simulates the change in the environment, which has prompted adaptation by the application. The buyers have to now re-approximate the private $\Omega_{f_x}$.
 Traditionally, a CDA works on a single piece of information, price. However, we modify the bids and asks to be multi-attribute, \textit{i.e.,} each bid also contains the minimum QoS levels that the buyer wants and each ask contains the maximum QoS levels that the seller is willing to provide. Thus, a transaction between a buyer and a seller is now an agreement to provide a certain functionality, at a certain price, at pre-defined QoS levels.
 %After every round of trading, the application calculates the total utility that it obtained after the trades and compares it to the previous utility it had. Depending on whether the utility in the current round is better or worse, the application provides an appropriate feedback to all the buying agents. This allows an agent to realize the effect of its action on the overall utility. It then modifies its bid, accordingly.
 
-\begin{figure} 
-%  \begin{minipage}[b]{0.5\linewidth}
-    \centering
-    \includegraphics[width=3in, height=3in]{drawings/buyers-and-market.png}
-  \caption{Web-services with agents that decide when to approach the market}
- \label{marketplace}
-%   \end{minipage}
- \end{figure}
- 
 In Figure \ref{marketplace}, we see the functionality being composed at the top and the agents below calculating the utility achieved by each trade. The agents are also able to observe the last known transaction price and QoS levels in their markets. This allows them to create bids, that are most likely to result in a trade.
 
-    \begin{algorithm}
+\begin{algorithm}
  \DontPrintSemicolon
- \KwData{Total budget available for entire application; Minimum level of QoS per Component}
+ \KwData{Total budget available for entire application}
  \KwResult{All agents initialised and ready to trade}
  \Begin{ 
  \ForEach{$Agent\ a$}{
-   $a_{budget} \longleftarrow (TotalBudget / N)$\;
-   $a_{min QoS level} \longleftarrow MinimumQoSLevel$\;
-   $a_{component} \longleftarrow Component$\;
-%    Insert $a$ into $UtilityGraph$\; 
+ 	Find list of markets $(M)$ corresponding to $a_{f_{x}}$\;
+ 	Choose $m \in M$\;
+ }
+ \ForEach{$Agent\ a$}{
+ 	Register in $m$\;
+ 	$a \longleftarrow m_{medianTransactionPrice}$\;
+ 	$a \longleftarrow m_{medianQoS}$\;
+  }
+  Apply SWR $\longleftarrow \langle \omega_{f_{1}}, \omega_{f_{2}}, \omega_{f_{3}} \ldots \rangle$\;
+  \eIf{$constraintsMet$}{
+	 \ForEach{$Agent\ a$}{
+     	$a_{budget} \propto a_{medianTransactionPrice}$\;
+	    $a_{minQoSlevel} \longleftarrow a_{medianQoS}$\;
+  	}  	
+ } {
+  	Choose different $m$\;
+  	\If{$allMarketsExhausted$}{
+  		TerminateWithFailure\;
+  	}
   }
  }
  \caption{Initialization of Agents}
@@ -194,13 +212,12 @@ In Figure \ref{marketplace}, we see the functionality being composed at the top 
  \KwData{$\Upsilon \longleftarrow ElectedHead$}
  \Begin{
  		\ForEach{$Agent\ a$}{
- 				Find list of markets $(M)$ corresponding to $a_{component}$\;
- 				Register in each of the markets\;
- 				Create random bid with {
- 						$a_{bid^{QoS}} \geq a_{min QoS level}$\;
+ 				
+ 				Create bid with {
+ 						$a_{bid^{QoS}} \geq a_{minQoSlevel}$\;
  						$a_{bid^{price}} \longleftarrow random(a_{budget})$\;
  				}
- 				Choose $m \in M$\;
+ 				
  				$m \longleftarrow register(a_{bid})$\;
 				$a \longleftarrow wait(m_{trading\_round})$\;
  				\eIf{trade}{
@@ -377,10 +394,10 @@ Number-of-Markets & 1 -- 5 \\ \hline
 %In \citep{Cheng2009}, the authors comment on the engineering challenges of building a self-adaptive system, and emphasize the fact that the %feedback loop is of utmost importance. 
 The design of our implementation is based on the publish-subscribe architectural style. This style was chosen for its decoupling properties, such that each communicating entity in the system is independent of every other. This fits in well, with our notion of agents acting on the basis of their own goals and their environment, in a decentralized manner. Each type of agent described previously, is both an event publisher and an event subscriber. That is, each application agent generates events that describe when the application's QoS constraints have changed, when the budget has changed, etc. These events are subscribed to, by the buyer agents that belong to that application. The buyer agents, for their part, publish events relating to the market that they're registered with. Similarly, the market agents publish events relating to the start of trading, transaction events, etc. The event-based paradigm fits well with the QoS monitoring schemes, as well. {TODO: INSERT REF OF TWO PAPERS THAT USE EVENTS TO INDICATE SLA VIOLATIONS}\\
 
-\begin{figure}[h]
+\begin{figure}[h]\label{class_diagram}
 	\centering
-	\includegraphics[totalheight=0.5\textheight, angle=270]{drawings/class_and_package_diagram.pdf}
-	\label{class_diagram}
+	\includegraphics[trim = 30mm 50mm 0 0, clip, totalheight=0.53\textheight]{drawings/class_and_package_diagram.pdf}
+	
 	\caption{Simplified class diagram of core entities}
 \end{figure}
 
@@ -388,14 +405,14 @@ In figure \ref{class_diagram}, we show a simplified class diagram of the main en
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.3]{drawings/setup_phase.auml.pdf}
+	\includegraphics[scale=0.6]{drawings/setup_phase.pdf}
 	\label{setup_phase}
 	\caption{Sequence of messages during the initial setup phase}
 \end{figure}
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.3]{drawings/trading_phase.auml.pdf}
+	\includegraphics[scale=0.6]{drawings/trading_phase.pdf}
 	\label{trading_phase}
 	\caption{Sequence of messages during trading}
 \end{figure}
