@@ -297,7 +297,7 @@ Thus, in a certain configuration, an application could potentially meet one of i
 \end{algorithm}
 
 \subsection{Adapting Bids and Asks}
-Bids and Asks form the core of the adaptive process of our mechanism. After an initial random start, the buyer agents perform the equivalent of a local search, by means of adjusting the QoS values in their bids. There are many ways to calculate the new QoS value, given a current value and the feedback. We use the least mean squares method (also known as \textit{Widrow-Hoff learning rule})\cite{Haykin2003Least} to adapt the QoS and the price. We use ZIP\cite{Cliff1998Simple}, a fairly simple improvement on the Zero-Intelligence algorithm, that implements the Widrow-Hoff learning rule to perform a gradient descent of the current price (in the ask or bid) to the last transaction price, in the market.  Also, depending on the feedback by the application, each individual buying agent either increases or decreases the QoS attribute values, that it is bidding for. The increase or decrease is determined by the direction indicated in the feedback. The magnitude of change is more difficult to realize. The magnitude indicated in the feedback is a cumulative figure, referring to the difference between target and achieved levels of QoS, for the application. Therefore, each agent changes its QoS bid attributes by a fraction of the magnitude indicated in the feedback (see algorithm \ref{bid_revision}). We use a simple average (magnitude of feedback divided by number of agents in the workflow) to calculate this fraction.\\
+Bids and Asks form the core of the adaptive process of our mechanism. After an initial start that is influenced by the current QoS values and prices in the market, the buyer agents perform the equivalent of a local search, by means of adjusting the QoS values in their bids. There are many ways to calculate the new QoS value, given a current value and the feedback. We use the least mean squares method (also known as \textit{Widrow-Hoff learning rule})\cite{Haykin2003Least} to adapt the QoS and the price. We use ZIP\cite{Cliff1998Simple}, a fairly simple improvement on the Zero-Intelligence algorithm, that implements the Widrow-Hoff learning rule to perform a gradient descent of the current price (in the ask or bid) to the last transaction price, in the market.  Also, depending on the feedback by the application, each individual buying agent either increases or decreases the QoS attribute values, that it is bidding for. The increase or decrease is determined by the direction indicated in the feedback. The magnitude of change is more difficult to realize. The magnitude indicated in the feedback is a cumulative figure, referring to the difference between target and achieved levels of QoS, for the application. Therefore, each agent changes its QoS bid attributes by a fraction of the magnitude indicated in the feedback (see algorithm \ref{bid_revision}). We use a simple average (magnitude of feedback divided by number of agents in the workflow) to calculate this fraction.\\
 Selling agents also modify their asks, in order to get a better deal for their services. If an agent is able to trade, it increases the price it charges, in the next ask. The sellers also use ZIP to decide on the new charging price(see algorithm \ref{ask_revision}). If the seller is unable to find buyers at a higher price, it drops back to its older price. If it is still unable to find a buyer, then it goes back to the original ask that enabled the agent to transact.\\
 The buyers are constrained by their budget, for the prices that they're willing to pay. The sellers are also constrained by their actual QoS values that they can provide.
  
@@ -345,7 +345,7 @@ The buyers are constrained by their budget, for the prices that they're willing 
  \end{algorithm}
  
 \subsection{Stopping Criteria}
-Trading by the agents (and hence adaptation) stops when the application has reached its IUL. Depending on the domain, the application may decide to tolerate a small ($\epsilon$) level of deviation from the IUL. Thus, an application adapting in this manner may never reach the IUL, since it stops trading once it reaches a satisfactory zone. The level of tolerance can be made arbitrarily small or even zero. The stopping criteria can be different for different applications, and indeed, has no restriction whatsoever. Clearly, if it is set injudiciously, the application may either stop adapting too quickly or may never stop adapting. Thus, it becomes an important parameter to tune.
+Trading by the agents (and hence adaptation) stops when the application has reached its IUL. Depending on the domain, the application may decide to tolerate a small ($\epsilon$) level of deviation from the IUL. Thus, a satisfactory zone of QoS values is reached which is acceptable to the application. The level of tolerance can be made arbitrarily small or even zero. The stopping criteria can be different for different applications, and indeed, has no restriction whatsoever. Clearly, if it is set injudiciously, the application may either stop adapting too quickly or may never stop adapting. Thus, it becomes an important parameter to tune.
 
 \subsection{Re-starting Conditions}
 There are two conditions where an application that has already reached a satisfactory level of QoS, needs to start adapting again:
@@ -363,14 +363,13 @@ According to \cite{Duboc2007}'s definition, when these variables change, they ha
 		\item Efficacy, measured as a fraction of the total applications that are able to achieve their required QoS
 		\item Performance, measured as the amount of time taken to select services, when critical variables vary over an expected range.
 	\end{enumerate}	 
-	
-We further explicate the critical variables of the system as:
+After a careful perusal of available literature on dynamic web-service composition, we have determined that the following variables are critical, in their effect on the performance of the service selection technique. We explicate the critical variables of the system as:
 	\begin{enumerate}
 		\item Tasks per workflow, \textit{i.e.}, the number of abstract services in a workflow
 		\item Number of candidate services, \textit{i.e.}, the number of concrete services available per abstract service
 		\item Number of QoS values per candidate service
 		\item Number of end-to-end QoS constraints
-		\item Number of markets available for acquiring concrete services
+%		\item Number of markets available for acquiring concrete services
 	\end{enumerate}
 	
 Eliciting the 'normal' operational range of these variables is an involved task, and outside the scope of this paper. We present, however, the results of such a systematic elicitation. The ranges that we consider are shown in table \ref{scaling_range}:
@@ -380,10 +379,10 @@ Eliciting the 'normal' operational range of these variables is an involved task,
 \hline
 \textbf{Variable} &  \textbf{Range} \\ \hline
 Tasks-per-Workflow & 10 -- 100 \\ \hline
-Candidate-Services & 1 -- 100 \\ \hline
+Candidate-Services & 1 -- 30 \\ \hline
 Number-of-QoS & 1 -- 10 \\ \hline
 End-to-end Constraints & 1 -- 10 \\ \hline
-Number-of-Markets & 1 -- 5 \\ \hline
+%Number-of-Markets & 1 -- 5 \\ \hline
 \end{tabular}
  \label{scaling_range}
  \caption{Operational range of service parameters}
@@ -394,30 +393,30 @@ Number-of-Markets & 1 -- 5 \\ \hline
 %In \citep{Cheng2009}, the authors comment on the engineering challenges of building a self-adaptive system, and emphasize the fact that the %feedback loop is of utmost importance. 
 The design of our implementation is based on the publish-subscribe architectural style. This style was chosen for its decoupling properties, such that each communicating entity in the system is independent of every other. This fits in well, with our notion of agents acting on the basis of their own goals and their environment, in a decentralized manner. Each type of agent described previously, is both an event publisher and an event subscriber. That is, each application agent generates events that describe when the application's QoS constraints have changed, when the budget has changed, etc. These events are subscribed to, by the buyer agents that belong to that application. The buyer agents, for their part, publish events relating to the market that they're registered with. Similarly, the market agents publish events relating to the start of trading, transaction events, etc. The event-based paradigm fits well with the QoS monitoring schemes, as well. {TODO: INSERT REF OF TWO PAPERS THAT USE EVENTS TO INDICATE SLA VIOLATIONS}\\
 
-\begin{figure}[h]\label{class_diagram}
-	\centering
-	\includegraphics[trim = 30mm 50mm 0 0, clip, totalheight=0.53\textheight]{drawings/class_and_package_diagram.pdf}
-	
-	\caption{Simplified class diagram of core entities}
-\end{figure}
+%\begin{figure}[h]\label{class_diagram}
+%	\centering
+%	\includegraphics[trim = 30mm 50mm 0 0, clip, totalheight=0.53\textheight]{drawings/class_and_package_diagram.pdf}
+%	
+%	\caption{Simplified class diagram of core entities}
+%\end{figure}
 
 In figure \ref{class_diagram}, we show a simplified class diagram of the main entities of the system. Each entity subscribes to, and publishes events through the use of sockets. In the figure, we show "Metric Computation Engine" as a black-box that generates events relating to SLA violations by services. The buyer agents listen to these events to decide whether to initiate an adaptation or not. The market agent listens to these very same events, to adjust its reliability ratings of each service. 
 
-\begin{figure}
-	\centering
-	\includegraphics[scale=0.6]{drawings/setup_phase.pdf}
-	\label{setup_phase}
-	\caption{Sequence of messages during the initial setup phase}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[scale=0.6]{drawings/trading_phase.pdf}
-	\label{trading_phase}
-	\caption{Sequence of messages during trading}
-\end{figure}
-
-In figures \ref{setup_phase} and \ref{trading_phase}, we show the sequence of messages passed between the agents in AUML. 
+%\begin{figure}
+%	\centering
+%	\includegraphics[scale=0.6]{drawings/setup_phase.pdf}
+%	\label{setup_phase}
+%	\caption{Sequence of messages during the initial setup phase}
+%\end{figure}
+%
+%\begin{figure}
+%	\centering
+%	\includegraphics[scale=0.6]{drawings/trading_phase.pdf}
+%	\label{trading_phase}
+%	\caption{Sequence of messages during trading}
+%\end{figure}
+%
+%In figures \ref{setup_phase} and \ref{trading_phase}, we show the sequence of messages passed between the agents in AUML. 
 
 \paragraph{Implementation of double auction}
 The most computationally intensive aspect of the entire system is the implementation of the double auction mechanism. Storing the bids and asks as simple lists results in a huge amount of searching for matching purposes. We modify {INSERT REF TO WURMAN'S IMPLEMENTATION} 4-heap data structure to store our multi-attribute bids and asks. In our python implementation, we use the heapq module to store bids in a descending order and asks in an ascending order. This decision allows for bids that are willing to pay a higher price, get matched first. 
@@ -653,8 +652,8 @@ We have not modelled complex seller-side behaviour. Specifically, actions like d
 
 
 \bibliographystyle{IEEEtran}
-\bibliography{/home/pg/vxn851/work/bibtex/viveknallur}
-% \bibliography{viveknallur}
+%\bibliography{/home/pg/vxn851/work/bibtex/viveknallur}
+ \bibliography{library}
 
 \begin{IEEEbiographynophoto}{Vivek Nallur}
 Vivek did his undergraduate degree in business management and economics  from the University of Delhi. He, then went on to do a postgraduate diploma in advanced software technology and subsequently a Masters in Software Engineering, at Carnegie Mellon University, Pittsburgh. After working for six years in the industry, he is currently pursuing his PhD at the University of Birmingham, UK. His research interests are complex systems, decentralized self-adaptation and communication in multi-agent systems.
