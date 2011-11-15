@@ -230,10 +230,10 @@ In Figure \ref{marketplace}, we see the functionality being composed at the top 
 							$a\rightarrow ReviseBid$\;
 						}
  				}{
- 						$a_{utility} \longleftarrow negative(a_{min QoS level})$\;
+ 						$a_{utility} \longleftarrow negative(a_{minQoSLevel})$\;
  						$a_{notrade}++$\;
  						\If{$a_{notrade} == k$}{
- 								$a_{nextCommunication} \longleftarrow ``Insufficient Budget''$\;
+ 								$a_{nextCommunication} \longleftarrow InsufficientBudget$\;
  						}
  				}
  		}
@@ -248,7 +248,7 @@ In Figure \ref{marketplace}, we see the functionality being composed at the top 
 %   \Begin{
 %   	\ForEach{$Agent\ a$}{
 % 		Gossip($a\leftarrow Neighbour_{nextCommunication}$)
-%  		\If{$Neighbour_{nextCommunication} == 'Insufficient Budget'$}{
+%  		\If{$Neighbour_{nextCommunication} == InsufficientBudget$}{
 %  			$a \rightarrow InspectBudget$\;
 %  			\eIf{$a \rightarrow HasSurplus$}{
 %   				$a_{apportionedSurplus} \rightarrow Neighbour$\;
@@ -275,7 +275,7 @@ whereas availability is calculated as:
 Thus, in a certain configuration, an application could potentially meet one of its target QoS, while not meeting another. The utility function must be able to reflect this. We use the \textit{Simple Additive Weighting} from \cite{Yoon1995Multiple} for this purpose.  For each application, the target level of QoS is also mapped onto a real value, that is designated as the ideal utility level (IUL) for that application. 
 
 \subsection{Calculating Achieved QoS and Feedback}
-% The application agent collects information from each of its buyer agents and calculates the cumulative QoS. It then compares the achieved cumulative QoS against the targetted QoS. On a per-QoS attribute basis, the difference between the achieved and the targetted, is computed and communicated back to the buyer agents.  Intuitively, the easiest way to calculate the application's cumulative QoS is through a central agent that collects QoS information, from each of the buying agents. However, this would lead to dependence on a centralized agent and thus become a bottleneck, in case of applications with a large number of services. We use a gossip-based algorithm, much like Push-Sum\cite{Kempe2003Gossip-Based}, to communicate QoS values. However, unlike Push-Sum, we make the agents gossip information, only to their neighbours' agent. A neighbour is defined as a service that is either in the input set or the output set, of a particular service. After each round of gossiping, each agent accumulates its neighbour's QoS information into the QoS calculation function. In the next round of gossip, it sends the new information to other neighbours. Each agent tags its QoS information with its name. This allows agents to recognize if they've seen/sent a particular message before. Agents only send out information that they haven't sent before. When an agent recognizes that it has received all QoS information from all other agents, it runs utility calculation procedures. Feedback is calculated as the difference between the obtained utility and the IUL. The feedback indicates not only the magnitude of the difference, but also the direction. That is, whether the buyer agents have undershot or overshot the target QoS.   
+ The application agent collects information from each of its buyer agents and calculates the cumulative QoS. It then compares the achieved cumulative QoS against the targetted QoS. On a per-QoS attribute basis, the difference between the achieved and the targetted, is computed and communicated back to the buyer agents.  Intuitively, the easiest way to calculate the application's cumulative QoS is through a central agent that collects QoS information, from each of the buying agents. However, this would lead to dependence on a centralized agent and thus become a bottleneck, in case of applications with a large number of services. We use a gossip-based algorithm, much like Push-Sum\cite{Kempe2003Gossip-Based}, to communicate QoS values. However, unlike Push-Sum, we make the agents gossip information, only to their neighbours' agent (see algorithm \ref{Communication}). A neighbour is defined as a service that is either in the input set or the output set, of a particular service. After each round of gossiping, each agent accumulates its neighbour's QoS information into the QoS calculation function. In the next round of gossip, it sends the new information to other neighbours. Each agent tags its QoS information with its name. This allows agents to recognize if they've seen/sent a particular message before. Agents only send out information that they haven't sent before. When an agent recognizes that it has received all QoS information from all other agents, it runs utility calculation procedures. Feedback is calculated as the difference between the obtained utility and the IUL. The feedback indicates not only the magnitude of the difference, but also the direction. That is, whether the buyer agents have undershot or overshot the target QoS.   
 	
 \begin{algorithm}
  \KwData{$Neighbour \in \{I,O\}$}
@@ -353,12 +353,12 @@ There are two conditions where an application that has already reached a satisfa
 	    \item Internal Stimulus: When a QoS violation is detected at any of the web-services, the application needs to re-start its search for a new web-service to replace the old one. This is not an application-wide adaptation, but localised to a particular web-service
 	     \item External Stimulus: When the application's end-to-end QoS target changes, the application triggers an adaptation in each of its web-services, whereby all the trading agents go through the trading process again, until the stopping criteria is met
 	\end{enumerate}
-Both these events occur at different time scales. The internal check for QoS violation is a continuous check and concerns itself with performance of the web-service across relatively shorter periods of time. The external stimulus, on the other hand, typically happens when budgets for operation change drastically or external events cause change in performance or reliability requirements. This happens at relatively rarer intervals. This implies that once an application reaches close to its desired level of QoS, most of the buying agents stop trading.
-\paragraph{QoS Monitoring} Monitoring a web-service for an SLA violation is a topic of research in its own right. There have been several attempts in this direction, most notably from {TODO: INSERT QOS VIOLATION REFERENCES}. In this paper, we do not attempt to devise our own scheme for QoS monitoring. Rather, we assume that one of the methods presented in {REFS JUST ABOVE} is used. 
+Both these events occur at different time scales. The internal check for QoS violation is a continuous check and concerns itself with performance of the web-service across relatively shorter periods of time. The external stimulus, on the other hand, typically happens when budgets for operation change drastically or external events cause change in performance or reliability requirements. This happens at relatively rarer intervals. This implies that once an application reaches close to its desired level of QoS, most of the buying agents stop trading.\\
+\textbf{QoS Monitoring}: Monitoring a web-service for an SLA violation is a topic of research in its own right. There have been several attempts in this direction, most notably from \cite{Chau2008Automatinga, Michlmayr2009Comprehensive, Raimondi2008Efficient} and \cite{Skene2004Precise} In this paper, we do not attempt to devise our own scheme for QoS monitoring. Rather, we assume that one of the methods outlined in the afore-mentioned research, is used. 
 
 \subsection{Scalability Requirements for Dynamic Web-Service Composition}
-In none of the papers that we surveyed (in section \ref{dynamic_wsc}), did we find a single rigorous definition of what it would mean for a dynamic service composition technique to be scalable . In the absence of such a definition, it is difficult to judge, whether a technique is really scalable or not. To alleviate the problem of capricious definitions of scalability, we use a definition of scalability from \cite{Duboc2007}: \textit{a quality of software systems characterized by the causal impact that scaling aspects of the system environment and design have on certain measured system qualities as these aspects are varied over expected operational ranges}.\\
-According to \cite{Duboc2007}'s definition, when these variables change, they have an impact on the system's qualities. In our case, the system qualities that we want to measure are:
+In none of the papers that we surveyed (in section \ref{dynamic_wsc}), did we find a single rigorous definition of what it would mean for a dynamic service composition technique to be scalable . In the absence of such a definition, it is difficult to judge, whether a technique is really scalable or not. To alleviate the problem of capricious definitions of scalability, we use a definition of scalability from \cite{Duboc2007framework}: \textit{a quality of software systems characterized by the causal impact that scaling aspects of the system environment and design have on certain measured system qualities as these aspects are varied over expected operational ranges}.\\
+According to \cite{Duboc2007framework}'s definition, when these variables change, they have an impact on the system's qualities. In our case, the system qualities that we want to measure are:
 	\begin{enumerate}
 		\item Efficacy, measured as a fraction of the total applications that are able to achieve their required QoS
 		\item Performance, measured as the amount of time taken to select services, when critical variables vary over an expected range.
@@ -368,58 +368,56 @@ After a careful perusal of available literature on dynamic web-service compositi
 		\item Tasks per workflow, \textit{i.e.}, the number of abstract services in a workflow
 		\item Number of candidate services, \textit{i.e.}, the number of concrete services available per abstract service
 		\item Number of QoS values per candidate service
-		\item Number of end-to-end QoS constraints
+	%	\item Number of end-to-end QoS constraints
 %		\item Number of markets available for acquiring concrete services
 	\end{enumerate}
 	
-Eliciting the 'normal' operational range of these variables is an involved task, and outside the scope of this paper. We present, however, the results of such a systematic elicitation. The ranges that we consider are shown in table \ref{scaling_range}:
-\begin{center}
+Eliciting the 'normal' operational range of these variables is an involved task, and outside the scope of this paper. Instead, we consider the ranges of variables, based on a study conducted by Cloud Harmony \cite{2011CloudHarmonyStudy}. The ranges that we consider, are shown in table \ref{scaling_range}:
+%\begin{center}
 \begin{table}
 \begin{tabular}{|c|c|}
 \hline
 \textbf{Variable} &  \textbf{Range} \\ \hline
 Tasks-per-Workflow & 10 -- 100 \\ \hline
-Candidate-Services & 1 -- 30 \\ \hline
-Number-of-QoS & 1 -- 10 \\ \hline
-End-to-end Constraints & 1 -- 10 \\ \hline
+Candidate-Services & 1 -- 10 \\ \hline
+Number-of-QoS & 1 -- 5 \\ \hline
+%End-to-end Constraints & 1 -- 10 \\ \hline
 %Number-of-Markets & 1 -- 5 \\ \hline
 \end{tabular}
  \label{scaling_range}
  \caption{Operational range of service parameters}
 \end{table}
-\end{center}
+%\end{center}
 
 \subsection{Design and Implementation}
 %In \citep{Cheng2009}, the authors comment on the engineering challenges of building a self-adaptive system, and emphasize the fact that the %feedback loop is of utmost importance. 
-The design of our implementation is based on the publish-subscribe architectural style. This style was chosen for its decoupling properties, such that each communicating entity in the system is independent of every other. This fits in well, with our notion of agents acting on the basis of their own goals and their environment, in a decentralized manner. Each type of agent described previously, is both an event publisher and an event subscriber. That is, each application agent generates events that describe when the application's QoS constraints have changed, when the budget has changed, etc. These events are subscribed to, by the buyer agents that belong to that application. The buyer agents, for their part, publish events relating to the market that they're registered with. Similarly, the market agents publish events relating to the start of trading, transaction events, etc. The event-based paradigm fits well with the QoS monitoring schemes, as well. {TODO: INSERT REF OF TWO PAPERS THAT USE EVENTS TO INDICATE SLA VIOLATIONS}\\
+The design of our implementation is based on the publish-subscribe architectural style. This style was chosen for its decoupling properties, such that each communicating entity in the system is independent of every other. This fits in well, with our notion of agents acting on the basis of their own goals and their environment, in a decentralized manner. Each type of agent described previously, is both an event publisher and an event subscriber. That is, each application agent generates events that describe when the application's QoS constraints have changed, when the budget has changed, etc. These events are subscribed to, by the buyer agents that belong to that application. The buyer agents, for their part, publish events relating to the market that they're registered with. Similarly, the market agents publish events relating to the start of trading, transaction events, etc. The event-based paradigm fits well with the QoS monitoring schemes, as well. Both \cite{Zeng2007Monitoring} and \cite{Michlmayr2009Comprehensive} use events to monitor and communicate SLA violations. \\
 
-%\begin{figure}[h]\label{class_diagram}
-%	\centering
-%	\includegraphics[trim = 30mm 50mm 0 0, clip, totalheight=0.53\textheight]{drawings/class_and_package_diagram.pdf}
-%	
-%	\caption{Simplified class diagram of core entities}
-%\end{figure}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[trim = 30mm 50mm 50mm 30mm, clip, totalheight=0.50\textheight, width=0.45\textwidth]{drawings/class_and_package_diagram.pdf}
+	\label{class_diagram}
+	\caption{Simplified class diagram of core entities}
+\end{figure}
 
-In figure \ref{class_diagram}, we show a simplified class diagram of the main entities of the system. Each entity subscribes to, and publishes events through the use of sockets. In the figure, we show "Metric Computation Engine" as a black-box that generates events relating to SLA violations by services. The buyer agents listen to these events to decide whether to initiate an adaptation or not. The market agent listens to these very same events, to adjust its reliability ratings of each service. 
+In figure \ref{class_diagram}, we show a simplified class diagram of the main entities of the system. Each entity subscribes to, and publishes events through the use of sockets. In the figure, we show "Metric Computation Engine" as a black-box that generates events relating to SLA violations by services. The buyer agents listen to these events to decide whether to initiate an adaptation or not. The market agent listens to these very same events, to adjust its reliability ratings of each service. In figures \ref{setup_phase} and \ref{trading_phase}, we show the sequence of messages passed between the agents in AUML. \\
 
-%\begin{figure}
-%	\centering
-%	\includegraphics[scale=0.6]{drawings/setup_phase.pdf}
-%	\label{setup_phase}
-%	\caption{Sequence of messages during the initial setup phase}
-%\end{figure}
-%
-%\begin{figure}
-%	\centering
-%	\includegraphics[scale=0.6]{drawings/trading_phase.pdf}
-%	\label{trading_phase}
-%	\caption{Sequence of messages during trading}
-%\end{figure}
-%
-%In figures \ref{setup_phase} and \ref{trading_phase}, we show the sequence of messages passed between the agents in AUML. 
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{drawings/setup_phase.pdf}
+	\label{setup_phase}
+	\caption{Sequence of messages during the initial setup phase}
+\end{figure}
 
-\paragraph{Implementation of double auction}
-The most computationally intensive aspect of the entire system is the implementation of the double auction mechanism. Storing the bids and asks as simple lists results in a huge amount of searching for matching purposes. We modify {INSERT REF TO WURMAN'S IMPLEMENTATION} 4-heap data structure to store our multi-attribute bids and asks. In our python implementation, we use the heapq module to store bids in a descending order and asks in an ascending order. This decision allows for bids that are willing to pay a higher price, get matched first. 
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{drawings/trading_phase.pdf}
+	\label{trading_phase}
+	\caption{Sequence of messages during trading}
+\end{figure}
+
+
+\textbf{Implementation of double auction}: The most computationally intensive aspect of the entire system is the implementation of the double auction mechanism. Storing the bids and asks as simple lists results in a huge amount of searching for matching purposes. We modify the 4-heap data structure, as suggested in \cite{Wurman1998Flexible}, to store our multi-attribute bids and asks. In our python implementation, we use the heapq module to store bids in a descending order and asks in an ascending order. This decision allows for bids that are willing to pay a higher price, get matched first. 
 
 \section{Evaluation}
 \subsection{Empirical Study}
@@ -512,7 +510,7 @@ At the individual level, we measure the difference between the targetted QoS lev
 \textbf{Performance}:\\
 We focus on the performance of the market as a whole in enabling applications to self-adapt. The market's performance is measured in terms of number of applications successfully able to achieve their target QoS. As a baseline, we first implement the Zero-Intelligence mechanism, as this represents the lower limit of the effectiveness of the CDA mechanism. The Zero-Intelligence scheme consists of agents randomly making bids and asks, with no history or learning or feedback(see figure \ref{pure_random_strategy}). As expected, it performs quite poorly, with only 10-20\% of applications managing to acquire the required QoS. Our mechanism achieves a much higher level of applications, able to attain their desired level of QoS(see figure \ref{marketperformance}). Adaptation using our mechanism allows 60-70\% of the applications in the market to adapt. Note, that this figure only indicates applications that have their QoS within the tolerance zone. There are many applications that have overshot their QoS requirements, but are unable to find sellers of services with lower QoS values. Depending on the distribution of QoS values amongst the sellers, this could represent skewedness in the market supply.\\
 \textbf{Scalability Evaluation}:\\    
-ADD TEXT HERE THAT DISCUSSES ALL THE AXES AND GRAPHS SHOWING PERFORMANCE ALONG THOSE AXES
+%ADD TEXT HERE THAT DISCUSSES ALL THE AXES AND GRAPHS SHOWING PERFORMANCE ALONG THOSE AXES
 Another big advantage of our mechanism is its scalability. We measure the time taken for the market to perform matching with increasing number of concrete services available per abstract service in the application's workflow.  We see (in figure \ref{svc_scaling}), that the market mechanism is able to achieve an almost linear performance in time taken. Time is measured as the number of seconds taken for 300 rounds of trading.\\
 \begin{figure}
     \includegraphics[width=3.8in]{graphs/efficiency-of-zi.png}
@@ -579,7 +577,7 @@ Investigating the effect of market conditions on the self-adaptive mechanism is 
 As expected, the periodic external event causes the aggregate number of satisfied applications to drop precipitously. Interestingly, it also causes the mechanism to satisfy a much higher percentage of the total applications. This is an interesting event and needs more investigation.
 
 \subsection{Discussion}
-DISCUSS PROS-AND-CONS OF ADOPTED ARCHITECTURAL STYLE. 
+%DISCUSS PROS-AND-CONS OF ADOPTED ARCHITECTURAL STYLE. 
 \subsubsection{Strengths}
 A big strength of our mechanism is the high scalability that it offers. As service-oriented applications mature and cloud offerings become more standardized, it is easy to envision applications being composed out of several third-party services. In such a scenario, a mechanism that scales up to accommodate many concrete services is essential. We see that our mechanism is easily able to scale up.\\
 Since the decision-making over which concrete service to instantiate is done in a de-centralized manner, the individual agents can be simple and easy to implement. \\    
@@ -587,18 +585,13 @@ Our mechanism implements a continuous adaptation scheme, thus leaving the system
 
 \subsubsection{Threats to Validity}
 
-The set of services used to model the supply (as seen in table \ref{choice-of-services}) is deliberately seeded with services that probably will not be able to transact (e.g. $S1_{3}, S1_{54}, S3_{3}, S4_{3}$, etc.). This is done with a view to evaluating the mechanism's performance in an extreme situation. Services that advertise an availability of 79\% ($S1_{3}$) would never be acceptable.  In real life, these services would be competed out of the market, with most services differing in their QoS offerings by a marginal amount (or the price would be appropriately low, for low QoS). With a more typical scenario, our mechanim's performance would be much better, since the number of applications that're able to successfully achieve their QoS would be higher than figure \ref{marketperformance}.
-
-Since the self-adaptive mechanism merely attempts to satisfy the application's QoS targets, it does not try to achieve  optimal set of concrete services, even if available. This is a tradeoff that occurs between simplicity and robustness on one hand, and optimality on the other.\\
-
+The set of services used to model the supply (as seen in table \ref{choice-of-services}) is deliberately seeded with services that probably will not be able to transact (e.g. $S1_{3}, S1_{54}, S3_{3}, S4_{3}$, etc.). This is done with a view to evaluating the mechanism's performance in an extreme situation. Services that advertise an availability of 79\% ($S1_{3}$) would never be acceptable.  In real life, these services would be competed out of the market, with most services differing in their QoS offerings by a marginal amount (or the price would be appropriately low, for low QoS). With a more typical scenario, our mechanim's performance would be much better, since the number of applications that're able to successfully achieve their QoS would be higher than figure \ref{marketperformance}. Since the self-adaptive mechanism merely attempts to satisfy the application's QoS targets, it does not try to achieve  optimal set of concrete services, even if available. This is a tradeoff that occurs between simplicity and robustness on one hand, and optimality on the other.\\
 
 The market mechanism does not achieve the optimum, neither from the individual perspective nor from the aggregate perspective. Given the bounded rationality of our agents, we aim only to achieve a satisficing result, that is, find a solution that satisfies the constraints. 
-% All satisficing problems can be trivially reformulated into optimization problems, but satisficing solutions need not be optimal solutions and vice-versa.
+% All satisficing problems can be trivially reformulated into optimization problems, but satisficing solutions need not be optimal solutions and vice-versa.\\
 
-\paragraph{LIMITATIONS IMPOSED BY LACK OF TRUST BETWEEN BUYERS AND SELLERS}
-
-
-\paragraph{Limitations using QoS Monitoring by External Entities}
+\textbf{Lack of Trust}: In any market-oriented mechanism, there is the issue of trust between the buyer of a service and the seller of a service. How does the seller reliably ensure that the buyer does not make more calls to the web-service, than the number agreed upon? How is the provenance of calls established? How does the buyer ensure that the seller provides the QoS, that it has promised in the SLA? What legal/technical recourse does it have, in case of violation of contract? These are all issues that are still open research problems. \cite{Ramchurn2005Trust} provides a good overview of these problems in the specific case of multi-agent systems. However, a good amount of research needs to be done, before all issues are acceptably resolved to the satisfaction of both, buyer and seller.\\
+%\textbf{QoS Monitoring by External Entities}: Monitoring of QoS by third-party engines solve some of the trust issues discussed above, but introduce new ones. 
 
 \section{Related Work}
     
@@ -636,7 +629,7 @@ These approaches, while interesting, have not explicitly considered scale of ada
 Cloud-based service-oriented applications have the potential to self-adapt their QoS, depending on demand. Using a market-based mechanism maps nicely to the real-world situation of unpredictable change of QoS requirements, costs involved in adaptation and adaptation by competing applications. As the number of possible concrete services increase, the scalability of the self-adaptive mechanism becomes important. We see that the market-based mechanism consists of simple agents, is able to adapt well and yet scales linearly to the number of concrete services. We also see that it is robust in the presence of differences in demand and supply of QoS. Applications implemented as an ASN can thus scale and adapt to the changing business requirements of QoS.\\
 We have not modelled complex seller-side behaviour. Specifically, actions like deliberate violation of QoS to free up resources for making Asks with higher prices or mis-reporting of QoS available. Mechanisms like penalties and reputation management can be used to prevent seller agents from behaving dishonestly. Also, we have not modelled adaptation on the part of the market. Sellers that lie about their QoS or, are generally unattractive for transactions may lower the reputation of the marketplace. Hence, the market could take steps to ensure that it is populated, only with sellers that are likely to be sold. In future work, we aim to systematically add these adaptations to observe their effect on the collective economy. Also, future work involves experimenting with more decentralized market mechanisms such as posted-offer markets.\\
   
-  DISCUSS CLOUD-SIM IMPLEMENTATION\\
+%  DISCUSS CLOUD-SIM IMPLEMENTATION\\
   
 
 % Agile Service Networks embody the kind of structure, that this mechanism would be applicable in. Agile Service Networks are formed when organizations, outsource a part of their function to other organizations. These organizations may, in turn, outsource a part of their function to yet other organizations. Thus, an application or a business process being instantiated by one organization, uses the services of many organizations. This has several benefits in terms of efficiency, agility in response to business fluctuations etc.
@@ -653,7 +646,7 @@ We have not modelled complex seller-side behaviour. Specifically, actions like d
 
 \bibliographystyle{IEEEtran}
 %\bibliography{/home/pg/vxn851/work/bibtex/viveknallur}
- \bibliography{library}
+ \bibliography{viveknallur}
 
 \begin{IEEEbiographynophoto}{Vivek Nallur}
 Vivek did his undergraduate degree in business management and economics  from the University of Delhi. He, then went on to do a postgraduate diploma in advanced software technology and subsequently a Masters in Software Engineering, at Carnegie Mellon University, Pittsburgh. After working for six years in the industry, he is currently pursuing his PhD at the University of Birmingham, UK. His research interests are complex systems, decentralized self-adaptation and communication in multi-agent systems.
