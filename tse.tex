@@ -619,33 +619,83 @@ Both these stimuli occur at different time scales. The external check for QoS vi
 
 \subsection{Design and Implementation}
 %In \citep{Cheng2009}, the authors comment on the engineering challenges of building a self-adaptive system, and emphasize the fact that the %feedback loop is of utmost importance. 
-The design of our implementation is based on the publish-subscribe architectural style. This style was chosen for its decoupling properties, such that each communicating entity in the system is independent of every other. This fits in well, with our notion of agents acting on the basis of their own goals and their environment, in a decentralized manner. Each type of agent described previously, is both an event publisher and an event subscriber. That is, each application agent generates events that describe when the application's QoS constraints have changed, when the budget has changed, etc. These events are subscribed to, by the buyer agents that belong to that application. The buyer agents, for their part, publish events relating to the market that they are registered with. Similarly, the market agents publish events relating to the start of trading, transaction events, etc. The event-based paradigm fits well with the QoS monitoring schemes, as well. Both \cite{Zeng2007Monitoring} and \cite{Michlmayr2009Comprehensive} use events to monitor and communicate SLA violations. \\
+We document the system using the object-oriented paradigm for all of the internal components of an agent. Thus, we show the static structure of the system through package, component and class diagrams. We show agent-interaction using Agent-UML (AUML).	
+\subsubsection{High level Package Diagram} A package diagram shows the coarse-level organization of code in a system, with the packages and sub-packages demarcating the encapsulation of concepts in the system. In figure \ref{fig:package_diagram}, we see that all the agents, \textit{viz.}, buyer, seller, application, market are created and maintained separately from concepts like \textbf{Strategy} and \textbf{Communication}. This independence of packaging also highlights the various axes along which Clobmas could change its behaviour. Thus, Clobmas could change its auction style from a continuous double auction to a double auction with a clearing house, with no effect on the other parts of the system. 
 
-\begin{figure}[ht]
-	\centering
-	\includegraphics[trim = 30mm 50mm 50mm 30mm, clip, totalheight=0.45\textheight, width=0.35\textwidth]{drawings/class_and_package_diagram.pdf}
-	\label{class_diagram}
-	\caption{Simplified class diagram of core entities}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{drawings/Agent_Package_Diagram.pdf}
+\caption{Package diagram of entities \label{fig:package_diagram}}
 \end{figure}
 
-In figure \ref{class_diagram}, we show a simplified class diagram of the main entities of the system. Each entity subscribes to, and publishes events through the use of sockets. In the figure, we show "Metric Computation Engine" as a black-box that generates events relating to SLA violations by services. The buyer agents listen to these events to decide whether to initiate an adaptation or not. The market agent listens to these very same events, to adjust its reliability ratings of each service. In figures \ref{setup_phase} and \ref{trading_phase}, we show the sequence of messages passed between the agents in AUML. \\
+\subsubsection{Architectural Style} The design of our implementation is based on the publish-subscribe architectural style. This style was chosen for its decoupling properties, such that each communicating entity in the system is independent of every other. This fits in well, with our notion of agents acting on the basis of their own goals and their environment, in a decentralized manner. Each type of agent described previously, is both an event publisher and an event subscriber. That is, each ApplicationAgent generates events that describe when the application's QoS constraints have changed, when the budget has changed, etc. These events are subscribed to, by BuyerAgents belonging to that application. The BuyerAgents, for their part, publish events relating to the market that they are registered with. Similarly, the MarketAgents publish events relating to the start of trading, transaction events, etc. The event-based paradigm fits well with the QoS monitoring schemes, as well. Both \cite{Zeng2007Monitoring} and \cite{Michlmayr2009Comprehensive} use events to monitor and communicate SLA violations. 
+%
+%\begin{figure}[ht]
+%	\centering
+%	\includegraphics[trim = 30mm 50mm 50mm 30mm, clip, scale=0.4]{drawings/class_and_package_diagram.pdf}
+%	\label{class_diagram}
+%	\caption{Simplified class diagram of core entities}
+%\end{figure}
 
-\begin{figure}
-	\centering
-	\includegraphics[scale=0.6]{drawings/setup_phase.pdf}
-	\label{setup_phase}
-	\caption{Sequence of messages during the initial setup phase}
+\subsubsection{Component Diagram} A component diagram illustrates how a system is structurally organized, with communication and dependencies between entities. There are several different definitions of \textit{component}. We do not attempt to provide yet another definition, but use the common features of most definitions, that it is a \textit{unit of reuse and replacement}\cite{Stevens2006Using}. In figure \ref{fig:component_diagram}, we see a subset of the components, and their communication links. The component \textit{Service Registry} is depicted as a separate entity, since it is a third-party component, and we do not have any control over it. The communication link shown between \textit{Seller} and \textit{Service Registry} is therefore necessarily one that is likely to be different for every \textit{Service Registry}. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.3]{drawings/Agent_Component_Diagram.pdf}
+\caption{Component diagram of entities\label{fig:component_diagram}}
 \end{figure}
 
-\begin{figure}
-	\centering
-	\includegraphics[scale=0.6]{drawings/trading_phase.pdf}
-	\label{trading_phase}
-	\caption{Sequence of messages during trading}
+\subsubsection{Class Diagram} The class diagram shows the static relationships between the main entities in the MAS. The \textit{Bid} and \textit{Ask} interfaces shown in figure \ref{fig:class_diagram} are also shown in the component diagram (see figure \ref{fig:component_diagram}), with the \textit{Market} class implementing both of them. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.25]{drawings/Agent_Class_Diagram.pdf}
+\caption{Class diagram of entities \label{fig:class_diagram}}
+\end{figure}
+
+\subsubsection{Activity Diagram} The most difficult part of getting all the agents in an MAS to solve a problem, is the problem of communication. The design of the communication protocol determines how much communication happens, at what times and how much computational effort it takes to communicate. If the agents communicate too little, then there is a danger of the MAS failing to solve the problem it was created for. On the other hand, if too much communication takes place, then a lot of wastage occurs, not only in terms of bandwidth but also in computational cycles and time. Thus, while communication is a fundamental activity in an MAS, depicting this in UML is difficult. The standard activity diagrams in UML are \textit{Sequence Diagrams} and \textit{Collaboration Diagrams}. However, the semantics in both these diagrams assumes a single thread of control, \textit{i.e.}, each object that sends or receives a message is assumed to be the only active object at that time instant. This is not true in the case of Clobmas.  Also, UML which does not provide for broadcast/multicast messages. To deal with these situations, the agent community has evolved AUML (Agent-UML) which modifies the semantics of a sequence diagram, to allow for the possibilities above. We document the communication steps of our mechanism through AUML diagrams.\\
+In the following figures, we show the communication for an application with two AbstractServices, \texttt{A} and \texttt{B}, and its corresponding BuyerAgents and the market agent. The \emph{Setup Phase} (figure \ref{fig:setup_phase}) is composed of two calculations done by the ApplicationAgent and, two multicast messages to the application's BuyerAgents. The two calculations involve decomposing the application's end-to-end constraints into local constraints and, computing the budget that each BuyerAgent will receive.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{drawings/setup_phase.pdf}
+\caption{Setup phase for an application with two AbstractServices A \& B \label{fig:setup_phase}}
+\end{figure}
+
+Decomposing constraints (figure \ref{fig:decompose_constraints}) involves communication between the BuyerAgents, their respective markets and the ApplicationAgent. The ApplicationAgent waits for the BuyerAgents to get data about previous transactions in the market, applies SWR \cite{Cardoso2002Workflow} and checks whether the combination of QoS available in the market meets its end-to-end constraints. Based on the combinations that meet the end-to-end constraints, the ApplicationAgent creates local constraints for the individual BuyerAgents. These are then propagated to the BuyerAgents.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{drawings/decompose_constraints.pdf}
+\caption{Application decomposes its constraints into local constraints \label{fig:decompose_constraints}}
+\end{figure}
+
+The budget for the individual agents is split in the ratio of the transaction prices that are prevalent in the individual markets. Given historical price information in a market, the prices in the next trading rounds are likely to be around the same figure. Splitting the application's budget evenly across the BuyerAgents could possibly result in some agents getting excess endowment, and some agents too less. The ratio of their transaction prices allows the agents with expensive services to get a naturally higher share of the budget.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.4]{drawings/compute_endowment.pdf}
+\caption{Application computes endowment for its BuyerAgents}
+\end{figure}
+
+%\begin{figure}
+%\includegraphics[scale=0.7]{figures/chapter4/distribute_budget.pdf}
+%\end{figure}
+
+In figure \ref{fig:trading_phase}, we show the communication that takes place during the trading phase. This phase is essentially a loop. It periodically evaluates the \textit{bids} and \textit{asks} in the orderbook, and tries to match them. If it is successful, the transaction moves into the second stage (see figure \ref{fig:cda_protocol}). Based on whether a trade occurs or not, the application evaluates whether it needs to re-distribute the endowments of its agents. It is possible that an agent is unable to find any potential transactions, simply because it does not have the budget to bid high enough.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{drawings/trading_phase.pdf}
+\caption{The trading phase of buying a service \label{fig:trading_phase}}
 \end{figure}
 
 
-\textbf{Implementation of double auction}: The most computationally intensive aspect of the entire system is the implementation of the double auction mechanism. Storing the bids and asks as simple lists results in a huge amount of searching for matching purposes. We modify the 4-heap data structure, as suggested in \cite{Wurman1998Flexible}, to store our multi-attribute bids and asks. In our python implementation, we use the heapq module to store bids in a descending order and asks in an ascending order. This decision allows for bids that are willing to pay a higher price, get matched first. 
+The trading proceeds in two stages. In the first stage, the MarketAgent matches the bids and asks based on their individual QoS values and shout prices. After matching, a provisional transaction is created. This provisional transaction enters the second stage. In the second stage, the BuyerAgent compares all the Asks returned as provisional transactions (see section \ref{calculation_of_preference}). The top-ranked Ask is selected and the other Asks are rejected. The BuyerAgent enters into a transaction with the SellerAgent of the selected Ask.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{drawings/cda_protocol.pdf}
+\caption{Two-stage CDA protocol \label{fig:cda_protocol}}
+\end{figure}
+
+\subsubsection{Implementation of double auction} The most computationally intensive aspect of the entire system is the implementation of the double auction mechanism. Storing the bids and asks as simple lists results in a huge amount of searching for matching purposes. We modify the 4-heap data structure, as suggested in \cite{Wurman1998Flexible}, to store our multi-attribute bids and asks. In our python implementation, we use the heapq module to store bids in a descending order and asks in an ascending order. This decision allows for bids that are willing to pay a higher price, get matched first. 
 
 \section{Evaluation}
 \subsection{Empirical Study}
@@ -658,6 +708,45 @@ Consider a number of such companies operating on the cloud and dynamically optim
 	    \item providing a fast matching service based on price and QoS, and
 	    \item allowing for high levels of matching 
 	\end{enumerate}
+
+\subsection{Experimental Setup}
+\paragraph{Software}
+\paragraph{Hardware}
+
+\subsection{Quantitative Criteria}
+	\paragraph{Functional Goals}
+    \paragraph{Scaling Assumptions}
+    We make these assumptions based on conversations with Mr. Danny Quilton (a performance consultant at Capacitas Inc.), and numbers gleaned from the literature review.
+          \begin{enumerate}
+			\item Number of AbstractService per application goes from 2 through to 20          
+           	\item Ratio of ConcreteServices per AbstractService goes from 1:1 through to 1:50
+     	    \item Number of QoS attributes per application goes from 1 through 10
+	         \item Ratio of markets available to AbstractServices goes from 1:1 through 1:10
+		 \end{enumerate}
+	  
+    \paragraph{Scaling Goals}
+	    \begin{enumerate}
+	        \item Ratio of increase in AdaptationTime to increase in CandidateServices increases linearly or as a low-order polynomial
+			\item Ratio of increase in AdaptationTime to increase in markets increases linearly or as a low-order polynomial
+			\item Number of applications that have adapted in all cases shall not be lower than 70\% of the market 
+	    \end{enumerate}
+We summarize the operational ranges that our system is expected to deal with, in table \ref{tbl:scalable_range}
+\begin{table*}[h]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{p{10cm}p{4cm}p{3cm}}
+	\toprule
+	\textbf{Variable affecting performance} & \textbf{From Lit. Review} & \textbf{Target Goals}\\ 
+	\midrule
+	Number of AbstractServices in a workflow & \hspace{1.8cm} 10 & \hspace{1.5cm} 20 \\ 
+	Candidate services per AbstractService & \hspace{1.8cm} 20 & \hspace{1.5cm} 50 \\ 
+	QoS attributes considered per CandidateService & \hspace{1.8cm} 1 & \hspace{1.5cm} 10 \\ 
+	Number of markets considered per CandidateService & \hspace{1.8cm} 1 & \hspace{1.5cm} 10 \\ 
+	\bottomrule
+\end{tabular}
+\caption{Operational range for scalability goals \label{tbl:scalability_targets}}
+\end{table*}
+
 \subsection{Methodology}
 We simulate 300 applications, each application consisting of 10 abstract services trying to achieve their desired QoS levels, within a given budget. The budget that each application gets, acts as a constraint and the application's constituent trading agents (buyers) can never bid above their budgets. Each application generates a random level of QoS that it must achieve.\\
 Once an application achieves its required QoS, it withdraws from trading until an internal or external stimulus occurs. An internal stimulus is when one of the concrete services exhibits a service violation. We model this violation by a small probability. An external stimulus occurs when the application decides to change its required QoS for any reason (say, a new job requires different QoS levels). This is simulated by using time as a parameter. Every application, once satisfied with its QoS, (as mentioned above) stops adapting. However, at some random time, every application receives a different job that requires different QoS levels. This prompts that particular application to adapt, and therefore, approach the market again.
@@ -710,22 +799,6 @@ After a careful perusal of available literature on dynamic web-service compositi
 %		\item Number of markets available for acquiring concrete services
 	\end{enumerate}
 	
-Eliciting the 'normal' operational range of these variables is an involved task, and outside the scope of this paper. Instead, we consider the ranges of variables, based on a study conducted by Cloud Harmony \cite{2011CloudHarmonyStudy}. The ranges that we consider, are shown in table \ref{scaling_range}:
-%\begin{center}
-\begin{table}
-\begin{tabular}{|c|c|}
-\hline
-\textbf{Variable} &  \textbf{Range} \\ \hline
-Tasks-per-Workflow & 10 -- 100 \\ \hline
-Candidate-Services & 1 -- 10 \\ \hline
-Number-of-QoS & 1 -- 5 \\ \hline
-%End-to-end Constraints & 1 -- 10 \\ \hline
-%Number-of-Markets & 1 -- 5 \\ \hline
-\end{tabular}
- \label{scaling_range}
- \caption{Operational range of service parameters}
-\end{table}
-%\end{center}
        
        
        
@@ -864,7 +937,7 @@ We have not modelled complex seller-side behaviour. Specifically, actions like d
 
 \bibliographystyle{IEEEtran}
 %\bibliography{/home/pg/vxn851/work/bibtex/converted-mendeley}
- \bibliography{viveknallur}
+ \bibliography{converted-mendeley}
 
 \begin{IEEEbiographynophoto}{Vivek Nallur}
 Vivek did his undergraduate degree in business management and economics  from the University of Delhi. He, then went on to do a postgraduate diploma in advanced software technology and subsequently a Masters in Software Engineering, at Carnegie Mellon University, Pittsburgh. After working for six years in the industry, he is currently pursuing his PhD at the University of Birmingham, UK. His research interests are complex systems, decentralized self-adaptation and communication in multi-agent systems.
