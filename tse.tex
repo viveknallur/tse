@@ -195,7 +195,7 @@ Reliability(t_{N}) = \prod_{1 \leq i \leq n} Reliability(t_{i})
 \begin{figure}[h]
 	\centering
 	\fbox{
-	\includegraphics[scale=0.27]{drawings/parallel_reduction.pdf}
+	\includegraphics[scale=0.25]{drawings/parallel_reduction.pdf}
 	}
 	\caption{Reduction of parallel tasks(reproduced from \cite{Cardoso2004Quality}). For additive QoS, the attributes are summed up, while for multiplicative QoS, the attributes are multiplied together\label{fig:parallel_reduction}}
 \end{figure}
@@ -502,7 +502,7 @@ In Figure \ref{fig:cda_activity_diagram}, we show the various steps in the CDA  
  
  \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.3]{drawings/CDA_Activity_Diagram.pdf}
+	\includegraphics[scale=0.32]{drawings/CDA_Activity_Diagram.pdf}
 	\caption{Activity diagram for principal agents}
 	\label{fig:cda_activity_diagram}
 \end{figure}	
@@ -612,13 +612,13 @@ Both these stimuli occur at different time scales. The external check for QoS vi
 \subsection{Design and Implementation}
 %In \citep{Cheng2009}, the authors comment on the engineering challenges of building a self-adaptive system, and emphasize the fact that the %feedback loop is of utmost importance. 
 We call our implementation of the proposed mechanism, \textit{clobmas}(Cloud-based Multi-Agent System). We document \textit{clobmas} using the object-oriented paradigm for all of the internal components of an agent. Thus, we show the static structure of the system through package, component and class diagrams. We show agent-interaction using Agent-UML (AUML).	
-\subsubsection{High level Package Diagram} A package diagram shows the coarse-level organization of code in a system, with the packages and sub-packages demarcating the encapsulation of concepts in the system. In figure \ref{fig:package_diagram}, we see that all the agents, \textit{viz.}, buyer, seller, application, market are created and maintained separately from concepts like \textbf{Strategy} and \textbf{Communication}. This independence of packaging also highlights the various axes along which behaviour could be changed. Thus, \textit{clobmas} could change its auction style from a continuous double auction to a double auction with a clearing house, with no effect on the other parts of the system. 
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.4]{drawings/Agent_Package_Diagram.pdf}
-\caption{Package diagram of entities \label{fig:package_diagram}}
-\end{figure}
+%\subsubsection{High level Package Diagram} A package diagram shows the coarse-level organization of code in a system, with the packages and sub-packages demarcating the encapsulation of concepts in the system. In figure \ref{fig:package_diagram}, we see that all the agents, \textit{viz.}, buyer, seller, application, market are created and maintained separately from concepts like \textbf{Strategy} and \textbf{Communication}. This independence of packaging also highlights the various axes along which behaviour could be changed. Thus, \textit{clobmas} could change its auction style from a continuous double auction to a double auction with a clearing house, with no effect on the other parts of the system. 
+%
+%\begin{figure}[H]
+%\centering
+%\includegraphics[scale=0.4]{drawings/Agent_Package_Diagram.pdf}
+%\caption{Package diagram of entities \label{fig:package_diagram}}
+%\end{figure}
 
 \subsubsection{Architectural Style} The design of our implementation is based on the publish-subscribe architectural style. This style was chosen for its decoupling properties, such that each communicating entity in the system is independent of every other. This fits in well, with our notion of agents acting on the basis of their own goals and their environment, in a decentralized manner. Each type of agent described previously, is both an event publisher and an event subscriber. That is, each ApplicationAgent generates events that describe when the application's QoS constraints have changed, when the budget has changed, etc. These events are subscribed to, by BuyerAgents belonging to that application. The BuyerAgents, for their part, publish events relating to the market that they are registered with. Similarly, the MarketAgents publish events relating to the start of trading, transaction events, etc. The event-based paradigm fits well with the QoS monitoring schemes, as well. Both \cite{Zeng2007Monitoring} and \cite{Michlmayr2009Comprehensive} use events to monitor and communicate SLA violations. 
 %
@@ -629,43 +629,43 @@ We call our implementation of the proposed mechanism, \textit{clobmas}(Cloud-bas
 %	\caption{Simplified class diagram of core entities}
 %\end{figure}
 
-\subsubsection{Component Diagram} A component diagram illustrates how a system is structurally organized, with communication and dependencies between entities. There are several different definitions of \textit{component}. We do not attempt to provide yet another definition, but use the common features of most definitions, that it is a \textit{unit of reuse and replacement}\cite{Stevens2006Using}. In figure \ref{fig:component_diagram}, we see a subset of the components, and their communication links. The component \textit{Service Registry} is depicted as a separate entity, since it is a third-party component, and we do not have any control over it. The communication link shown between \textit{Seller} and \textit{Service Registry} is therefore necessarily one that is likely to be different for every \textit{Service Registry}. 
+\subsubsection{Component Diagram} A component diagram illustrates how a system is structurally organized, with communication and dependencies between entities. In figure \ref{fig:component_diagram}, we see a subset of the components, and their communication links. The component \textit{Service Registry} is depicted as a separate entity, since it is a third-party component, and we do not have any control over it. The communication link shown between \textit{Seller} and \textit{Service Registry} is therefore necessarily one that is likely to be different for every \textit{Service Registry}. The Market component can be easily replaced with another that implements a different auction strategy, without disrupting the architecture.
 
-\begin{figure}[H]
+\begin{figure*}[htbp]
 \centering
-\includegraphics[scale=0.3]{drawings/Agent_Component_Diagram.pdf}
+\includegraphics[scale=0.46]{drawings/Agent_Component_Diagram.pdf}
 \caption{Component diagram of entities\label{fig:component_diagram}}
-\end{figure}
+\end{figure*}
 
 \subsubsection{Class Diagram} The class diagram shows the static relationships between the main entities in the MAS. The \textit{Bid} and \textit{Ask} interfaces shown in figure \ref{fig:class_diagram} are also shown in the component diagram (see figure \ref{fig:component_diagram}), with the \textit{Market} class implementing both of them. 
 
-\begin{figure}[H]
+\begin{figure*}[htbp]
 \centering
-\includegraphics[scale=0.25]{drawings/Agent_Class_Diagram.pdf}
+\includegraphics[scale=0.45]{drawings/Agent_Class_Diagram.pdf}
 \caption{Class diagram of entities \label{fig:class_diagram}}
-\end{figure}
+\end{figure*}
 
 \subsubsection{Activity Diagram} The most difficult part of getting all the agents in an MAS to solve a problem, is the problem of communication. The design of the communication protocol determines how much communication happens, at what times and how much computational effort it takes to communicate. If the agents communicate too little, then there is a danger of the MAS failing to solve the problem it was created for. On the other hand, if too much communication takes place, then a lot of wastage occurs, not only in terms of bandwidth but also in computational cycles and time. Thus, while communication is a fundamental activity in an MAS, depicting this in UML is difficult. The standard activity diagrams in UML are \textit{Sequence Diagrams} and \textit{Collaboration Diagrams}. However, the semantics in both these diagrams assumes a single thread of control, \textit{i.e.}, each object that sends or receives a message is assumed to be the only active object at that time instant. This is not true in the case of Clobmas.  Also, UML which does not provide for broadcast/multicast messages. To deal with these situations, the agent community has evolved AUML (Agent-UML) which modifies the semantics of a sequence diagram, to allow for the possibilities above. We document the communication steps of our mechanism through AUML diagrams.\\
 In the following figures, we show the communication for an application with two AbstractServices, \texttt{A} and \texttt{B}, and its corresponding BuyerAgents and the market agent. The \emph{Setup Phase} (figure \ref{fig:setup_phase}) is composed of two calculations done by the ApplicationAgent and, two multicast messages to the application's BuyerAgents. The two calculations involve decomposing the application's end-to-end constraints into local constraints and, computing the budget that each BuyerAgent will receive.
-\begin{figure}[h]
+\begin{figure*}[h]
 \centering
-\includegraphics[scale=0.3]{drawings/setup_phase.pdf}
+\includegraphics[scale=0.7]{drawings/setup_phase.pdf}
 \caption{Setup phase for an application with two AbstractServices A \& B \label{fig:setup_phase}}
-\end{figure}
+\end{figure*}
 
 Decomposing constraints (figure \ref{fig:decompose_constraints}) involves communication between the BuyerAgents, their respective markets and the ApplicationAgent. The ApplicationAgent waits for the BuyerAgents to get data about previous transactions in the market, applies SWR \cite{Cardoso2002Workflow} and checks whether the combination of QoS available in the market meets its end-to-end constraints. Based on the combinations that meet the end-to-end constraints, the ApplicationAgent creates local constraints for the individual BuyerAgents. These are then propagated to the BuyerAgents.
-\begin{figure}[h]
+\begin{figure*}[h]
 \centering
-\includegraphics[scale=0.3]{drawings/decompose_constraints.pdf}
+\includegraphics[scale=0.7]{drawings/decompose_constraints.pdf}
 \caption{Application decomposes its constraints into local constraints \label{fig:decompose_constraints}}
-\end{figure}
+\end{figure*}
 
 The budget for the individual agents is split in the ratio of the transaction prices that are prevalent in the individual markets. Given historical price information in a market, the prices in the next trading rounds are likely to be around the same figure. Splitting the application's budget evenly across the BuyerAgents could possibly result in some agents getting excess endowment, and some agents too less. The ratio of their transaction prices allows the agents with expensive services to get a naturally higher share of the budget.
-\begin{figure}[h]
+\begin{figure*}[h]
 \centering
-\includegraphics[scale=0.4]{drawings/compute_endowment.pdf}
+\includegraphics[scale=0.7]{drawings/compute_endowment.pdf}
 \caption{Application computes endowment for its BuyerAgents}
-\end{figure}
+\end{figure*}
 
 %\begin{figure}
 %\includegraphics[scale=0.7]{figures/chapter4/distribute_budget.pdf}
@@ -675,19 +675,19 @@ In figure \ref{fig:trading_phase}, we show the communication that takes place du
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.3]{drawings/trading_phase.pdf}
+\includegraphics[scale=0.8]{drawings/trading_phase.pdf}
 \caption{The trading phase of buying a service \label{fig:trading_phase}}
 \end{figure}
 
 
 The trading proceeds in two stages. In the first stage, the MarketAgent matches the bids and asks based on their individual QoS values and shout prices. After matching, a provisional transaction is created. This provisional transaction enters the second stage. In the second stage, the BuyerAgent compares all the Asks returned as provisional transactions (see section \ref{ask_selection}). The top-ranked Ask is selected and the other Asks are rejected. The BuyerAgent enters into a transaction with the SellerAgent of the selected Ask.
-\begin{figure}[h]
+\begin{figure*}[h]
 \centering
-\includegraphics[scale=0.3]{drawings/cda_protocol.pdf}
+\includegraphics[scale=0.7]{drawings/cda_protocol.pdf}
 \caption{Two-stage CDA protocol \label{fig:cda_protocol}}
-\end{figure}
+\end{figure*}
 
-\subsubsection{Implementation of double auction} The most computationally intensive aspect of the entire system is the implementation of the double auction mechanism. Storing the bids and asks as simple lists results in a huge amount of searching for matching purposes. We modify the 4-heap data structure, as suggested in \cite{Wurman1998Flexible}, to store our multi-attribute bids and asks. In our python implementation, we use the heapq module to store bids in a descending order and asks in an ascending order. This decision allows for bids that are willing to pay a higher price, get matched first. 
+%\subsubsection{Implementation of double auction} The most computationally intensive aspect of the entire system is the implementation of the double auction mechanism. Storing the bids and asks as simple lists results in a huge amount of searching for matching purposes. We modify the 4-heap data structure, as suggested in \cite{Wurman1998Flexible}, to store our multi-attribute bids and asks. In our python implementation, we use the heapq module to store bids in a descending order and asks in an ascending order. This decision allows for bids that are willing to pay a higher price, get matched first. 
 
 \section{Evaluation}
 \subsection{The Current Scenario}
@@ -851,27 +851,26 @@ Quite similar to the CDA, the posted-offer also performs well (approx 70\% marke
 % \end{table*}
        
 \subsection{Scalability Requirements for SkyCompute}
-Although clobmas using a double-auction is better than clobmas using a posted offer, SkyCompute would like to know if this mechanism scales well. To investigate this, we pick a level of market satisfaction rate, that is higher than posted-offer, and measure how long it takes to achieve this level. The adaptation process can be highly dependent on many variables. In this section, we tease out how each of these variables affect the time taken for adaptation. To this end, we present the time taken by the CDA market to achieve an \textbf{80\%  market satisfaction rate}, while varying each of these variables.
+There are no commonly accepted/standard definitions of scalability, in self-adaptive, multi-agent systems. To alleviate this, we use a definition of scalability from \cite{Duboc2007framework}: \textit{a quality of software systems characterized by the causal impact that scaling aspects of the system environment and design have on certain measured system qualities as these aspects are varied over expected operational ranges}.\\
+According to \cite{Duboc2007framework}'s definition, when aspects of the environment change, they have an impact on the system's qualities. In our case, the system quality that we want to measure is performance, measured as the amount of time taken to reach a defined level of \textit{market satisfaction rate}. Although clobmas using a double-auction is better than clobmas using a posted offer, SkyCompute would like to know if this mechanism scales well. To investigate this, we pick a level of market satisfaction rate, that is higher than posted-offer, and measure how long it takes to achieve this level. The adaptation process can be highly dependent on many variables. In this section, we tease out how each of these variables affect the time taken for adaptation. To this end, we present the time taken by the CDA market to achieve an \textbf{80\%  market satisfaction rate}, while varying each of these variables.
 
 \textbf{AbstractServices Vs. CandidateServices:}
 Arguably, these are the variables that change most often from application to application, and from time to time. Every application has a different workflow and therefore, a different number of AbstractServices. As time passes, applications that have met their QoS will retire from the market, and new applications will come in. This changes the orderbook from the demand side. Also, the number of CandidateServices available per AbstractService is most susceptible to change. As time passes, some CandidateServices will no longer be available, and new ones come into the market. This changes the orderbook from the supply side.
 
 \begin{figure}[htbp]
 	\begin{minipage}[b]{0.4\linewidth}
-	\hspace{0.5cm}
-	\includegraphics[clip, trim=5cm 14cm 2cm 6cm, scale=0.3]{graphs/1_3_5_10_task_per_svc_scaling.pdf}
+	\includegraphics[clip, trim=5cm 12cm 2cm 6cm, scale=0.32]{graphs/1_3_5_10_task_per_svc_scaling.pdf}
 	\caption{CandidateServices per AbstractService increase \label{fig:task_per_svc}}
 	\end{minipage}
-	\hspace{0.7cm}
 	\begin{minipage}[b]{0.4\linewidth}
-			\includegraphics[clip, trim=2cm 14cm 2cm 6cm, scale=0.3]{graphs/10_30_50_svc_per_task_scaling.pdf}
-			\caption{AbstractServices in workflow increase\label{fig:svc_per_task}}
+			\includegraphics[clip, trim=2cm 12cm 2cm 6cm, scale=0.32]{graphs/10_30_50_svc_per_task_scaling.pdf}
+			\caption{AbstractServices increase in Workflow\label{fig:svc_per_task}}
 	\end{minipage}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[clip, trim=3cm 11cm 2cm 7cm,scale=0.45]{graphs/scaling_time_task_candidates.pdf}
+	\includegraphics[clip, trim=3cm 11cm 2cm 7cm,scale=0.47]{graphs/scaling_time_task_candidates.pdf}
 	\caption{Both AbstractServices and CandidateServices increase \label{fig:task_and_candidate_scaling}}
 \end{figure}
 
@@ -882,30 +881,32 @@ As the number of applications that use clobmas increase, it will have to make a 
 
 \begin{figure}[htbp]
 	\begin{minipage}[b]{0.4\linewidth}
-		\includegraphics[clip, trim=4cm 14cm 2cm 6cm, scale=0.3]{graphs/5_10_15_20_svc_per_qos_scaling.pdf}
+		\includegraphics[clip, trim=4cm 12cm 2cm 6cm, scale=0.32]{graphs/5_10_15_20_svc_per_qos_scaling.pdf}
 		\caption{CandidateServices increase \label{fig:svc_per_qos}}
 	\end{minipage}
 	\hspace{0.9cm}
 	\begin{minipage}[b]{0.4\linewidth}
 			\vspace{0.3cm}
-		\includegraphics[clip, trim=2cm 14cm 2cm 6cm, scale=0.3]{graphs/1_3_5_7_9_qos_per_svc_scaling.pdf}
+		\includegraphics[clip, trim=2cm 12cm 2cm 6cm, scale=0.32]{graphs/1_3_5_7_9_qos_per_svc_scaling.pdf}
 		\caption{QoS increase \label{fig:qos_per_svc}}
 	\end{minipage}
 \end{figure}
 
+We see from figure \ref{fig:svc_and_qos_scaling} that the slope of QoS axis is greater than that of CandidateServices. That is, time taken for adaptation increases faster when QoS attributes increase, as compared to the number of CandidateServices available per AbstractService.
+\vspace*{1.5cm}
 \begin{figure}[htbp]
 \centering
-\includegraphics[clip, trim=2cm 9cm 2cm 12cm, scale=0.5]{graphs/scaling_time_svcs_qos.pdf}
+\includegraphics[clip, trim=2cm 9cm 2cm 12cm, scale=0.45]{graphs/scaling_time_svcs_qos.pdf}
 \caption{Both CandidateServices and QoS increase \label{fig:svc_and_qos_scaling}}
 \end{figure}
 
-We see from figure \ref{fig:svc_and_qos_scaling} that the slope of QoS axis is greater than that of CandidateServices. That is, time taken for adaptation increases faster when QoS attributes increase, as compared to the number of CandidateServices available per AbstractService.
+
 
 
 \subsubsection{The Cost of Decentralization}
 As discussed in \cite{Eymann2003Decentralized}, an auction-based mechanism, by default, leads to a centralized mechanism. The auctioneer becomes a single point of failure, and thus leads to decreased robustness. This can be remedied by introducing multiple auctioneers. In clobmas, we use multiple markets for each AbstractService. This ensures that even if one market is non-functional, the others continue to function. Decentralization of markets comes at a cost. Buyer Agents have to choose which market to place their bids, to place them in multiple markets or a single market. Placing bids in multiple markets increases the chances of getting Candidate Services, but it also places a greater computational load on the Buyer Agent in terms of decision making. We currently choose markets randomly.\\
 \textbf{CandidateServices Vs. Number of Markets:} Does decentralization affect time taken for adaptation or number of CandidateServices? In other words, should clobmas increase the number of CandidateServices available per market? Or would it be better to increase the number of markets? Increasing the number of markets increases the robustness of the system. 
-
+\vspace*{2cm}
 \begin{figure}[htbp]
 		\begin{minipage}{0.4\linewidth}
 			\includegraphics[clip, trim=4cm 14cm 6cm 6cm, scale=0.3]{graphs/1_3_5_7_10_svc_per_mkt_scaling.pdf}
@@ -931,15 +932,16 @@ Hence, the decision to increase robustness does not negatively impact the time-t
 Next we look at how QoS attributes affect the time-to-adapt \textit{vis-a-vis} the number of markets. 
 
 \begin{figure}[htbp]
-		\begin{minipage}{0.4\linewidth}
-			\includegraphics[clip, trim=4cm 16cm 6cm 4cm, scale=0.4]{graphs/1_4_7_9_mkts_per_qos.pdf}
+%		\begin{minipage}{0.4\linewidth}
+			\includegraphics[clip, trim=2cm 16cm 8cm 4cm, scale=0.55]{graphs/1_4_7_9_mkts_per_qos.pdf}
 			\caption{Markets increase per QoS\label{fig:mkt_per_qos}}		
-		\end{minipage}
-		\hspace{0.9cm}
-		\begin{minipage}{0.4\linewidth}
-			\includegraphics[clip, trim=2cm 16cm 6cm 4cm, scale=0.4]{graphs/2_4_6_qos_per_mkt_scaling.pdf}
+\end{figure}
+%		\hspace{0.9cm}
+%		\begin{minipage}{0.4\linewidth}
+\begin{figure}
+			\includegraphics[clip, trim=2cm 16cm 6cm 4cm, scale=0.55]{graphs/2_4_6_qos_per_mkt_scaling.pdf}
 			\caption{QoS increase per Market \label{fig:qos_per_mkt}}
-		\end{minipage}		
+%		\end{minipage}		
 \end{figure}
 
 We see that increasing the number of markets adds a constant amount of time to the adaptation process. On the other hand, increasing the number of QoS per CandidateService causes a non-proportional increase in the time taken. In other words, increasing the number of QoS per CandidateService is more expensive than increasing the number of markets. 
