@@ -6,10 +6,13 @@
 \usepackage{subfig}
 \usepackage{float}
 %\usepackage[tight,normalsize,sf,SF]{subfigure}
+% \usepackage[square, numbers]{natbib}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{booktabs}
-\usepackage[table]{xcolor} % for highlighting rows in tables
+\usepackage[table]{xcolor} % for highlighting rows insTables
+
+
 
 
 \begin{document}
@@ -32,7 +35,7 @@ Self-Adaptation, Market-Based, Multi-Agent Systems
 \section{Introduction}
 Self-adaptation, as a concept, has been around for many years, in several domains like biology, chemistry, logistics, economics etc. Self-adaptivity in computer-based systems is relatively newer. Some of the first references to self-adaptive software systems are from \cite{Oreizy1998Architecture-based}, \cite{Laddaga1999Creating}, \cite{Kokar1999Control} and \cite{Kephart2003Vision} (where they are referred to, as autonomic systems). By self-adaptivity in software systems, we mean software that monitors itself and the operating environment, and takes appropriate actions when circumstances change. In web-applications, service-oriented architecture has often been used as a mechanism for achieving self-adaptivity\cite{DiNitto2008journey}. Web-services allow for dynamic composition, which enables applications to switch services, without going offline. A common instance of using web-services dynamically, is applications living on the cloud, asking for computing power and bandwidth to be scaled up or down, depending on demand. However, one of the cloud's major selling points, \textit{operational flexibility} is of little use, if applications (or organizations) have to indicate at sign-up time, the kind of services that they intend to use. On Amazon, for instance, a customer specifies during sign up whether she wants a Hi-CPU instance or a Standard On-Demand instance or a Hi-Memory instance. This assumes that an application is able to forecast its demand for computing and storage resources accurately. However, this inability to forecast is precisely what the cloud claims to address through elasticity in computing power. This is not to say that there are no flexible, demand-based pricing schemes available. Amazon's \textit{Spot Instances} \cite{Amazon2010SpotInstance} is an example of how cloud providers are trying to flexibly price their services, in response to fluctuating demand over time. Applications that can adapt to fluctuating prices will be able to ensure a better return on investment. In the future, we surmise that service-pricing will depend not only on demand but also on additional attributes like performance, availability, reliability, etc.
 \\ 
-Current implementations of public clouds mainly focus on providing easily scaled-up and scaled-down computing power and storage. We envisage a more sophisticated scenario, where federated clouds with different specialized services collaborate. These collaborations can then be leveraged by an enterprise to construct an application, that can be self-adaptive by changing the specific web-service it utilizes. The notion of utilizing collaborative services to satisfy a business need, is not new in itself. The recognition of Agile Service Networks (ASN) that spring up in modern business practices, is testament to this. 
+Current implementations of public clouds mainly focus on providing easily scaled-up and scaled-down computing power and storage. We envisage a more sophisticated scenario, where federated clouds with different specialized services collaborate. These collaborations can then be leveraged by an enterprise to construct an application, that is self-adaptive by changing the specific web-service it utilizes. The notion of utilizing collaborative services to satisfy a business need, is not new in itself. The recognition of Agile Service Networks (ASN) that spring up in modern business practices, is testament to this. 
 %\begin{quote}
 %An Agile Service Network (ASN) comprises large numbers of long-running, highly dynamic complex end-to-end service interactions reflecting asynchronous message flows that typically transcend several organizations and span geographical locations. 
 %\end{quote}
@@ -84,7 +87,7 @@ S5
 \end{table} 
  
 
- In table \ref{tbl:choice-of-services}, if the application wanted to optimize on Price, the set of selected services would be $[S1_{5}, S2_{1}, S3_{2}, S4_{1}, S5_{2}]$. On the other hand, if it wanted to optimize on Latency, the selected services would be $[S1_{1}, S2_{2}, S3_{4}, S4_{2}, S5_{4}]$. The calculations become more difficult if the optimizations need to be done on multiple QoS simultaneously, for e.g., Latency and Price or Latency and Availability. As the number of AbstractServices in the workflow increase, the number of combinations also increase correspondingly.
+ In Table~\ref{tbl:choice-of-services}, if the application wanted to optimize on Price, the set of selected services would be $[S1_{5}, S2_{1}, S3_{2}, S4_{1}, S5_{2}]$. On the other hand, if it wanted to optimize on Latency, the selected services would be $[S1_{1}, S2_{2}, S3_{4}, S4_{2}, S5_{4}]$. The calculations become more difficult if the optimizations need to be done on multiple QoS simultaneously, for e.g., Latency and Price or Latency and Availability. As the number of AbstractServices in the workflow increase, the number of combinations also increase correspondingly.
 
 %	    \begin{enumerate}
 %	        \item Initial data filter (to weed out incomplete or damaged records)
@@ -94,35 +97,32 @@ S5
 %	    \end{enumerate}
 %Each of the above composite web-services is itself composed of simpler services (for e.g., disk-based sorting). The performance of the data-mining application as a whole, will depend on the individual performance of all the simpler services. We imagine such an application to be composed using a federated cloud approach, wherein each of the specific web-services is available on a (possibly) different cloud.
 
-The problem arises from the fact that for each of these tasks in the application's workflow (AbstractService), there are several candidate web-services (ConcreteService), that can be used. Each of these ConcreteServices exhibit a different set of QoS attributes, and each is priced differently. Determining the best combination of web-services to achieve the application's overall target QoS, is an NP-hard problem\cite{Ardagna2005Global}. There is a further complication. As different jobs arrive, depending on the priority and QoS demanded, the application instance has to either scale up or scale down, on each of those QoS attributes. Not only does it have to re-calculate the best value-for-money service instance, but the set of concrete services that are available, also change with time. Since these service instances (possibly) belong to third-parties, they may or may not be available or, are available with different QoS or, for a different price. Thus, the application has to deal with all of these factors, while adjusting to the changed demand for QoS.  Self-Adaptation, in this case, is the problem of dynamically selecting services, forming the application, from the pool of services currently available. There are two conditions where an application that has started off with a satisfactory level of QoS, needs to start adapting:
+The problem arises from the fact that for each of these tasks in the application's workflow (AbstractService), there are several candidate web-services (ConcreteService), that can be used. Each of these ConcreteServices exhibit a different set of QoS attributes, and each is priced differently. Determining the best combination of web-services to achieve the application's overall target QoS, is an NP-Hard problem~\cite{Ardagna2005Global}. There is a further complication. As different jobs arrive, depending on the priority and QoS demanded, the application instance has to either scale up or scale down, on each of those QoS attributes. Not only does it have to re-calculate the best value-for-money service instance, but the set of concrete services that are available, also change with time. Since these service instances (possibly) belong to third-parties, they may or may not be available or, are available with different QoS or, for a different price. Thus, the application has to deal with all of these factors, while adjusting to the changed demand for QoS.  Self-Adaptation, in this case, is the problem of dynamically selecting services, forming the application, from the pool of services currently available. There are two conditions where an application that has started off with a satisfactory level of QoS, needs to start adapting:
 	\begin{enumerate}
 	    \item \textit{External Adaptation Stimulus}: When a QoS violation is detected at any of the web-services, the application needs to re-start its search for a new web-service to replace the old one.
 	     \item \textit{Internal Adaptation Stimulus}: When the application's end-to-end QoS target changes, the application needs to trigger an adaptation, to ensure that its constituent web-services are able to meet the targetted QoS level.
 	\end{enumerate} 
 %The timescales involved in both these conditions is different. In general, violation of QoS by constituent services is likely to be more frequent than changes in QoS requirements at runtime. Thus, a self-adaptation strategy must take into account these frequencies  and the corresponding expected response time.	
-From the cloud provider's perspective, any service that could potentially be used by an application, but is idle instead, represents lost revenue. According to \cite{Buyya2008Market-Oriented}, the cloud provider will also have to invest in self-managing resource management models that can adaptively service new QoS demands as well as existing QoS obligations. It is this scenario, of self-adaptive applications on one side and dynamic service provision from the cloud provider that we address in this paper. Current static models of provisioning and pricing will prove inadequate, as self-adapting applications mature.
+From the cloud provider's perspective, any service that could potentially be used by an application, but is idle instead, represents lost revenue. According to~\cite{Buyya2008Market-Oriented}, the cloud provider will also have to invest in self-managing resource management models that can adaptively service new QoS demands as well as existing QoS obligations. It is this scenario, of self-adaptive applications on one side and dynamic service provision from the cloud provider that we address in this paper. Current static models of provisioning and pricing will prove inadequate, as self-adapting applications mature.
   
 \subsection{Contributions of this paper}
-In \cite{Nallur2010Design}, we had proposed a preliminary design of a market- mechanism for service-based application to self-adapt to changing QoS requirements. In this paper, we explicate on the adaptation mechanism, its design in terms of implementation units, and its efficacy.  In this paper, we also detail the adaptive generation of bids, and the decentralized mechanism for selection of services. We then show that this approach scales to hundreds of applications, with thousands of services being evaluated and selected. We show that the services thus selected, meet the QoS criteria of the application as well as are within the budget that the application is willing to spend. 
+In~\cite{Nallur2010Design}, we had proposed a preliminary design of a market- mechanism for service-based application to self-adapt to changing QoS requirements. In this paper, we explicate on the adaptation mechanism, its design in terms of implementation units, and its efficacy.  In this paper, we also detail the adaptive generation of bids, and the decentralized mechanism for selection of services. We then show that this approach scales to hundreds of applications, with thousands of services being evaluated and selected. We show that the services thus selected, meet the QoS criteria of the application as well as are within the budget that the application is willing to spend. 
   
 \section{Our Approach}
-We would like to create a mechanism that allows multiple applications, constructed across a federation of clouds, to self-adapt. We chose a market-based approach to self-adaptation, not only because it is decentralized, but also due to its easy applicability to the problem domain. Services in the cloud are moving from a fixed-price package to a more flexible, auction-based approach\cite{Amazon2010SpotInstance}. This enables a self-adaptive application to change the QoS exhibited, by switching to a different concrete service. Differences in pricing of the services, cost incurred for switching services, fees paid to the market, etc. provide a direct indication of the cost of adaptation. 
+We would like to create a mechanism that allows multiple applications, constructed across a federation of clouds, to self-adapt. We chose a market-based approach to self-adaptation, not only because it is decentralized, but also due to its easy applicability to the problem domain. Services in the cloud are moving from a fixed-price package to a more flexible, auction-based approach~\cite{Amazon2010SpotInstance}. This enables a self-adaptive application to change the QoS exhibited, by switching to a different concrete service. Differences in pricing of the services, cost incurred for switching services, fees paid to the market, etc. provide a direct indication of the cost of adaptation. 
 \subsection{Market-Based Control}
-Market-Based Control (MBC) essentially involves modelling the system as a marketplace, where self-interested agents use economic strategies to compete for resources. The self-interested competition, along with well-designed utility functions allow for a decentralized means of decision making. These agents, via their competitive need to get resources, perform a parallel search through the space of decision points. MBC has been used in several contexts, as a mechanism for computing a good solution in a decentralized manner. Notable examples include Clearwater's bidding agents to control the temperature of a building\cite{Clearwater1996Saving}, Ho's center-free resource algorithms \cite{Ho1980class} and Cheriton's extension to operating systems to allow programs to bid for memory\cite{Harty1996market}. Wellman's WALRAS system \cite{Wellman1993market-oriented}, which is highly distributed, reports high scalability. More examples include distributed Monte-Carlo simulations\cite{Waldspurger1992Spawn}, distributed database design using market-methods for distributing sub-parts of queries \cite{Stonebraker1994Economic} and proportional-share resource management technique\cite{Waldspurger1994Lottery}. All of these systems provide evidence of market-based control being a good candidate for distributed decision making. 
+Market-Based Control (MBC) essentially involves modelling the system as a marketplace, where self-interested agents use economic strategies to compete for resources. The self-interested competition, along with well-designed utility functions allow for a decentralized means of decision making. These agents, via their competitive need to get resources, perform a parallel search through the space of decision points. MBC has been used in several contexts, as a mechanism for computing a good solution in a decentralized manner. Notable examples include Clearwater's bidding agents to control the temperature of a building~\cite{Clearwater1996Saving}, Ho's center-free resource algorithms~\cite{Ho1980class} and Cheriton's extension to operating systems to allow programs to bid for memory~\cite{Harty1996market}. Wellman's WALRAS system~\cite{Wellman1993market-oriented}, which is highly distributed, reports high scalability. More examples include distributed Monte-Carlo simulations~\cite{Waldspurger1992Spawn}, distributed database design using market-methods for distributing sub-parts of queries~\cite{Stonebraker1994Economic} and proportional-share resource management technique~\cite{Waldspurger1994Lottery}. All of these systems provide evidence of market-based control being a good candidate for distributed decision making. 
 \subsection{Auctions}
-Auctions, specifically Double Auctions (DA), have increasingly been studied in Computer Science, as a mechanism of resource allocation. Daniel Friedman \cite{Freidman1993Double} reports on experiments where traders even with imperfect information, consistently achieve highly efficient allocations and prices. The rise of electronic commerce naturally creates a space for efficient exchange of goods and services, and there has been much work on the design space of market-institutions\cite{Wurman2001Parametrization, Niu2008Characterizing}, bidding strategies \cite{Cliff1998Simple, Roth1995Learning}, agent-based implementations of traders\cite{Jennings2000Automated, He2003SouthamptonTAC, He2003agent-mediated, Niu2010What}, etc. Gupta et al\cite{Gupta1999economics} argue that network management, specifically for QoS issues, must be done using pricing and market dynamics. According to them, the flexibility offered by pricing mechanisms offers benefits of decentralization of control, dynamic load management and effective allocation of priority to different QoS attributes. The continuous-time variant, called \textit{Continuous Double Auction} (CDA), is used in stock-markets and commodity exchanges around the world\cite{Klemperer1999Auction}. In a CDA, the market clears \textit{continuously}. That is, instead of waiting for all bids and asks to be made, matches are made as the bids and asks come in. A new bid is evaluated against the existing asks and the first ask that matches, is immediately paired off for a transaction. A CDA is known to be highly allocatively efficient \cite{Gode1993Allocative}, \textit{i.e.}, it achieves a very high percentage of all the possible trades, between buyers and sellers. The most important property of the work in \cite{Gode1993Allocative}, is that a CDA's efficiency results from the structure of the mechanism used, rather than intelligence of the agents involved in trading. This is a very important result, since it provides us with encouragement regarding the efficiency of our mechanism.
+Auctions, specifically Double Auctions (DA), have increasingly been studied in Computer Science, as a mechanism of resource allocation. Daniel Friedman~\cite{Freidman1993Double} reports on experiments where traders even with imperfect information, consistently achieve highly efficient allocations and prices. The rise of electronic commerce naturally creates a space for efficient exchange of goods and services, and there has been much work on the design space of market-institutions~\cite{Wurman2001Parametrization, Niu2008Characterizing}, bidding strategies~\cite{Cliff1998Simple, Roth1995Learning}, agent-based implementations of traders~\cite{Jennings2000Automated, He2003SouthamptonTAC, He2003agent-mediated, Niu2010What}, etc. Gupta et al~\cite{Gupta1999economics} argue that network management, specifically for QoS issues, must be done using pricing and market dynamics. According to them, the flexibility offered by pricing mechanisms offers benefits of decentralization of control, dynamic load management and effective allocation of priority to different QoS attributes. The continuous-time variant, called \textit{Continuous Double Auction} (CDA), is used in stock-markets and commodity exchanges around the world~\cite{Klemperer1999Auction}. In a CDA, the market clears \textit{continuously}. That is, instead of waiting for all bids and asks to be made, matches are made as the bids and asks come in. A new bid is evaluated against the existing asks and the first ask that matches, is immediately paired off for a transaction. A CDA is known to be highly allocatively efficient~\cite{Gode1993Allocative}, \textit{i.e.}, it achieves a very high percentage of all the possible trades, between buyers and sellers. The most important property of the work in~\cite{Gode1993Allocative}, is that a CDA's efficiency results from the structure of the mechanism used, rather than intelligence of the agents involved in trading. This is a very important result, since it provides us with encouragement regarding the efficiency of our mechanism.
 
 \subsection{Use of MDA for QoS adaptation}
-We view an application as a directed graph of AbstractServices. A ConcreteService corresponds to a piece of functionality described by the AbstractService, along with associated QoS levels. Thus, a data-mining application can be visualised as a directed graph of abstract data-filtering service, a data-transformation service, a clustering service and visualization service. The total QoS actually exhibited by the application, is a function of the individual QoS exhibited by each of the ConcreteServices that have been used in the composition. We design a marketplace that allows individual applications to select ConcreteServices. The cloud is designed to be an ultra-large collection of applications, web-services and raw computing power. Given this large scale, any solution that is implemented, must not rely on central knowledge or coordination. A market populated with self-interested trading agents is therefore suitable for our purpose. The design of the market that we chose, is the CDA.  However, we are mindful of Eymann's criticism \cite{Eymann2003Decentralized} with regard to implicit centralization of auctions, and hence we create multiple double auctions (MDA), for each AbstractService. That is, each AbstractService is traded in multiple markets, and trading agents can move amongst these markets to find the ConcreteService they need. Each market is homogeneous, in the sense that all ConcreteServices trading in that market, pertain to one AbstractService only. This is analogous to commodity markets in the real world. Thus, in a market for clustering web-services, each seller will provide a ConcreteService that performs clustering, but offers varying performance and dependability levels. Varying levels of QoS require different implementations and depending on the complexity of the implementations, will be either scarce or common. This leads to a differentiation in pricing based on QoS levels.  
+We view an application as a directed graph of AbstractServices. A ConcreteService corresponds to a piece of functionality described by the AbstractService, along with associated QoS levels. Thus, a data-mining application can be visualised as a directed graph of abstract data-filtering service, a data-transformation service, a clustering service and visualization service. The total QoS actually exhibited by the application, is a function of the individual QoS exhibited by each of the ConcreteServices that have been used in the composition. We design a marketplace that allows individual applications to select ConcreteServices. The cloud is designed to be an ultra-large collection of applications, web-services and raw computing power. Given this large scale, any solution that is implemented, must not rely on central knowledge or coordination. A market populated with self-interested trading agents is therefore suitable for our purpose. The design of the market that we chose, is the CDA.  However, we are mindful of Eymann's criticism~\cite{Eymann2003Decentralized} with regard to implicit centralization of auctions, and hence we create multiple double auctions (MDA), for each AbstractService. That is, each AbstractService is traded in multiple markets, and trading agents can move amongst these markets to find the ConcreteService they need. Each market is homogeneous, in the sense that all ConcreteServices trading in that market, pertain to one AbstractService only. This is analogous to commodity markets in the real world. Thus, in a market for clustering web-services, each seller will provide a ConcreteService that performs clustering, but offers varying performance and dependability levels. Varying levels of QoS require different implementations and depending on the complexity of the implementations, will be either scarce or common. This leads to a differentiation in pricing based on QoS levels.  
 
 \subsubsection{Description of Agents}
-\paragraph{BuyerAgent} A trading agent that bids for, and buys a CandidateService. Typically, a BuyerAgent is responsible for one AbstractService. The amount that the BuyerAgent is prepared to pay is called the \textsl{bid price} and this is necessarily \textit{less than or equal to} its budget. The combination of \textsl{bid price}  and the QoS attributes demanded, is called the \textsl{Bid}.
-
-\paragraph{SellerAgent} A trading agent that sells a CandidateService. Again, a SellerAgent is responsible for only one AbstractService. The SellerAgent adjusts the price at which it is willing to sell the CandidateService, based on demand and supply. The amount that a SellerAgent is prepared to pay, is called the \textsl{ask price}. This is necessarily \textit{less than or equal to } its cost. The combination of \textsl{ask price} and the QoS attributes offered, is called the \textsl{Ask}.
-
-\paragraph{MarketAgent} A trading agent that implements trading rounds for a Market. It accepts bids, and asks from BuyerAgents, and SellerAgents. It performs matching of Bids and Asks.
-
-\paragraph{ApplicationAgent} An agent responsible for ensuring that an application meets its QoS requirements. It is responsible for distributing the budget, and initiating and stopping adaptation by the BuyerAgents.
+\textbf{BuyerAgent:} A trading agent that bids for, and buys a CandidateService. Typically, a BuyerAgent is responsible for one AbstractService. The amount that the BuyerAgent is prepared to pay is called the \textsl{bid price} and this is necessarily \textit{less than or equal to} its budget. The combination of \textsl{bid price}  and the QoS attributes demanded, is called the \textsl{Bid}.\\
+\textbf{SellerAgent:} A trading agent that sells a CandidateService. A SellerAgent is responsible for only one AbstractService. The SellerAgent adjusts the price at which it is willing to sell the CandidateService, based on demand and supply. The amount that a SellerAgent is prepared to accept, is called the \textsl{ask price}. This is necessarily \textit{less than or equal to } its cost. The combination of \textsl{ask price} and the QoS attributes offered, is called the \textsl{Ask}.\\
+\textbf{MarketAgent:} A trading agent that implements trading rounds for a Market. It accepts bids, and asks from BuyerAgents, and SellerAgents. It performs matching of Bids and Asks.\\
+\textbf{ApplicationAgent:} An agent responsible for ensuring that an application meets its QoS requirements. It is responsible for distributing the budget, and initiating and stopping adaptation by the BuyerAgents.
 
 \subsubsection{Structure of the Auction}
 A CDA works by accepting offers from both buyers and sellers. It maintains an orderbook containing both, the \textsl{Bids} from the buyers and the \textsl{Asks} from the sellers. The Bids are held in descending order of price, while the Asks are held in ascending order, \textit{i.e.}, buyers willing to pay a high price and sellers willing to accept a lower price are more likely to trade. When a new \textit{Bid} comes in, the offer is evaluated against the existing \textit{Asks} in the book and a transaction is conducted when the price demanded by the \textit{ask} is lower than the price the \textit{Bid} is willing to pay \textbf{and} all the QoS attributes of the Ask are \textit{greater than or equal to} all the QoS attributes in the\textit{Bid}. After a transaction, the corresponding \textit{Bid} and \textit{Ask} are cleared from the orderbook.
@@ -142,7 +142,7 @@ $[$\small{B5, 87, ssl=yes, framerate=24fps, latency=110ms}$]$ & $[$\small{S5, 11
 \end{tabular}
 \caption{Orderbook at time $t_{0}$ \label{orderbook}}
 \end{table*}
-Table \ref{orderbook} shows the state of the orderbook at some time \textit{$t_{0}$}. Maximizing the number of transactions would lead to a possible set like: $[B1-S4, B2-S3, B3-S1]$. Calculating this optimal set, however, quickly becomes infeasible as the number of bids and asks increase, since the number of pairwise comparisons needed increases exponentially.  With a CDA, the set of transactions is: $[B1-S1, B2-S3]$. This is so because a CDA evaluates bids and asks, as they come in and the first possible match is set up as a transaction. Thus, $[B1-S1]$ is immediately matched and removed from the orderbook, and then $[B2-S3]$ is matched.  Since this procedure is carried out for every offer (\textit{bid/ask}) that enters the market, the only bids and asks that remain on the orderbook are those that haven't been matched (figure \ref{orderbook-after-one-pass}) yet. This procedure is much faster, and easily parallelizable. Although counter-intuitive, it has been shown that even when buyers and sellers have Zero-Intelligence, the structure of the market allows for a high degree of allocative efficiency \cite{Gode1993Allocative}. Zero-Intelligence refers to a strategy, where the agents involved, do not consider any historical information about trades, and nor do they possess any learning mechanism. Thus, Zero-Intelligence marks the lower limit of the efficiency of a CDA market.
+Table \ref{orderbook} shows the state of the orderbook at some time \textit{$t_{0}$}. Maximizing the number of transactions would lead to a possible set like: $[B1-S4, B2-S3, B3-S1]$. Calculating this optimal set, however, quickly becomes infeasible as the number of bids and asks increase, since the number of pairwise comparisons needed increases exponentially.  With a CDA, the set of transactions is: $[B1-S1, B2-S3]$. This is so because a CDA evaluates bids and asks, as they come in and the first possible match is set up as a transaction. Thus, $[B1-S1]$ is immediately matched and removed from the orderbook, and then $[B2-S3]$ is matched.  Since this procedure is carried out for every offer (\textit{bid/ask}) that enters the market, the only bids and asks that remain on the orderbook are those that haven't been matched (figure \ref{orderbook-after-one-pass}) yet. This procedure is much faster, and easily parallelizable. Although counter-intuitive, it has been shown that even when buyers and sellers have Zero-Intelligence, the structure of the market allows for a high degree of allocative efficiency~\cite{Gode1993Allocative}. Zero-Intelligence refers to a strategy, where the agents involved, do not consider any historical information about trades, and nor do they possess any learning mechanism. Thus, Zero-Intelligence marks the lower limit of the efficiency of a CDA market.
 \begin{table*}
 \centering
 \begin{tabular}{ll}
@@ -161,28 +161,27 @@ $[$\small{B5, 87, ssl=yes, framerate=24fps, latency=110ms}$]$ &$[$\small{S5, 110
 
 There are many variations on the implementation of a CDA, and each variation introduces changes in the behaviour of both, markets as well as the trading agents. We now list the structural axes of a CDA, and our position on each of those axes:
 \begin{enumerate}
-	\item \textbf{Shout Accepting Rule:} Bids and Asks are referred to, as shouts. When a shout is made from a buyer or seller, the market evaluates it for validity. If valid, a shout is inserted in the appropriate place, in the orderbook. The most commonly used shout accepting rule is the \textit{NYSE rule}. According to the \textit{NYSE rule}, a shout is only accepted, if it makes a better offer than that trader's previous offer\cite{Vytelingum2006Structure}. We modify this rule to accept multiple bids from BuyerAgents. This modification allows the BuyerAgents to explore the QoS-cost search space in a more efficient manner (see \ref{bid_generation}). 
+	\item \textbf{Shout Accepting Rule:} Bids and Asks are referred to, as shouts. When a shout is made from a buyer or seller, the market evaluates it for validity. If valid, a shout is inserted in the appropriate place, in the orderbook. The most commonly used shout accepting rule is the \textit{NYSE rule}. According to the \textit{NYSE rule}, a shout is only accepted, if it makes a better offer than that trader's previous offer\cite{Vytelingum2006Structure}. We modify this rule to accept multiple bids from BuyerAgents. This modification allows the BuyerAgents to explore the QoS-cost search space in a more efficient manner (see section \ref{bid_generation}). 
 
 	\item \textbf{Information Revelation Rule:} This refers to the market information that is available to buyers and sellers. In our case, all market participants have access to the last $k$ transactions.	
 	
-	\item \textbf{Clearing Rule:} The market can either clear continuously or at periodic time intervals. A market that clears with periodic time interval of 1 time unit is equivalent to clearing continuously. A market that clears with a time interval of greater than one, is also called a Clearing House. In our mechanism, as soon as ask meets all the QoS constraints specified in a bid, and the bid-price is greater than or equal to the ask-price, a potential transaction is identified. The transacting parties are now given the option of accepting or rejecting the transaction. Again, this is a departure from typical CDAs, but essential to our mechanism (see \ref{ask_selection}). If accepted, the shouts of the transacting agents are deleted from the orderbook.
+	\item \textbf{Clearing Rule:} The market can either clear continuously or at periodic time intervals. A market that clears with periodic time interval of 1 time unit is equivalent to clearing continuously. A market that clears with a time interval of greater than one, is also called a Clearing House. In our mechanism, as soon as ask meets all the QoS constraints specified in a bid, and the bid-price is greater than or equal to the ask-price, a potential transaction is identified. The transacting parties are now given the option of accepting or rejecting the transaction. Again, this is a departure from typical CDAs, but essential to our mechanism (see section \ref{ask_selection}). If accepted, the shouts of the transacting agents are deleted from the orderbook.
 	
-	\item \textbf{Pricing Rule:} This determines the price at which a transaction takes place. The most commonly used mechanism is \textit{k-Pricing}. The value of \textit{k} determines which entity makes more profit, the buyer or the seller. We use \textit{k = 0.5} ($0.5 * bid\_price + (1 - 0.5) * ask\_price$) as the transaction price. 	
+	\item \textbf{Pricing Rule:} This determines the price at which a transaction takes place. The most commonly used mechanism is \textit{k-Pricing}. The value of \textit{k} determines which entity makes more profit, the buyer or the seller. We use \textit{k = 0.5} (\textit{i.e.}, $0.5 * bid\_price + (1 - 0.5) * ask\_price$) as the transaction price. 	
 	
 \end{enumerate}
 
 \subsubsection{QoS Calculation}
-For any application, it is not enough to have functionality. Rather, it requires to exhibit a certain QoS that determines whether it is acceptable to the user or not. 
-\paragraph{Constraints} There are three types of constraints that we consider in our services:
+For any application, it is not enough to have functionality. Rather, it requires to exhibit a certain QoS that determines whether it is acceptable to the user or not. \\
+\textbf{Constraints:} There are three types of constraints that we consider in our services:
 	\begin{enumerate}
-	    \item \textbf{Numeric}: These constraints pertain to those QoS attributes that are either numeric inherently (e.g., Cost) or, are easily reducible to a scale such that numeric comparisons are possible (e.g. performance, reliability, etc.)
-	    \item \textbf{Boolean}: Refers to those QoS attributes that are required to be definitely either present or absent (e.g., secure socket layer support = \textit{yes/no})
-	    \item \textbf{Categoric}: Refers to those QoS attributes that are again required to be definitively picked out of a list, but may end up being more than one (e.g., possible values for framerate = 16fps, 24fps, 32fps, 48fps and acceptable ones are: 32fps and 48 fps) 
+	    \item \textit{Numeric}: These constraints pertain to those QoS attributes that are either numeric inherently (e.g., Cost) or, are easily reducible to a scale such that numeric comparisons are possible (e.g. performance, reliability, etc.)
+	    \item \textit{Boolean}: Refers to those QoS attributes that are required to be definitely either present or absent (e.g., secure socket layer support = \textit{yes/no})
+	    \item \textit{Categoric}: Refers to those QoS attributes that are again required to be definitively picked out of a list, but may end up being more than one (e.g., possible values for framerate = 16fps, 24fps, 32fps, 48fps and acceptable ones are: 32fps and 48 fps) 
 	\end{enumerate}
 We also allow each constraint to be tagged as \textit{hard} or \textit{soft}. This allows the application to indicate that it prefers a certain QoS attribute value, but that the value is not critical. For example, an application might specify a boolean QoS attribute, say \textit{SSL support = yes}, as a soft constraint. This means that given a choice, it would prefer a CandidateService which has SSL support, but it is not an essential criterion. On the other hand, an application in the banking domain could specify it as a hard constraint, which means that a CandidateService that does not support SSL is not acceptable, at all.
 
-\paragraph{Stochastic Workflow Reduction\label{swr}}
-Depending on the pattern of the Workflow involved in the application, the same individual services with their corresponding QoS values, might result in differing end-to-end QoS exhibited by the application. To compute the QoS metrics for the entire application, we employ \textit{Stochastic Workflow Reduction} \cite{Cardoso2002Workflow}. Using this method, the Workflow is reduced using a series of reduction steps. Each time a reduction rule is applied, the structure of the network changes, and the QoS metrics for the affected nodes are aggregated. The reduction continues in an iterative manner, until only one task remains in the Workflow. The QoS metrics aggregated for this task represents the QoS metrics corresponding to the application Workflow. In Figure \ref{fig:parallel_reduction}, we see that a set of parallel tasks $t_{1}, t_{2}, t_{3}...t{n}$, a \textit{split task ($t_{a}$)} and a \textit{join task ($t_{b}$)} can be reduced to a sequence of three tasks, $t_{a}, t_{N}, t_{b}$. The incoming transitions of task $t_{a}$ and the outgoing transitions of task $t_{b}$ remain the same. The reduction for the QoS of the parallel tasks is computed as follows:
+\textbf{Stochastic Workflow Reduction\label{swr}:} Depending on the pattern of the Workflow involved in the application, the same individual services with their corresponding QoS values, might result in differing end-to-end QoS exhibited by the application. To compute the QoS metrics for the entire application, we employ \textit{Stochastic Workflow Reduction}~\cite{Cardoso2002Workflow}. Using this method, the Workflow is reduced using a series of reduction steps. Each time a reduction rule is applied, the structure of the network changes, and the QoS metrics for the affected nodes are aggregated. The reduction continues in an iterative manner, until only one task remains in the Workflow. The QoS metrics aggregated for this task represents the QoS metrics corresponding to the application Workflow. In Figure \ref{fig:parallel_reduction}, we see that a set of parallel tasks $t_{1}, t_{2}, t_{3}...t{n}$, a \textit{split task ($t_{a}$)} and a \textit{join task ($t_{b}$)} can be reduced to a sequence of three tasks, $t_{a}, t_{N}, t_{b}$. The incoming transitions of task $t_{a}$ and the outgoing transitions of task $t_{b}$ remain the same. The reduction for the QoS of the parallel tasks is computed as follows:
 
 \begin{equation}
 Cost(t_{N}) = \sum_{1 \leq i \leq n} Cost(t_{i})
@@ -197,13 +196,13 @@ Reliability(t_{N}) = \prod_{1 \leq i \leq n} Reliability(t_{i})
 	\fbox{
 	\includegraphics[scale=0.25]{drawings/parallel_reduction.pdf}
 	}
-	\caption{Reduction of parallel tasks(reproduced from \cite{Cardoso2004Quality}). For additive QoS, the attributes are summed up, while for multiplicative QoS, the attributes are multiplied together\label{fig:parallel_reduction}}
+	\caption{Reduction of parallel tasks(reproduced from~\cite{Cardoso2004Quality}). For additive QoS, the attributes are summed up, while for multiplicative QoS, the attributes are multiplied together\label{fig:parallel_reduction}}
 \end{figure}
 
-Thus, if the cost for each of the parallel tasks ($t_{1}...t_{n}$) is $5$ units each, then the cost of $t_{N}$ would be $5 * n$. Likewise, if the reliability for (say) three tasks ($t_{1}...t_{3}$) is $0.9$ each, then the reliability for $t_{N}$ would be $0.729$. Similar reduction formulae \cite{Cardoso2004Quality} are used for other types of tasks, such as sequential tasks, loop tasks, conditional tasks, etc.
+Thus, if the cost for each of the parallel tasks ($t_{1}...t_{n}$) is $5$ units each, then the cost of $t_{N}$ would be $5 * n$. Likewise, if the reliability for (say) three tasks ($t_{1}...t_{3}$) is $0.9$ each, then the reliability for $t_{N}$ would be $0.729$. Similar reduction formulae~\cite{Cardoso2004Quality} are used for other types of tasks, such as sequential tasks, loop tasks, conditional tasks, etc.
 
 
-\subsubsection{Decomposing End-to-End constraints\label{decomposing_constraints}} QoS constraints are usually specified on an application-wide basis. That is, performance for an entire application (end-to-end) or a cost constraint that must be met. To achieve these constraints in a decentralized manner, we decompose the global constraints that the application imposes, into local ones (the reverse process of SWR). Local constraints can can be handed over to individual BuyerAgents. Amongst the three type of QoS that we consider, the last two types of constraints (boolean and categoric) do not need to be decomposed at all. They are given to all agents, as is. For example, if \texttt{all services must use encryption} is a constraint, then every agent can be given the constraint, without any processing. On the other hand, constraints like \texttt{cost of all services $< C$} need to be decomposed on a per-Agent basis. Numeric constraints are decomposed, as shown in \ref{algo_decomposing_numeric_constraints}
+\subsubsection{Decomposing End-to-End constraints\label{decomposing_constraints}} QoS constraints are usually specified on an application-wide basis. That is, performance for an entire application (end-to-end) or a cost constraint that must be met. To achieve these constraints in a decentralized manner, we decompose the global constraints that the application imposes, into local ones (the reverse process of SWR). Local constraints can can be handed over to individual BuyerAgents. Amongst the three type of QoS that we consider, the last two types of constraints (boolean and categoric) do not need to be decomposed at all. They are given to all agents, as is. For example, if \texttt{all services must use encryption} is a constraint, then every agent can be given the constraint, without any processing. On the other hand, constraints like \texttt{cost of all services $< C$} need to be decomposed on a per-Agent basis. Numeric constraints are decomposed, as shown in Algorithm \ref{algo_decomposing_numeric_constraints}
 
 \begin{algorithm}
  \DontPrintSemicolon
@@ -216,7 +215,7 @@ Thus, if the cost for each of the parallel tasks ($t_{1}...t_{n}$) is $5$ units 
  	Register in $m$\;
  	$a \longleftarrow m_{last\_k\_transactions}$\;
  	\ForEach{$\omega \in NumericConstraints$}{
-		calculate $a^{\omega\_m}_{low}, a^{\omega\_m}_{median}, a^{\omega_m}_{high}$ \;
+		calculate $a^{\omega\_m}_{low}, a^{\omega\_m}_{median}, a^{\omega\_m}_{high}$ \;
 	}
   }
   \ForEach{$\omega \in NumericConstraints$}{
@@ -239,7 +238,7 @@ Thus, if the cost for each of the parallel tasks ($t_{1}...t_{n}$) is $5$ units 
 
 \subsection{Adaptation Using Bid Generation}\label{bid_generation}
 
-\textit{Bids} are the mechanism by which BuyerAgents explore the search space of QoS-cost combinations that are available. Depending on the \textit{bids}, potential transactional matches are identified by the MarketAgent. Thus, there needs to be a systematic way to generate bids, that not only meet the application's QoS requirements, but also explore the space of possible matches. The relevant parts that go into a Bid are given in table \ref{tbl:bid_elements}.
+\textit{Bids} are the mechanism by which BuyerAgents explore the search space of QoS-cost combinations that are available. Depending on the \textit{bids}, potential transactional matches are identified by the MarketAgent. Thus, there needs to be a systematic way to generate bids, that not only meet the application's QoS requirements, but also explore the space of possible matches. The relevant parts that go into a Bid are given in Table~\ref{tbl:bid_elements}.
 
 \begin{table*}
 \centering
@@ -256,13 +255,10 @@ Bid\_Price & Numeric \\
 \caption{Elements in a Bid \label{tbl:bid_elements}}
 \end{table*}
 
-The most important part of deciding on a value for a QoS attribute, in a Bid is the constraint on each attribute. If the constraint is hard, then, in each of the generated bids, the value inserted into the bid will remain the same. Else, the value inserted into the bid is varied. The varied values depend on the type of QoS attribute. The rules for generating QoS values, on the basis of type of attribute are as follows:
-
-\paragraph{Boolean} In case of soft constraints, two bids will be generated for a particular QoS attribute. For example, for QoS attribute \textit{SSL support}, one bid is generated with the value: \textit{yes} and another with the value: \textit{no}
-
-\paragraph{Categoric} In case of soft constraints, the number of bids will depend on the number of acceptable alternatives. For example, for QoS attribute {framerate}, the acceptable alternatives are: \textit{24fps} and \textit{32fps}. Therefore, two bids will be generated. 
-
-\paragraph{Numeric} In case of soft constraints, the number of bids will be three. That is, the BuyerAgent makes one bid at its target value, one at the median value obtained from the market, and the last one at the mid-point between the target and the median value.
+The most important part of deciding on a value for a QoS attribute, in a Bid is the constraint on each attribute. If the constraint is hard, then, in each of the generated bids, the value inserted into the bid will remain the same. Else, the value inserted into the bid is varied. The varied values depend on the type of QoS attribute. The rules for generating QoS values, on the basis of type of attribute are as follows:\\
+\textbf{Boolean:} In case of soft constraints, two bids will be generated for a particular QoS attribute. For example, for QoS attribute \textit{SSL support}, one bid is generated with the value: \textit{yes} and another with the value: \textit{no}\\
+\textbf{Categoric:} In case of soft constraints, the number of bids will depend on the number of acceptable alternatives. For example, for QoS attribute {framerate}, the acceptable alternatives are: \textit{24fps} and \textit{32fps}. Therefore, two bids will be generated. \\
+\textbf{Numeric:} In case of soft constraints, the number of bids will be three. The BuyerAgent makes one bid at its target value, one at the median value obtained from the market, and the third bid at the mid-point between the target and the median value.
 
 Thus, the total number of bids that a buyer generates is given by:
 \setlength{\arraycolsep}{0.0em}
@@ -273,7 +269,7 @@ Num(buyer_{bids})&{} = &{ }2 * Num(BooleanQoS)\nonumber\\
 \end{eqnarray}
 \setlength{\arraycolsep}{5pt}
 
-Thus, if a BuyerAgent has the QoS and preferences as given in table \ref{tbl:sample_qos_preferences}:
+Thus, if a BuyerAgent has the QoS and preferences as given in Table \ref{tbl:sample_qos_preferences}:
 
 \begin{table*}
 \centering
@@ -328,7 +324,7 @@ Latency & 99 \\
 \end{table*}
 
 \subsection{Decentralized Decision-Making Using Ask-Selection}\label{ask_selection}
-According to the market mechanism that we have outlined, a BuyerAgent can make multiple bids. This is how it searches the space of possible services that it could get, for its stated budget. Now, there might be multiple asks in the market that match these multiple bids. The market mechanism now moves on to its second-stage, where the BuyerAgent has to select amongst the possible transactions. Given that the mechanism for bid generation precludes bids that will violate hard constraints, it is safe to assume that none of the possible transactions will violate the application's hard constraints either. The task facing the BuyerAgent, is to choose amongst the possible transactions, in such a way that the decision maximizes the possible benefits, while taking care to minimize the possible downsides. We use a multiple criteria decision making approach called PROMETHEE\cite{Brans1985Preference}\\
+According to the market mechanism that we have outlined, a BuyerAgent can make multiple bids. This is how it searches the space of possible services, for its stated budget. Now, there might be multiple asks in the market that match these multiple bids. The market mechanism now moves on to its second-stage, where the BuyerAgent has to select amongst the possible transactions. Given that the mechanism for bid generation precludes bids that will violate hard constraints, it is safe to assume that none of the possible transactions will violate the application's hard constraints either. The task facing the BuyerAgent, is to choose amongst the possible transactions, in such a way that the decision maximizes the possible benefits, while taking care to minimize the possible downsides. We use a multiple criteria decision making approach called PROMETHEE~\cite{Brans1985Preference}\\
 The BuyerAgent needs to rank all the CandidateServices, that have been returned by the MarketAgent, as a potential transaction. Thus, for a transaction set ($TS$), the BuyerAgent needs to select one CandidateService that it will actually transact with. Depending on the number of QoS attributes, the preference of CandidateService $a$ over CandidateService $b$ is calculated by aggregating the preferences over each QoS attribute (and its weightage). The aggregate preference value of a CandidateService is calculated as:
 \begin{equation}
 \pi(a,b) = \sum_{i=1}^{n} P_{i}(a,b)w_{i}
@@ -359,7 +355,7 @@ Choice of the CandidateService is based on the following heuristic:
 	\end{enumerate}
 
 \subsection{A Worked-out Example}
-Suppose that the MarketAgent returns the 4 Asks (as shown in table\ref{tbl:potential_transactions}), as possible transaction matches:
+Suppose that the MarketAgent returns the 4 Asks (as shown in Table~\ref{tbl:potential_transactions}), as possible transaction matches:
 \begin{table*}
 \centering
 \subfloat[][CandidateService A]{
@@ -416,7 +412,7 @@ Latency & 92 \\
 \caption{Asks returned by MarketAgent as potential transactions \label{tbl:potential_transactions}}
 \end{table*}
 
-Ranking amongst multiple asks is done on a per-QoS attribute basis. That is, each ask is ranked on each QoS attribute. Depending on the type of QoS attribute, the criteria used from PROMETHEE is shown in table \ref{tbl:qos_promethee_mapping}
+Ranking amongst multiple asks is done on a per-QoS attribute basis. That is, each ask is ranked on each QoS attribute. Depending on the type of QoS attribute, the criteria used from PROMETHEE is shown in Table~\ref{tbl:qos_promethee_mapping}.
 
 \begin{table}
 \centering
@@ -434,8 +430,8 @@ Numeric & Criterion with Linear Preference \\
 
 Table \ref{tbl:qos_promethee_mapping} effectively means that CandidateServices will be evaluated on their QoS attributes as follows:
 	\begin{enumerate}
-		\item In case of a boolean attribute, a CandidateService A will be preferred over CandidateService B, if it has a desired boolean value, while the other doesn't. Else, there is no preference.
-		\item In case of a categoric attribute, a CandidateService A will be preferred over CandidateService B, if the categoric value of A is better by $k$ over the categoric value of B. Else, there is no preference. The value of $k$ is adjusted based on whether the attribute is a hard constraint or a soft constraint. For hard constraints, $k$ is taken to be zero, \textit{i.e.}, the CandidateService with the better categoric value (higher if the attribute is to be maximized, minimized otherwise) is strictly preferred over the other. 
+		\item In case of a boolean attribute, a CandidateService A will be preferred over CandidateService B, if it has a desired boolean value. Else, there is no preference.
+		\item In case of a categoric attribute, a CandidateService A will be preferred over CandidateService B, if the categoric value of A is better by $k$ over the categoric value of B. Else, there is no preference. The value of $k$ is adjusted based on whether the attribute is a hard constraint or a soft constraint. For hard constraints, $k$ is taken to be zero, \textit{i.e.}, the CandidateService with the better categoric value is strictly preferred over the other. 
 		\item In case of a numeric attribute, a CandidateService A will be increasingly preferred over CandidateService B, as the difference between their numeric value approaches some $m$. After $m$, A is strictly preferred. Again, the value of $m$ is adjusted based on whether the attribute is a hard constraint or a soft constraint. 
 	\end{enumerate}
 	
@@ -460,7 +456,7 @@ Table \ref{tbl:qos_promethee_mapping} effectively means that CandidateServices w
 			\label{pref_latency}
 	\end{equation}
 	
-Based on the preference equations \ref{pref_ssl}, \ref{pref_framerate} and \ref{pref_latency}, we can calculate the relative values of the 4 CandidateServices, as given in table \ref{tbl:outranking_table}
+Based on the preference equations \ref{pref_ssl}, \ref{pref_framerate} and \ref{pref_latency}, we can calculate the relative values of the 4 CandidateServices, as given insTable \ref{tbl:outranking_table}
 	\begin{table}[htbp]
 		\centering
 		\caption{Values of $\pi(x_i, x_j)$ \label{tbl_ranking_values}}
@@ -476,7 +472,7 @@ Based on the preference equations \ref{pref_ssl}, \ref{pref_framerate} and \ref{
 		\bottomrule
 		\end{tabular}
 	\end{table}
-Once we have a relative per-attribute value, we can calculate the outranking values based on equations \ref{positive_outranking},\ref{negative_outranking} and \ref{net_outranking}, as shown in table \ref{tbl:outranking_table}
+Once we have a relative per-attribute value, we can calculate the outranking values based on equations \ref{positive_outranking},\ref{negative_outranking} and \ref{net_outranking}, as shown insTable \ref{tbl:outranking_table}
 
 	\begin{table}[htbp]
 		\centering
@@ -493,7 +489,7 @@ Once we have a relative per-attribute value, we can calculate the outranking val
 		\end{tabular}			
 		\caption{Calculation of outranking values \label{tbl:outranking_table}}
 	\end{table}
-It is clear from table \ref{tbl:outranking_table} that CandidateService D is the best amongst the potential transactions and CandidateService C is the worst. The BuyerAgent now accepts the transaction with CandidateService D and rejects all the others. 
+It is clear fromsTable \ref{tbl:outranking_table} that CandidateService D is the best amongst the potential transactions and CandidateService C is the worst. The BuyerAgent now accepts the transaction with CandidateService D and rejects all the others. 
 
 \subsection{Post-Transaction}
 The BuyerAgent reports back to the ApplicationAgent, the cost and QoS being made available for the transaction. The ApplicationAgent then performs a SWR calculation to ensure that the QoS of the service being bought, does not violate any of the application's end-to-end constraints. Note that the ApplicationAgent needs to calculate SWR for the numeric constraints only. The other types of constraints (boolean and categoric) are specified in the bid prepared by the BuyerAgent, and therefore do not need checking. This greatly reduces the computational effort required on the part of the Application agent. The best case scenario, from a computational perspective, is when all the QoS attributes of the Application are either boolean or categoric. However, in the worst case scenario, all the QoS attributes that the ApplicationAgent is  interested in, could be numeric. In this case, it has to perform an SWR calculation for each of the QoS attributes and the distribution of computation to BuyerAgents is minimal.\\
@@ -611,7 +607,7 @@ Both these stimuli occur at different time scales. The external check for QoS vi
 
 \subsection{Design and Implementation}
 %In \citep{Cheng2009}, the authors comment on the engineering challenges of building a self-adaptive system, and emphasize the fact that the %feedback loop is of utmost importance. 
-We call our implementation of the proposed mechanism, \textit{clobmas}(Cloud-based Multi-Agent System). We document \textit{clobmas} using the object-oriented paradigm for all of the internal components of an agent. Thus, we show the static structure of the system through package, component and class diagrams. We show agent-interaction using Agent-UML (AUML).	
+We call our implementation of the proposed mechanism, \textit{clobmas} (Cloud-based Multi-Agent System). We document \textit{clobmas} using the object-oriented paradigm for all of the internal components of an agent. Thus, we show the static structure of the system through package, component and class diagrams. We show agent-interaction using Agent-UML (AUML).	
 %\subsubsection{High level Package Diagram} A package diagram shows the coarse-level organization of code in a system, with the packages and sub-packages demarcating the encapsulation of concepts in the system. In figure \ref{fig:package_diagram}, we see that all the agents, \textit{viz.}, buyer, seller, application, market are created and maintained separately from concepts like \textbf{Strategy} and \textbf{Communication}. This independence of packaging also highlights the various axes along which behaviour could be changed. Thus, \textit{clobmas} could change its auction style from a continuous double auction to a double auction with a clearing house, with no effect on the other parts of the system. 
 %
 %\begin{figure}[H]
@@ -620,7 +616,7 @@ We call our implementation of the proposed mechanism, \textit{clobmas}(Cloud-bas
 %\caption{Package diagram of entities \label{fig:package_diagram}}
 %\end{figure}
 
-\subsubsection{Architectural Style} The design of our implementation is based on the publish-subscribe architectural style. This style was chosen for its decoupling properties, such that each communicating entity in the system is independent of every other. This fits in well, with our notion of agents acting on the basis of their own goals and their environment, in a decentralized manner. Each type of agent described previously, is both an event publisher and an event subscriber. That is, each ApplicationAgent generates events that describe when the application's QoS constraints have changed, when the budget has changed, etc. These events are subscribed to, by BuyerAgents belonging to that application. The BuyerAgents, for their part, publish events relating to the market that they are registered with. Similarly, the MarketAgents publish events relating to the start of trading, transaction events, etc. The event-based paradigm fits well with the QoS monitoring schemes, as well. Both \cite{Zeng2007Monitoring} and \cite{Michlmayr2009Comprehensive} use events to monitor and communicate SLA violations. 
+\subsubsection{Architectural Style} The design of our implementation is based on the publish-subscribe architectural style. This style was chosen for its decoupling properties, such that each communicating entity in the system is independent of every other. This fits in well, with our notion of agents acting on the basis of their own goals and their environment, in a decentralized manner. Each type of agent described previously, is both an event publisher and an event subscriber. That is, each ApplicationAgent generates events that describe when the application's QoS constraints have changed, when the budget has changed, etc. These events are subscribed to, by BuyerAgents belonging to that application. The BuyerAgents, for their part, publish events relating to the market that they are registered with. Similarly, the MarketAgents publish events relating to the start of trading, transaction events, etc. The event-based paradigm fits well with the QoS monitoring schemes, as well. Both Zeng~\cite{Zeng2007Monitoring} and Michlmayer~\cite{Michlmayr2009Comprehensive} use events to monitor and communicate SLA violations. 
 %
 %\begin{figure}[ht]
 %	\centering
@@ -629,31 +625,31 @@ We call our implementation of the proposed mechanism, \textit{clobmas}(Cloud-bas
 %	\caption{Simplified class diagram of core entities}
 %\end{figure}
 
-\subsubsection{Component Diagram} A component diagram illustrates how a system is structurally organized, with communication and dependencies between entities. In figure \ref{fig:component_diagram}, we see a subset of the components, and their communication links. The component \textit{Service Registry} is depicted as a separate entity, since it is a third-party component, and we do not have any control over it. The communication link shown between \textit{Seller} and \textit{Service Registry} is therefore necessarily one that is likely to be different for every \textit{Service Registry}. The Market component can be easily replaced with another that implements a different auction strategy, without disrupting the architecture.
+\subsubsection{Component Diagram} A component diagram illustrates how a system is structurally organized, with communication and dependencies between entities. In Figure~\ref{fig:component_diagram}, we see a subset of the components, and their communication links. The component \textit{Service Registry} is depicted as a separate entity, since it is a third-party component, and we do not have any control over it. The communication link shown between \textit{Seller} and \textit{Service Registry} is therefore necessarily one that is likely to be different for every \textit{Service Registry}. The Market component can be easily replaced with another that implements a different auction strategy, without disrupting the architecture.
 
-\begin{figure*}[htbp]
+\begin{figure}[htbp]
 \centering
 \includegraphics[scale=0.46]{drawings/Agent_Component_Diagram.pdf}
 \caption{Component diagram of entities\label{fig:component_diagram}}
-\end{figure*}
+\end{figure}
 
-\subsubsection{Class Diagram} The class diagram shows the static relationships between the main entities in the MAS. The \textit{Bid} and \textit{Ask} interfaces shown in figure \ref{fig:class_diagram} are also shown in the component diagram (see figure \ref{fig:component_diagram}), with the \textit{Market} class implementing both of them. 
+\subsubsection{Class Diagram} The class diagram shows the static relationships between the main entities in the MAS. The \textit{Bid} and \textit{Ask} interfaces shown in Figure~\ref{fig:class_diagram} are also shown in the component diagram (see Figure~\ref{fig:component_diagram}), with the \textit{Market} class implementing both of them. 
 
-\begin{figure*}[htbp]
+\begin{figure}[htbp]
 \centering
 \includegraphics[scale=0.45]{drawings/Agent_Class_Diagram.pdf}
 \caption{Class diagram of entities \label{fig:class_diagram}}
-\end{figure*}
+\end{figure}
 
 \subsubsection{Activity Diagram} The most difficult part of getting all the agents in an MAS to solve a problem, is the problem of communication. The design of the communication protocol determines how much communication happens, at what times and how much computational effort it takes to communicate. If the agents communicate too little, then there is a danger of the MAS failing to solve the problem it was created for. On the other hand, if too much communication takes place, then a lot of wastage occurs, not only in terms of bandwidth but also in computational cycles and time. Thus, while communication is a fundamental activity in an MAS, depicting this in UML is difficult. The standard activity diagrams in UML are \textit{Sequence Diagrams} and \textit{Collaboration Diagrams}. However, the semantics in both these diagrams assumes a single thread of control, \textit{i.e.}, each object that sends or receives a message is assumed to be the only active object at that time instant. This is not true in the case of Clobmas.  Also, UML which does not provide for broadcast/multicast messages. To deal with these situations, the agent community has evolved AUML (Agent-UML) which modifies the semantics of a sequence diagram, to allow for the possibilities above. We document the communication steps of our mechanism through AUML diagrams.\\
-In the following figures, we show the communication for an application with two AbstractServices, \texttt{A} and \texttt{B}, and its corresponding BuyerAgents and the market agent. The \emph{Setup Phase} (figure \ref{fig:setup_phase}) is composed of two calculations done by the ApplicationAgent and, two multicast messages to the application's BuyerAgents. The two calculations involve decomposing the application's end-to-end constraints into local constraints and, computing the budget that each BuyerAgent will receive.
+In the following figures, we show the communication for an application with two AbstractServices, \texttt{A} and \texttt{B}, and its corresponding BuyerAgents and the market agent. The \emph{Setup Phase} (Figure~\ref{fig:setup_phase}) is composed of two calculations done by the ApplicationAgent and, two multicast messages to the application's BuyerAgents. The two calculations involve decomposing the application's end-to-end constraints into local constraints and, computing the budget that each BuyerAgent will receive.
 \begin{figure*}[h]
 \centering
 \includegraphics[scale=0.7]{drawings/setup_phase.pdf}
 \caption{Setup phase for an application with two AbstractServices A \& B \label{fig:setup_phase}}
 \end{figure*}
 
-Decomposing constraints (figure \ref{fig:decompose_constraints}) involves communication between the BuyerAgents, their respective markets and the ApplicationAgent. The ApplicationAgent waits for the BuyerAgents to get data about previous transactions in the market, applies SWR \cite{Cardoso2002Workflow} and checks whether the combination of QoS available in the market meets its end-to-end constraints. Based on the combinations that meet the end-to-end constraints, the ApplicationAgent creates local constraints for the individual BuyerAgents. These are then propagated to the BuyerAgents.
+Decomposing constraints (Figure~\ref{fig:decompose_constraints}) involves communication between the BuyerAgents, their respective markets and the ApplicationAgent. The ApplicationAgent waits for the BuyerAgents to get data about previous transactions in the market, applies SWR~\cite{Cardoso2002Workflow} and checks whether the combination of QoS available in the market meets its end-to-end constraints. Based on the combinations that meet the end-to-end constraints, the ApplicationAgent creates local constraints for the individual BuyerAgents. These are then propagated to the BuyerAgents.
 \begin{figure*}[h]
 \centering
 \includegraphics[scale=0.7]{drawings/decompose_constraints.pdf}
@@ -671,7 +667,7 @@ The budget for the individual agents is split in the ratio of the transaction pr
 %\includegraphics[scale=0.7]{figures/chapter4/distribute_budget.pdf}
 %\end{figure}
 
-In figure \ref{fig:trading_phase}, we show the communication that takes place during the trading phase. This phase is essentially a loop. It periodically evaluates the \textit{bids} and \textit{asks} in the orderbook, and tries to match them. If it is successful, the transaction moves into the second stage (see figure \ref{fig:cda_protocol}). Based on whether a trade occurs or not, the application evaluates whether it needs to re-distribute the endowments of its agents. It is possible that an agent is unable to find any potential transactions, simply because it does not have the budget to bid high enough.
+In Figure~\ref{fig:trading_phase}, we show the communication that takes place during the trading phase. This phase is essentially a loop. It periodically evaluates the \textit{bids} and \textit{asks} in the orderbook, and tries to match them. If it is successful, the transaction moves into the second stage (see Figure~\ref{fig:cda_protocol}). Based on whether a trade occurs or not, the application evaluates whether it needs to re-distribute the endowments of its agents. It is possible that an agent is unable to find any potential transactions, simply because it does not have the budget to bid high enough.
 
 \begin{figure}[h]
 \centering
@@ -691,7 +687,7 @@ The trading proceeds in two stages. In the first stage, the MarketAgent matches 
 
 \section{Evaluation}
 \subsection{The Current Scenario}
-The current form of service-selection is provider-driven. That is, in all commercial clouds, the cloud provider uses a \textbf{posted-offer} mechanism. A posted-offer is a form of market where the supplier posts a certain price on a \textit{take-it-or-leave-it} basis. Thus, on Amazon's \textit{elastic cloud compute} (EC2), there are several services that are functionally identical, but priced differently. This price differentiation exists due to different QoS being exhibited by these services.  In table \ref{tbl:amazon_prices}, we show a slice of Amazon's pricing for its \textit{On-Demand Instances}.
+The current form of service-selection is provider-driven. That is, in all commercial clouds, the cloud provider uses a \textbf{posted-offer} mechanism. A posted-offer is a form of market where the supplier posts a certain price on a \textit{take-it-or-leave-it} basis. Thus, on Amazon's \textit{elastic cloud compute} (EC2), there are several services that are functionally identical, but priced differently. This price differentiation exists due to different QoS being exhibited by these services.  In Table~\ref{tbl:amazon_prices}, we show a slice of Amazon's pricing for its \textit{On-Demand Instances}.
 \begin{table*}\footnotesize
 	\centering
 	 \begin{tabular}{|p{5cm}|p{3cm}|p{3cm}|}
@@ -737,8 +733,8 @@ Since, SkyCompute is an ultra-large collection of services, clobmas must be able
 %			\item Ratio of increase in AdaptationTime to increase in markets increases linearly or as a low-order polynomial
 %			\item Number of applications that have adapted in all cases shall not be lower than 70\% of the market 
 %	    \end{enumerate}
-We summarize the operational ranges that clobmas is expected to deal with, in table \ref{tbl:scalability_targets}
-\begin{table*}[h]
+We summarize the operational ranges that clobmas is expected to deal with, in Table~\ref{tbl:scalability_targets}
+\begin{table}[H]
 \centering
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{p{10cm}p{4cm}p{3cm}}
@@ -752,14 +748,12 @@ We summarize the operational ranges that clobmas is expected to deal with, in ta
 	\bottomrule
 \end{tabular}
 \caption{Operational range for scalability goals \label{tbl:scalability_targets}}
-\end{table*}
+\end{table}
 
 \subsection{Experimental Setup}
-Although open-source cloud implementations like OpenNebula\footnote{www.opennebula.org}, and Eucalyptus\footnote{http://www.eucalyptus.com/} are freely available for download, they are primarily targetted at the \textit{Infrastructure-As-A-Service} market. Also, modifying these implementations for our purposes (to introduce the notion of markets), would be cumbersome and expensive. In the same vein, using simulators such as CloudSim would require major modifications, to those toolkits. CloudSim is a fairly new toolkit, and does not have the ability to explore market mechanisms in a sophisticated manner\cite{Breskovic2011Towards}. 
-\paragraph{Software}
-In this scenario, we wrote our own simulator in Python (v. 2.6.5), using a discrete-event simulation library, SimPy\footnote{http://simpy.sourceforge.net/}. The operating system in use, was 64-bit Scientific Linux.
-\paragraph{Hardware}
-All experiments were run on an Intel Dual-cpu Quad-Core 1.5Ghz workstation, with 4MB of level-1 cache and 2GB of RAM.
+Although open-source cloud implementations like OpenNebula\footnote{www.opennebula.org}, and Eucalyptus\footnote{http://www.eucalyptus.com/} are freely available for download, they are primarily targetted at the \textit{Infrastructure-As-A-Service} market. Also, modifying these implementations for our purposes (to introduce the notion of markets), would be cumbersome and expensive. In the same vein, using simulators such as CloudSim would require major modifications, to those toolkits. CloudSim is a fairly new toolkit, and does not have the ability to explore market mechanisms in a sophisticated manner~\cite{Breskovic2011Towards}. \\
+\textbf{Software}: In this scenario, we wrote our own simulator in Python (v. 2.6.5), using a discrete-event simulation library, SimPy\footnote{http://simpy.sourceforge.net/}. The operating system in use, was 64-bit Scientific Linux.\\
+\textbf{Hardware}: All experiments were run on an Intel Dual-cpu Quad-Core 1.5Ghz workstation, with 4MB of level-1 cache and 2GB of RAM.\\
 \subsection{Methodology}
 We simulate 300 applications, each application consisting of randomly generated workflows trying to achieve their desired QoS levels, within a given budget. The budget that each application gets, acts as a constraint and the application's constituent BuyerAgents can never bid above their budgets. Each application generates a random level of QoS that it must achieve. Once an application achieves its required QoS, it withdraws from trading until an internal or external stimulus occurs. We model the probability of a QoS service violation based on a study by Cloud Harmony\cite{2011CloudHarmonyStudy}.\\
 %An external stimulus occurs when the application decides to change its required QoS for any reason (say, a new job requires different QoS levels). This is simulated by using time as a parameter. Every application, once satisfied with its QoS, (as mentioned above) stops adapting. However, at some random time, every application receives a different job that requires different QoS levels. This prompts that particular application to adapt, and therefore, approach the market again.
@@ -776,19 +770,19 @@ From BizInt's perspective, a cloud provider that enabled applications to self-ad
 		\item How close to the desired QoS level does the adaptive mechanism reach?
 		\item How long does it take for an application to achieve its desired QoS?
 	\end{enumerate}
-\paragraph{Close to desired QoS}  We use the application's targetted end-to-end QoS as the benchmark, against which the currently achieved QoS is measured. The application's target QoS is normalized and summed across all the QoS that it is interested in. This is taken to be the \textit{ideal utility level}. The achieved QoS is fed through the same process, to attain the \textit{achieved utility level}. The difference between the \textit{ideal utility level} and \textit{achieved utility level} is called the \textit{quality gap}. Each application defines a tolerance level, that specifies the magnitude of quality gap that is acceptable. \textbf{If the quality gap is within the tolerance level, the application is said to be satisfied}. We measure over a trading period, the \textbf{number of rounds that the application is satisfied}.
+\textbf{Close to desired QoS}: We use the application's targetted end-to-end QoS as the benchmark, against which the currently achieved QoS is measured. The application's target QoS is normalized and summed across all the QoS that it is interested in. This is taken to be the \textit{ideal utility level}. The achieved QoS is fed through the same process, to attain the \textit{achieved utility level}. The difference between the \textit{ideal utility level} and \textit{achieved utility level} is called the \textit{quality gap}. Each application defines a tolerance level, that specifies the magnitude of quality gap that is acceptable. \textbf{If the quality gap is within the tolerance level, the application is said to be satisfied}. We measure over a trading period, the \textbf{number of rounds that the application is satisfied}.\\
 
-\paragraph{Time to Satisfaction} In the absence of a deterministic solution (and therefore a deterministic notion of time), we must contend ourselves with evaluating whether the adaptive algorithm is \textit{`fast-enough'}.  The natural unit of time in clobmas, is a \textit{trading round}.  We measure \textbf{how many trading rounds}, application takes to be satisfied, from the start of an adaptation event. An adaptation event occurs when an application notices that the \textit{quality gap} is beyond the tolerance level. Thus, the start of the simulation defines an adaptation event, since all applications start off without any \textit{achieved utility level}.
+\textbf{Time to Satisfaction}: In the absence of a deterministic solution (and therefore a deterministic notion of time), we must contend ourselves with evaluating whether the adaptive algorithm is \textit{`fast-enough'}.  The natural unit of time in clobmas, is a \textit{trading round}.  We measure \textbf{how many trading rounds}, application takes to be satisfied, from the start of an adaptation event. An adaptation event occurs when an application notices that the \textit{quality gap} is beyond the tolerance level. Thus, the start of the simulation defines an adaptation event, since all applications start off without any \textit{achieved utility level}.
 	
-In figure \ref{fig:goodness} we see an average application's achievement of QoS levels. The application starts off with a \textit{quality gap} of \textit{minus 3}, but it quickly adapts to the QoS demanded and reaches the tolerance zone, in about $20$ trading rounds. From this point on, the application stays satisfied. The application is satisfied for $280$ out of $300$ trading rounds. We see that the achieved utility level does not stay constant. Instead, internal adaptation events cause the application to seek out different services. However, it stays within the tolerance zone. In figure \ref{fig:goodness_cda}, we show the adaptation occurring  under conditions of normal distribution of QoS demand and supply in the cloud. 
+In Figure~\ref{fig:goodness_cda} we see an average application's achievement of QoS levels. The application starts off with a \textit{quality gap} of \textit{minus 3}, but it quickly adapts to the QoS demanded and reaches the tolerance zone, in about $20$ trading rounds. From this point on, the application stays satisfied. The application is satisfied for $280$ out of $300$ trading rounds. We see that the achieved utility level does not stay constant. Instead, internal adaptation events cause the application to seek out different services. However, it stays within the tolerance zone. In Figure~\ref{fig:goodness_cda}, we show the adaptation occurring  under conditions of normal distribution of QoS demand and supply in the cloud. 
  \begin{figure}[h]
  	\centering
     \includegraphics[scale=0.45]{graphs/Single_App_Self_Adaptation_Across_Rounds_With_QA_Change.png}
     \caption{Utility gained by adaptation by a single application \label{fig:goodness_cda}}
 \end{figure}	 
 
-To compare the goodness of trading in a CDA market, we contrast its use in a posted-offer market.
-\paragraph{Posted Offer:} This type of mechanism refers to a situation where a seller posts an offer of a certain good at a certain price, but does not negotiate on either. That is, the buyer is free to \textit{take-it-or-leave-it}.  In such a scenario, the probability that an application will find services, at the \textit{bid-price} decreases. 
+To compare the goodness of trading in a CDA market, we contrast its use in a posted-offer market.\\
+\textbf{Posted Offer}: This type of mechanism refers to a situation where a seller posts an offer of a certain good at a certain price, but does not negotiate on either. That is, the buyer is free to \textit{take-it-or-leave-it}.  In such a scenario, the probability that an application will find services, at the \textit{bid-price} decreases. 
 
 \begin{figure}[h]
 	\centering
@@ -796,7 +790,7 @@ To compare the goodness of trading in a CDA market, we contrast its use in a pos
 	\caption{Utility gained by a single application in a posted offer market \label{fig:goodness_posted_offer}}
 \end{figure}
 
-In figure \ref{fig:goodness_posted_offer}, we see that the application is able to adapt and acquire the QoS that it requires. However, it is obvious from comparing the two figures, that in figure \ref{fig:goodness_cda}, the application is able to reach the tolerance zone a lot quicker than the application in figure \ref{fig:goodness_posted_offer}. In fact, in the \textit{posted offer} market, we see that the application takes $140$ rounds to reach the tolerance zone, while in the \textit{CDA} market, the application is able to reach its tolerance zone in under 20 rounds of trading. This difference can be attributed to the fact that since the sellers in a \textit{posted-offer} market do not change their price, the buying agents have to search a lot longer to find sellers that they are able to trade with. In a \textit{CDA}, the search process is much faster, since both the buyers and the sellers adjust their \textit{Bids} and \textit{Asks}.
+In Figure~\ref{fig:goodness_posted_offer}, we see that the application is able to adapt and acquire the QoS that it requires. However, it is obvious from comparing the two figures, that in Figure~\ref{fig:goodness_cda}, the application is able to reach the tolerance zone a lot quicker than the application in Figure~\ref{fig:goodness_posted_offer}. In fact, in the \textit{posted offer} market, we see that the application takes $140$ rounds to reach the tolerance zone, while in the \textit{CDA} market, the application is able to reach its tolerance zone in under 20 rounds of trading. This difference can be attributed to the fact that since the sellers in a \textit{posted-offer} market do not change their price, the buying agents have to search a lot longer to find sellers that they are able to trade with. In a \textit{CDA}, the search process is much faster, since both the buyers and the sellers adjust their \textit{Bids} and \textit{Asks}.
 
 \begin{table}[H]\footnotesize
 \centering
@@ -813,7 +807,7 @@ In figure \ref{fig:goodness_posted_offer}, we see that the application is able t
 	
 \subsubsection{SkyCompute's Perspective}	
 SkyCompute would like to ensure that any mechanism that it offers for self-adaptation results in high utilization of its services. We define \textbf{market satisfaction rate} as a measure of the efficiency of the mechanism. \textbf{Market satisfaction rate} is the percentage of applications that are satisfied with their QoS achievement. A satisfied application would withdraw from trading and use the service for a relatively long period of time. The more the number of applications that are satisfied, the more the number of services from SkyCompute that are being utilized. Thus, \textbf{market satisfaction rate} is a measure that SkyCompute would like to maximize.\\
-As a baseline, we first implement the Zero-Intelligence mechanism, as this represents the lower limit of the effectiveness of the CDA mechanism. The Zero-Intelligence scheme consists of agents randomly making bids and asks, with no history or learning or feedback(see figure \ref{fig:pure_random_strategy}). As expected, it performs quite poorly, with a market satisfaction rate of about 10-20\%. Clobmas achieves a much higher rate of market satisfaction(see figure \ref{fig:cda_zip_market_satisfaction}). 
+As a baseline, we first implement the Zero-Intelligence mechanism, as this represents the lower limit of the effectiveness of the CDA mechanism. The Zero-Intelligence scheme consists of agents randomly making bids and asks, with no history or learning or feedback(see figure \ref{fig:cda_zi_market_satisfaction}). As expected, it performs quite poorly, with a market satisfaction rate of about 10-20\%. Clobmas, on the other hand, achieves a much higher rate of market satisfaction(see Figure \ref{fig:cda_zip_market_satisfaction}). 
 
 \begin{figure}[h]
 	\centering
@@ -837,7 +831,7 @@ Quite similar to the CDA, the posted-offer also performs well (approx 70\% marke
 \end{figure}
 
 %\paragraph{Market Conditions}
-%Investigating the effect of market conditions (distributions of demand and supply) on the self-adaptive mechanism is slightly tricky. Conditions like paucity of supply, merely has the effect of less applications being able to satisfy their QoS requirements. The conditions that we investigate are shown in Table \ref{MarketConditions}. As can be seen from the table, the changing of QoS attribute demand and/or supply, from a uniform distribution to a skewed (bimodal) distribution does not seem to adversely affect the performance, at the aggregate level. More investigation, however, is required to establish the limits at which the aggregate performance starts to degrade noticeably.
+%Investigating the effect of market conditions (distributions of demand and supply) on the self-adaptive mechanism is slightly tricky. Conditions like paucity of supply, merely has the effect of less applications being able to satisfy their QoS requirements. The conditions that we investigate are shown in Table \ref{MarketConditions}. As can be seen from thesTable, the changing of QoS attribute demand and/or supply, from a uniform distribution to a skewed (bimodal) distribution does not seem to adversely affect the performance, at the aggregate level. More investigation, however, is required to establish the limits at which the aggregate performance starts to degrade noticeably.
 %
 %\begin{table*}[ht]
 % \begin{tabular}{| c | l | l |}
@@ -855,12 +849,12 @@ There are no commonly accepted/standard definitions of scalability, in self-adap
 According to \cite{Duboc2007framework}'s definition, when aspects of the environment change, they have an impact on the system's qualities. In our case, the system quality that we want to measure is performance, measured as the amount of time taken to reach a defined level of \textit{market satisfaction rate}. Although clobmas using a double-auction is better than clobmas using a posted offer, SkyCompute would like to know if this mechanism scales well. To investigate this, we pick a level of market satisfaction rate, that is higher than posted-offer, and measure how long it takes to achieve this level. The adaptation process can be highly dependent on many variables. In this section, we tease out how each of these variables affect the time taken for adaptation. To this end, we present the time taken by the CDA market to achieve an \textbf{80\%  market satisfaction rate}, while varying each of these variables.
 
 \textbf{AbstractServices Vs. CandidateServices:}
-Arguably, these are the variables that change most often from application to application, and from time to time. Every application has a different workflow and therefore, a different number of AbstractServices. As time passes, applications that have met their QoS will retire from the market, and new applications will come in. This changes the orderbook from the demand side. Also, the number of CandidateServices available per AbstractService is most susceptible to change. As time passes, some CandidateServices will no longer be available, and new ones come into the market. This changes the orderbook from the supply side.
+Arguably, these are the variables that change most often from application to application. Every application has a different workflow and therefore, a different number of AbstractServices. As time passes, applications that have met their QoS will retire from the market, and new applications will come in. This changes the orderbook from the demand side. Also, the number of CandidateServices is most susceptible to change. As time passes, some CandidateServices will no longer be available, and new ones come into the market. This changes the orderbook from the supply side.
 
 \begin{figure}[htbp]
 	\begin{minipage}[b]{0.4\linewidth}
 	\includegraphics[clip, trim=5cm 12cm 2cm 6cm, scale=0.32]{graphs/1_3_5_10_task_per_svc_scaling.pdf}
-	\caption{CandidateServices per AbstractService increase \label{fig:task_per_svc}}
+	\caption{CandidateServices increase \label{fig:task_per_svc}}
 	\end{minipage}
 	\begin{minipage}[b]{0.4\linewidth}
 			\includegraphics[clip, trim=2cm 12cm 2cm 6cm, scale=0.32]{graphs/10_30_50_svc_per_task_scaling.pdf}
@@ -874,34 +868,31 @@ Arguably, these are the variables that change most often from application to app
 	\caption{Both AbstractServices and CandidateServices increase \label{fig:task_and_candidate_scaling}}
 \end{figure}
 
-We see that clobmas is more sensitive to the number of AbstractServices in the workflow, than to the number of CandidateServices available per AbstractService (see figures \ref{fig:task_per_svc}, \ref{fig:svc_per_task} and \ref{fig:task_and_candidate_scaling}). The time taken to adapt increases faster when the number of AbstractServices in the workflow increases, as compared to the number of CandidateServices per AbstractService. From the perspective of individual applications inside clobmas, this is a good thing since the workflow of an individual application does not change, as often as the number of CandidateServices available. Since the time to adapt does not rise dramatically, with the rise in availability of CandidateServices, applications have a greater chance of adapting quickly and attaining their required QoS.
+We see that clobmas is more sensitive to the number of AbstractServices in the workflow, than to the number of CandidateServices (see Figures~\ref{fig:task_per_svc}, \ref{fig:svc_per_task} and \ref{fig:task_and_candidate_scaling}). The time to adapt increases faster when the number of AbstractServices in the workflow increases, as compared to the number of CandidateServices. From the perspective of individual applications inside clobmas, this is a good thing since the workflow of an individual application does not change, as often as the number of CandidateServices available. Since the time to adapt does not rise dramatically, with the rise in availability of CandidateServices, applications have a greater chance of adapting quickly and attaining their required QoS.
 
 \textbf{CandidateServices Vs. QoS attributes per Service:}
-As the number of applications that use clobmas increase, it will have to make a decision on whether to increase the number of CandidateServices per AbstractService, or increase the number of QoS attributes available per AbstractService. Regardless of the business implications of each, both will have an impact on the scalability of clobmas. In the following figures (see fig \ref{fig:svc_per_qos} and \ref{fig:qos_per_svc}), we see that each variable affects the time-to-adapt in approximately the same way. There is a slight difference in the slope of the lines, when QoS attributes are increased (as shall be seen in figure \ref{fig:svc_and_qos_scaling}).
+As the number of applications that use clobmas increase, it will have to make a decision on whether to increase the number of CandidateServices, or increase the number of QoS attributes. Regardless of the business implications of each, both will have an impact on the scalability of clobmas. In the following figures (see Figure~\ref{fig:svc_per_qos} and \ref{fig:qos_per_svc}), we see that each variable affects the time-to-adapt in approximately the same way. There is a slight difference in the slope of the lines, when QoS attributes are increased (as shall be seen in Figure~\ref{fig:svc_and_qos_scaling}).
 
 \begin{figure}[htbp]
 	\begin{minipage}[b]{0.4\linewidth}
 		\includegraphics[clip, trim=4cm 12cm 2cm 6cm, scale=0.32]{graphs/5_10_15_20_svc_per_qos_scaling.pdf}
-		\caption{CandidateServices increase \label{fig:svc_per_qos}}
+		\caption{QoS increase \label{fig:svc_per_qos}}
 	\end{minipage}
 	\hspace{0.9cm}
 	\begin{minipage}[b]{0.4\linewidth}
 			\vspace{0.3cm}
 		\includegraphics[clip, trim=2cm 12cm 2cm 6cm, scale=0.32]{graphs/1_3_5_7_9_qos_per_svc_scaling.pdf}
-		\caption{QoS increase \label{fig:qos_per_svc}}
+		\caption{CandidateServices increase \label{fig:qos_per_svc}}
 	\end{minipage}
 \end{figure}
 
-We see from figure \ref{fig:svc_and_qos_scaling} that the slope of QoS axis is greater than that of CandidateServices. That is, time taken for adaptation increases faster when QoS attributes increase, as compared to the number of CandidateServices available per AbstractService.
+We see from Figure~\ref{fig:svc_and_qos_scaling} that the slope of QoS axis is greater than that of CandidateServices. That is, time taken for adaptation increases faster when QoS attributes increase, as compared to the number of CandidateServices.
 \vspace*{1.5cm}
 \begin{figure}[htbp]
 \centering
-\includegraphics[clip, trim=2cm 9cm 2cm 12cm, scale=0.45]{graphs/scaling_time_svcs_qos.pdf}
+\includegraphics[clip, trim=2cm 9cm 2cm 11cm, scale=0.45]{graphs/scaling_time_svcs_qos.pdf}
 \caption{Both CandidateServices and QoS increase \label{fig:svc_and_qos_scaling}}
 \end{figure}
-
-
-
 
 \subsubsection{The Cost of Decentralization}
 As discussed in \cite{Eymann2003Decentralized}, an auction-based mechanism, by default, leads to a centralized mechanism. The auctioneer becomes a single point of failure, and thus leads to decreased robustness. This can be remedied by introducing multiple auctioneers. In clobmas, we use multiple markets for each AbstractService. This ensures that even if one market is non-functional, the others continue to function. Decentralization of markets comes at a cost. Buyer Agents have to choose which market to place their bids, to place them in multiple markets or a single market. Placing bids in multiple markets increases the chances of getting Candidate Services, but it also places a greater computational load on the Buyer Agent in terms of decision making. We currently choose markets randomly.\\
@@ -909,17 +900,17 @@ As discussed in \cite{Eymann2003Decentralized}, an auction-based mechanism, by d
 \vspace*{2cm}
 \begin{figure}[htbp]
 		\begin{minipage}{0.4\linewidth}
-			\includegraphics[clip, trim=4cm 14cm 6cm 6cm, scale=0.3]{graphs/1_3_5_7_10_svc_per_mkt_scaling.pdf}
-			\caption{CandidateServices increase per Market\label{fig:svc_per_mkt}}		
+			\includegraphics[clip, trim=3cm 14cm 5cm 6cm, scale=0.3]{graphs/1_3_5_7_10_svc_per_mkt_scaling.pdf}
+			\caption{CandidateServices increase\label{fig:svc_per_mkt}}		
 		\end{minipage}
 		\hspace{0.9cm}
 		\begin{minipage}{0.4\linewidth}
 			\includegraphics[clip, trim=2cm 14cm 6cm 6cm, scale=0.3]{graphs/1_3_5_7_10_mkts_per_svc_scaling.pdf}
-			\caption{Markets increase per CandidateService \label{fig:mkt_per_svc}}
+			\caption{Markets increase\label{fig:mkt_per_svc}}
 		\end{minipage}		
 \end{figure}
 
-We see from figures \ref{fig:svc_per_mkt} and \ref{fig:mkt_per_svc} that the slopes of the lines is almost linear. That is, increasing the number of CandidateServices \textit{vis-a-vis} increasing the number of markets does not make a significant difference to the time-to-adapt.
+We see from Figure~\ref{fig:svc_per_mkt} and Figure~\ref{fig:mkt_per_svc} that the slopes of the lines is almost linear. That is, increasing the number of CandidateServices \textit{vis-a-vis} increasing the number of markets does not make a significant difference to the time-to-adapt.
 
 \begin{figure}[htbp]%
 	\centering
@@ -933,13 +924,13 @@ Next we look at how QoS attributes affect the time-to-adapt \textit{vis-a-vis} t
 
 \begin{figure}[htbp]
 %		\begin{minipage}{0.4\linewidth}
-			\includegraphics[clip, trim=2cm 16cm 8cm 4cm, scale=0.55]{graphs/1_4_7_9_mkts_per_qos.pdf}
+			\includegraphics[clip, trim=2cm 16cm 6cm 4cm, scale=0.55]{graphs/1_4_7_9_mkts_per_qos.pdf}
 			\caption{Markets increase per QoS\label{fig:mkt_per_qos}}		
 \end{figure}
 %		\hspace{0.9cm}
 %		\begin{minipage}{0.4\linewidth}
 \begin{figure}
-			\includegraphics[clip, trim=2cm 16cm 6cm 4cm, scale=0.55]{graphs/2_4_6_qos_per_mkt_scaling.pdf}
+			\includegraphics[clip, trim=2cm 16cm 5cm 4cm, scale=0.55]{graphs/2_4_6_qos_per_mkt_scaling.pdf}
 			\caption{QoS increase per Market \label{fig:qos_per_mkt}}
 %		\end{minipage}		
 \end{figure}
@@ -948,7 +939,7 @@ We see that increasing the number of markets adds a constant amount of time to t
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[clip, trim=2cm 12cm 2cm 6cm, scale=0.45]{graphs/scaling_time_qos_mkts.pdf}
+	\includegraphics[clip, trim=2cm 12cm 2cm 5cm, scale=0.45]{graphs/scaling_time_qos_mkts.pdf}
 	\caption{Both QoS attributes and markets increase \label{fig:qos_and_mkts_scaling}}
 \end{figure}
 
@@ -1008,7 +999,7 @@ Our mechanism implements a continuous adaptation scheme, thus leaving the system
 
 \subsubsection{Threats to Validity}
 
-The set of services used to model the supply (as seen in table \ref{tbl:choice-of-services}) is deliberately seeded with services that probably will not be able to transact (e.g. $S1_{3}, S1_{54}, S3_{3}, S4_{3}$, etc.). This is done with a view to evaluating the mechanism's performance in an extreme situation. Services that advertise an availability of 79\% ($S1_{3}$) would never be acceptable.  In real life, these services would be competed out of the market, with most services differing in their QoS offerings by a marginal amount (or the price would be appropriately low, for low QoS). With a more typical scenario, our mechanism's performance would be much better, since the number of applications that are able to successfully achieve their QoS would be higher than figure \ref{fig:cda_zip_market_satisfaction}. Since the self-adaptive mechanism merely attempts to satisfy the application's QoS targets, it does not try to achieve  optimal set of concrete services, even if available. This is a trade-off that occurs between simplicity and robustness on one hand, and optimality on the other.\\
+The set of services used to model the supply (as seen insTable \ref{tbl:choice-of-services}) is deliberately seeded with services that probably will not be able to transact (e.g. $S1_{3}, S1_{54}, S3_{3}, S4_{3}$, etc.). This is done with a view to evaluating the mechanism's performance in an extreme situation. Services that advertise an availability of 79\% ($S1_{3}$) would never be acceptable.  In real life, these services would be competed out of the market, with most services differing in their QoS offerings by a marginal amount (or the price would be appropriately low, for low QoS). With a more typical scenario, our mechanism's performance would be much better, since the number of applications that are able to successfully achieve their QoS would be higher than figure \ref{fig:cda_zip_market_satisfaction}. Since the self-adaptive mechanism merely attempts to satisfy the application's QoS targets, it does not try to achieve  optimal set of concrete services, even if available. This is a trade-off that occurs between simplicity and robustness on one hand, and optimality on the other.\\
 
 The market mechanism does not achieve the optimum, neither from the individual perspective nor from the aggregate perspective. Given the bounded rationality of our agents, we aim only to achieve a satisficing result, that is, find a solution that satisfies the constraints. 
 % All satisficing problems can be trivially reformulated into optimization problems, but satisficing solutions need not be optimal solutions and vice-versa.\\
@@ -1074,9 +1065,9 @@ We have not modelled complex seller-side behaviour. Specifically, actions like d
 
 
 
-\bibliographystyle{IEEEtran}
-%\bibliography{/home/pg/vxn851/work/bibtex/converted-mendeley}
- \bibliography{converted-mendeley}
+\bibliographystyle{plain}
+\bibliography{/home/pg/vxn851/work/bibtex/converted-mendeley}
+% \bibliography{converted-mendeley}
 
 \begin{IEEEbiographynophoto}{Vivek Nallur}
 Vivek did his undergraduate degree in business management and economics  from the University of Delhi. He, then went on to do a postgraduate diploma in advanced software technology and subsequently a Masters in Software Engineering, at Carnegie Mellon University, Pittsburgh. After working for six years in the industry, he is currently pursuing his PhD at the University of Birmingham, UK. His research interests are complex systems, decentralized self-adaptation and communication in multi-agent systems.
