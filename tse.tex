@@ -852,96 +852,136 @@ According to \cite{Duboc2007framework}'s definition, when aspects of the environ
 Arguably, these are the variables that change most often from application to application. Every application has a different workflow and therefore, a different number of AbstractServices. As time passes, applications that have met their QoS will retire from the market, and new applications will come in. This changes the orderbook from the demand side. Also, the number of CandidateServices is most susceptible to change. As time passes, some CandidateServices will no longer be available, and new ones come into the market. This changes the orderbook from the supply side.
 
 \begin{figure}[htbp]
-	\begin{minipage}[b]{0.4\linewidth}
-	\includegraphics[clip, trim=5cm 12cm 2cm 6cm, scale=0.32]{graphs/1_3_5_10_task_per_svc_scaling.pdf}
+  \centering
+	\includegraphics[clip, trim=2cm 14.2cm 2cm 6cm, scale=0.42]{graphs/1_3_5_10_task_per_svc_scaling.pdf}
 	\caption{CandidateServices increase \label{fig:task_per_svc}}
-	\end{minipage}
-	\begin{minipage}[b]{0.4\linewidth}
-			\includegraphics[clip, trim=2cm 12cm 2cm 6cm, scale=0.32]{graphs/10_30_50_svc_per_task_scaling.pdf}
-			\caption{AbstractServices increase in Workflow\label{fig:svc_per_task}}
-	\end{minipage}
+\end{figure}
+\begin{figure}[htbp]
+      \centering
+	\includegraphics[clip, trim=2cm 14cm 2cm 6cm, scale=0.42]{graphs/10_30_50_svc_per_task_scaling.pdf}
+	\caption{AbstractServices increase in Workflow\label{fig:svc_per_task}}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[clip, trim=3cm 11cm 2cm 7cm,scale=0.47]{graphs/scaling_time_task_candidates.pdf}
+	\includegraphics[clip, trim=1cm 10cm 1cm 7cm,scale=0.47]{graphs/scaling_time_task_candidates.pdf}
 	\caption{Both AbstractServices and CandidateServices increase \label{fig:task_and_candidate_scaling}}
 \end{figure}
+% 
+% We see that clobmas is more sensitive to the number of AbstractServices in the workflow, than to the number of CandidateServices (see Figures~\ref{fig:task_per_svc}, \ref{fig:svc_per_task} and \ref{fig:task_and_candidate_scaling}). The time to adapt increases faster when the number of AbstractServices in the workflow increases, as compared to the number of CandidateServices. From the perspective of individual applications inside clobmas, this is a good thing since the workflow of an individual application does not change, as often as the number of CandidateServices available. Since the time to adapt does not rise dramatically, with the rise in availability of CandidateServices, applications have a greater chance of adapting quickly and attaining their required QoS.
+We perform curve-fitting to analyze the growth of the graphs. In the worst case, the polynomial growth of Time-to-MSR($y$) when AbstractServices($x$), is given by
+\begin{equation}
+    y =  -0.0361x^{3} +   4.7619x^{2}  - 5.4985x +   3.8978 \label{eq:task_vs_cand}
+\end{equation}
 
-We see that clobmas is more sensitive to the number of AbstractServices in the workflow, than to the number of CandidateServices (see Figures~\ref{fig:task_per_svc}, \ref{fig:svc_per_task} and \ref{fig:task_and_candidate_scaling}). The time to adapt increases faster when the number of AbstractServices in the workflow increases, as compared to the number of CandidateServices. From the perspective of individual applications inside clobmas, this is a good thing since the workflow of an individual application does not change, as often as the number of CandidateServices available. Since the time to adapt does not rise dramatically, with the rise in availability of CandidateServices, applications have a greater chance of adapting quickly and attaining their required QoS.
+Again, in the worst case, the polynomial growth of Time-to-MSR ($y$) when CandidateServices ($x$) increase, is given by
+\begin{equation}
+    y =  0.0012x^{3} - 0.0611x^{2} +  8.2678x - 16.6664 \label{eq:cand_vs_task}
+\end{equation}
+
+From \autoref{eq:task_vs_cand} and \autoref{eq:cand_vs_task}, we see that Clobmas is more sensitive to the number of CandidateServices than to the number of AbstractServices (see Figures \ref{fig:task_per_svc}, \ref{fig:svc_per_task} and \ref{fig:task_and_candidate_scaling}). Although, both equations are cubic in nature, the cubic term in \autoref{eq:task_vs_cand} is negative. This indicates that it grows slower than \autoref{eq:cand_vs_task}. This makes intuitive sense, since the increase in AbstractServices merely increases the number of BuyerAgents. 
 
 \textbf{CandidateServices Vs. QoS attributes per Service:}
-As the number of applications that use clobmas increase, it will have to make a decision on whether to increase the number of CandidateServices, or increase the number of QoS attributes. Regardless of the business implications of each, both will have an impact on the scalability of clobmas. In the following figures (see Figure~\ref{fig:svc_per_qos} and \ref{fig:qos_per_svc}), we see that each variable affects the time-to-adapt in approximately the same way. There is a slight difference in the slope of the lines, when QoS attributes are increased (as shall be seen in Figure~\ref{fig:svc_and_qos_scaling}).
+As the number of applications that use clobmas increase, it will have to make a decision on whether to increase the number of CandidateServices, or increase the number of QoS attributes. Regardless of the business implications of each decision, both will have an impact on the scalability of clobmas. In the following figures (see Figure~\ref{fig:svc_per_qos} and \ref{fig:qos_per_svc}), we see that each variable affects the time-to-adapt in approximately the same way. There is a slight difference in the slope of the lines, when QoS attributes are increased (as shall be seen in Figure~\ref{fig:svc_and_qos_scaling}).
 
 \begin{figure}[htbp]
-	\begin{minipage}[b]{0.4\linewidth}
-		\includegraphics[clip, trim=4cm 12cm 2cm 6cm, scale=0.32]{graphs/5_10_15_20_svc_per_qos_scaling.pdf}
-		\caption{QoS increase \label{fig:svc_per_qos}}
-	\end{minipage}
-	\hspace{0.9cm}
-	\begin{minipage}[b]{0.4\linewidth}
-			\vspace{0.3cm}
-		\includegraphics[clip, trim=2cm 12cm 2cm 6cm, scale=0.32]{graphs/1_3_5_7_9_qos_per_svc_scaling.pdf}
-		\caption{CandidateServices increase \label{fig:qos_per_svc}}
-	\end{minipage}
+  \centering
+  \includegraphics[clip, trim=4cm 14cm 2cm 6cm, scale=0.42]{graphs/5_10_15_20_svc_per_qos_scaling.pdf}
+  \caption{QoS increase \label{fig:svc_per_qos}}
+\end{figure}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[clip, trim=0cm 14cm 4cm 6cm, scale=0.42]{graphs/1_3_5_7_9_qos_per_svc_scaling.pdf}
+  \caption{CandidateServices increase \label{fig:qos_per_svc}}
 \end{figure}
 
 We see from Figure~\ref{fig:svc_and_qos_scaling} that the slope of QoS axis is greater than that of CandidateServices. That is, time taken for adaptation increases faster when QoS attributes increase, as compared to the number of CandidateServices.
-\vspace*{1.5cm}
+
 \begin{figure}[htbp]
 \centering
-\includegraphics[clip, trim=2cm 9cm 2cm 11cm, scale=0.45]{graphs/scaling_time_svcs_qos.pdf}
+\includegraphics[clip, trim=0.5cm 8cm 1cm 9cm, scale=0.45]{graphs/scaling_time_svcs_qos.pdf}
 \caption{Both CandidateServices and QoS increase \label{fig:svc_and_qos_scaling}}
 \end{figure}
+
+In the worst case, the polynomial describing the growth of Time-to-MSR ($y$) as QoS attributes ($x$) increase, is given by
+\begin{equation}
+    y =  0.0303x^{4}  - 0.7769x^{3} +   6.4554x^{2} - 14.4945x +  25.7250 \label{eq:qos_vs_cand}
+\end{equation}
+
+In the worst case, the polynomial describing the growth of Time-to-MSR ($y$) as CandidateServices ($x$) increase, is given by
+\begin{equation}
+    y =  0.0030x^{2} +    2.3721x  +  2.4722 \label{eq:cand_vs_qos}
+\end{equation}
+
+Equations \ref{eq:qos_vs_cand} and \ref{eq:cand_vs_qos} indicate that it is preferable to increase CandidateServices, than QoS attributes. 
+% The equation describing the increase due to QoS attribute (Equation \ref{eq:qos_vs_cand}) is actually biquadratic. 
+
 
 \subsubsection{The Cost of Decentralization}
 As discussed in \cite{Eymann2003Decentralized}, an auction-based mechanism, by default, leads to a centralized mechanism. The auctioneer becomes a single point of failure, and thus leads to decreased robustness. This can be remedied by introducing multiple auctioneers. In clobmas, we use multiple markets for each AbstractService. This ensures that even if one market is non-functional, the others continue to function. Decentralization of markets comes at a cost. Buyer Agents have to choose which market to place their bids, to place them in multiple markets or a single market. Placing bids in multiple markets increases the chances of getting Candidate Services, but it also places a greater computational load on the Buyer Agent in terms of decision making. We currently choose markets randomly.\\
 \textbf{CandidateServices Vs. Number of Markets:} Does decentralization affect time taken for adaptation or number of CandidateServices? In other words, should clobmas increase the number of CandidateServices available per market? Or would it be better to increase the number of markets? Increasing the number of markets increases the robustness of the system. 
-\vspace*{2cm}
-\begin{figure}[htbp]
-		\begin{minipage}{0.4\linewidth}
-			\includegraphics[clip, trim=3cm 14cm 5cm 6cm, scale=0.3]{graphs/1_3_5_7_10_svc_per_mkt_scaling.pdf}
-			\caption{CandidateServices increase\label{fig:svc_per_mkt}}		
-		\end{minipage}
-		\hspace{0.9cm}
-		\begin{minipage}{0.4\linewidth}
-			\includegraphics[clip, trim=2cm 14cm 6cm 6cm, scale=0.3]{graphs/1_3_5_7_10_mkts_per_svc_scaling.pdf}
-			\caption{Markets increase\label{fig:mkt_per_svc}}
-		\end{minipage}		
-\end{figure}
 
-We see from Figure~\ref{fig:svc_per_mkt} and Figure~\ref{fig:mkt_per_svc} that the slopes of the lines is almost linear. That is, increasing the number of CandidateServices \textit{vis-a-vis} increasing the number of markets does not make a significant difference to the time-to-adapt.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[clip, trim=0cm 13cm 3cm 6cm, scale=0.40]{graphs/1_3_5_7_10_svc_per_mkt_scaling.pdf}
+  \caption{Markets increase\label{fig:svc_per_mkt}}		
+\end{figure}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[clip, trim=0cm 14cm 3cm 6cm, scale=0.4]{graphs/1_3_5_7_10_mkts_per_svc_scaling.pdf}
+  \caption{CandidateServices increase\label{fig:mkt_per_svc}}
+\end{figure}
 
 \begin{figure}[htbp]%
 	\centering
-	\includegraphics[clip, trim=2cm 10cm 2cm 10cm, scale=0.5]{graphs/scaling_time_svcs_mkts.pdf}
+	\includegraphics[clip, trim=2cm 10cm 1cm 10cm, scale=0.5]{graphs/scaling_time_svcs_mkts.pdf}
 	\caption{Both Candidate Services and Markets increase \label{fig:svc_and_mkts_scaling}}%
 \end{figure}
 
-Hence, the decision to increase robustness does not negatively impact the time-to-adapt exhibited by clobmas. \\
+In the worst case, the polynomial describing the growth of Time-to-MSR ($y$), as number of Markets increase ($x$), is given  by
+\begin{equation}
+    y =  8.3745x  +  0.0800 \label{eq:mkt_vs_cand}
+\end{equation}
+
+In the worst case, the polynomial describing the growth of Time-to-MSR ($y$), as number of CandidateServices increase ($x$), is given  by
+\begin{equation}
+    y =   7.5972x  +  6.8222 \label{eq:cand_vs_mkt}
+\end{equation}
+
+We see from Equation~\ref{eq:mkt_vs_cand} and Equation~\ref{eq:cand_vs_mkt} that the slopes of the lines is linear. That is, increasing the number of CandidateServices \textit{vis-a-vis} increasing the number of markets does not make a significant difference to the time-to-adapt.\\
+
 \textbf{QoS attributes Vs. Number of Markets:}
 Next we look at how QoS attributes affect the time-to-adapt \textit{vis-a-vis} the number of markets. 
 
 \begin{figure}[htbp]
-%		\begin{minipage}{0.4\linewidth}
-			\includegraphics[clip, trim=2cm 16cm 6cm 4cm, scale=0.55]{graphs/1_4_7_9_mkts_per_qos.pdf}
-			\caption{Markets increase per QoS\label{fig:mkt_per_qos}}		
-\end{figure}
-%		\hspace{0.9cm}
-%		\begin{minipage}{0.4\linewidth}
-\begin{figure}
-			\includegraphics[clip, trim=2cm 16cm 5cm 4cm, scale=0.55]{graphs/2_4_6_qos_per_mkt_scaling.pdf}
-			\caption{QoS increase per Market \label{fig:qos_per_mkt}}
-%		\end{minipage}		
+\centering
+  \includegraphics[clip, trim=0cm 16.2cm 2cm 4cm, scale=0.45]{graphs/1_4_7_9_mkts_per_qos.pdf}
+  \caption{QoS increase\label{fig:mkt_per_qos}}		
 \end{figure}
 
-We see that increasing the number of markets adds a constant amount of time to the adaptation process. On the other hand, increasing the number of QoS per CandidateService causes a non-proportional increase in the time taken. In other words, increasing the number of QoS per CandidateService is more expensive than increasing the number of markets. 
+\begin{figure}
+  \centering
+  \includegraphics[clip, trim=0cm 16cm 2cm 4cm, scale=0.4]{graphs/2_4_6_qos_per_mkt_scaling.pdf}
+  \caption{Markets increase \label{fig:qos_per_mkt}}
+\end{figure}
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[clip, trim=2cm 12cm 2cm 5cm, scale=0.45]{graphs/scaling_time_qos_mkts.pdf}
+	\includegraphics[clip, trim=0cm 12cm 2cm 5cm, scale=0.4]{graphs/scaling_time_qos_mkts.pdf}
 	\caption{Both QoS attributes and markets increase \label{fig:qos_and_mkts_scaling}}
 \end{figure}
+
+In the worst case, the polynomial describing the growth of Time-to-MSR ($y$) as number of Markets ($x$) increase, is given by
+\begin{equation}
+    y = -0.4595x^{2} +  65.0048x +  26.6683 \label{eq:mkt_vs_qos}
+\end{equation}
+
+In the worst case, the polynomial describing the growth of Time-to-MSR ($y$) as QoS attributes ($x$) increase, is given by
+\begin{equation}
+    y =  -0.1103x^{4} +   2.3380x^{3} - 14.9209x^{2} +  42.0606x + 465.6389 \label{eq:qos_vs_mkt}
+\end{equation}
+
+The increase in QoS attributes causes Time-to-MSR rise in a biquadratic way, as opposed to increase in number of Markets (\autoref{eq:mkt_vs_qos} and \autoref{eq:qos_vs_mkt}). Again, the biquadratic term in the equation (\autoref{eq:qos_vs_mkt}) has a negative coefficient, so the scale of growth is actually cubic.\\
 
 \subsection{QoS Monitoring Engine}
 Monitoring the actual QoS exhibited during runtime by the CandidateService, is beyond the scope of the system. We assume that all the agents agree on the monitoring of a CandidateService, by a specific monitoring mechanism. This could be market-specific or domain specific. The monitoring of QoS cannot be done by our mechanism, since it needs to be neutral. The monitoring mechanism will be used by both parties: BuyerAgent and SellerAgent. The BuyerAgent needs to know whether the SellerAgent's service is providing the QoS that it promised. The SellerAgent needs to know that the BuyerAgent's application is not abusing the service. Zeng \cite{Zeng2007Monitoring}, and Michlmayer\cite{Michlmayr2009Comprehensive} are good examples of online QoS monitoring. Zeng et al. classify QoS metrics into three categories: (a) Provider-advertised (b) Consumer-rated, and (c) Observable metrics. They provide an event-driven, rule-based model where designers can define QoS metrics and their computation logic (in terms of Event-Condition-Action rules), for observable metrics. These are then compiled into executable statecharts, which provide execution efficiency in computing QoS metrics based on service-events that are observed. \\
