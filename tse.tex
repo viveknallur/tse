@@ -1043,6 +1043,14 @@ A big strength of our mechanism is the high scalability that it offers. As servi
 Since the decision-making over which concrete service to instantiate is done in a de-centralized manner, the individual agents can be simple and easy to implement. \\    
 Our mechanism implements a continuous adaptation scheme, thus leaving the system administrator free to attend to more critical tasks.
 
+\subsubsection{Weaknesses}
+The introduction of decentralization in the adaptivity process, while increasing the robustness, also brings an increased cost in terms of time, and computation. There are two steps which are particularly affected. These are: 
+\begin{enumerate}
+    \item \textbf{Decomposition of Constraints}: Depending on the type of QoS constraints, the time complexity changes. If the constraints are boolean or categoric, then the time complexity for $k$ constraints in an application with $n$ AbstractServices, is $O(n \dot k)$. However, if the constraints are numeric, then the complexity of decomposition increases. 
+    \item Calculation of achieved utility
+\end{enumerate}
+
+
 \subsubsection{Threats to Validity}
 
 The set of services used to model the supply (as seen insTable \ref{tbl:choice-of-services}) is deliberately seeded with services that probably will not be able to transact (e.g. $S1_{3}, S1_{54}, S3_{3}, S4_{3}$, etc.). This is done with a view to evaluating the mechanism's performance in an extreme situation. Services that advertise an availability of 79\% ($S1_{3}$) would never be acceptable.  In real life, these services would be competed out of the market, with most services differing in their QoS offerings by a marginal amount (or the price would be appropriately low, for low QoS). With a more typical scenario, our mechanism's performance would be much better, since the number of applications that are able to successfully achieve their QoS would be higher than figure \ref{fig:cda_zip_market_satisfaction}. Since the self-adaptive mechanism merely attempts to satisfy the application's QoS targets, it does not try to achieve  optimal set of concrete services, even if available. This is a trade-off that occurs between simplicity and robustness on one hand, and optimality on the other.\\
