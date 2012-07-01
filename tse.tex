@@ -491,7 +491,7 @@ Once we have a relative per-attribute value, we can calculate the outranking val
 It is clear from Table \ref{tbl:outranking_table} that CandidateService D is the best amongst the potential transactions and CandidateService C is the worst. The BuyerAgent now accepts the transaction with CandidateService D and rejects all the others. 
 
 \subsection{Post-Transaction}
-The BuyerAgent reports back to the ApplicationAgent, the cost and QoS being made available for the transaction. The ApplicationAgent then performs a SWR calculation to ensure that the QoS of the service being bought, does not violate any of the application's end-to-end constraints. Note that the ApplicationAgent needs to calculate SWR for the numeric constraints only. The other types of constraints (boolean and categoric) are specified in the bid prepared by the BuyerAgent, and therefore do not need checking. This greatly reduces the computational effort required on the part of the Application agent. The best case scenario, from a computational perspective, is when all the QoS attributes of the Application are either boolean or categoric. However, in the worst case scenario, all the QoS attributes that the ApplicationAgent is  interested in, could be numeric. In this case, it has to perform an SWR calculation for each of the QoS attributes and the distribution of computation to BuyerAgents is minimal.\\
+The BuyerAgent reports back to the ApplicationAgent, the cost and QoS being made available for the transaction. The ApplicationAgent then performs a SWR calculation to ensure that the QoS of the service being bought, does not violate any of the application's end-to-end constraints. Note that the ApplicationAgent needs to calculate SWR for the numeric constraints only. The other types of constraints (boolean and categoric) are specified in the bid prepared by the BuyerAgent, and therefore do not need checking. This greatly reduces the computational effort required on the part of the Application agent. The best case scenario, from a computational perspective, is when all the QoS attributes of the Application are either boolean or categoric. However, in the worst case scenario, all the QoS attributes could be numeric. In this case, it has to perform an SWR calculation for each of the QoS attributes and the distribution of computation to BuyerAgents is minimal.\\
 
 In Figure \ref{fig:cda_activity_diagram}, we show the various steps in the CDA  as activities carried out by the principal agents.
  
@@ -630,7 +630,7 @@ We call our implementation of the proposed mechanism, \textit{clobmas} (Cloud-ba
 %	\caption{Simplified class diagram of core entities}
 %\end{figure}
 
-\subsubsection{Component Diagram} A component diagram illustrates how a system is structurally organized, with communication and dependencies between entities. In Figure~\ref{fig:component_diagram}, we see a subset of the components, and their communication links. The component \textit{Service Registry} is depicted as a separate entity, since it is a third-party component, and we do not have any control over it. The communication link shown between \textit{Seller} and \textit{Service Registry} is therefore necessarily one that is likely to be different for every \textit{Service Registry}. The Market component can be easily replaced with another that implements a different auction strategy, without disrupting the architecture.
+\subsubsection{Component Diagram} A component diagram illustrates how a system is structurally organized, with communication and dependencies between entities. In Figure~\ref{fig:component_diagram}, we see a subset of the components, and their communication links. The component \textit{Service Registry} is depicted as a separate entity, since it is a third-party component, and we do not have any control over it. The communication link shown between \textit{Seller} and \textit{Service Registry} is therefore one that is likely to be different for every \textit{Service Registry}. The Market component can be easily replaced with another that implements a different auction strategy, without disrupting the architecture.
 
 \begin{figure*}[htbp]
 \centering
@@ -693,7 +693,7 @@ The trading proceeds in two stages. In the first stage, the MarketAgent matches 
 \section{Evaluation}
 \subsection{The Current Scenario}
 The current form of service-selection is provider-driven. That is, in all commercial clouds, the cloud provider uses a \textbf{posted-offer} mechanism. A posted-offer is a form of market where the supplier posts a certain price on a \textit{take-it-or-leave-it} basis. Thus, on Amazon's \textit{elastic cloud compute} (EC2), there are several services that are functionally identical, but priced differently. This price differentiation exists due to different QoS being exhibited by these services.  In Table~\ref{tbl:amazon_prices}, we show a slice of Amazon's pricing for its \textit{On-Demand Instances}.
-\begin{table*}\footnotesize
+\begin{table*}[htbp]\footnotesize
 	\centering
 	 \begin{tabular}{|p{5cm}|p{3cm}|p{3cm}|}
 		\hline
@@ -714,13 +714,13 @@ The current form of service-selection is provider-driven. That is, in all commer
 \end{table*}
 Depending on the type of job envisioned, customers purchase a basket of computational power from Amazon. However, currently, there is no mechanism to automatically switch from one kind of \textit{On-Demand Instance} to another. Customers have to forecast the type of demand for their application in advance, and appropriately chose their package from Amazon. Any application that desires to use a particular service, has to pay the posted price. There exists no mechanism to negotiate/bargain with Amazon, on pricing or QoS of the services being offered. This has the very obvious effect of customers either over-provisioning or under-provisioning for their actual demand. If an application under-provisions, then it risks losing customers due to lack of QoS. On the other hand, if it over-provisions, it loses money due to lack of productive use. In both cases, the customer faces a loss.
 \subsection{Empirical Study}
-\textit{BizInt}, a small startup company creates a new business intelligence mining and visualization application.  It combines off-the-shelf clustering algorithms with its proprietary outlier detection and visualization algorithms, to present a unique view of a company's customer and competitor ecosystem. In order to exhibit a high level of performance, it decides to host its application in the cloud. Also, instead of reinventing the wheel, it uses third-party services (for clustering, etc.) that are also hosted in the same cloud. As seen in figure \ref{fig:BizIntWorkflow}, BizInt uses composite web services (Data Filtering, Clustering, Association Rule Mining and Cross-Validation) from the cloud, along with its own services (Job Submission, Outlier Detection and Visualization) to create a complete application.
+\textit{BizInt}, a small (fictional) startup company creates a new business intelligence mining and visualization application.  It combines off-the-shelf clustering algorithms with its proprietary outlier detection and visualization algorithms, to present a unique view of a company's customer and competitor ecosystem. In order to exhibit a high level of performance, it decides to host its application in the cloud. Also, instead of reinventing the wheel, it uses third-party services (for clustering, etc.) that are also hosted in the same cloud. As seen in figure \ref{fig:BizIntWorkflow}, BizInt uses composite web services (Data Filtering, Clustering, Association Rule Mining and Cross-Validation) from the cloud, along with its own services (Job Submission, Outlier Detection and Visualization) to create a complete application.
 \begin{figure}%
 \includegraphics[scale=0.4, clip, trim=0 20cm 0 4cm]{drawings/BizIntWorkflow.pdf}%
 \caption{BizInt's workflow constructed using composite services from the hosting cloud\label{fig:BizIntWorkflow}}%
 \end{figure}
 Soon BizInt discovers that different jobs emphasize different QoS. Some jobs want data to be processed as fast as possible, others require a high amount of security and reliability. In order to exhibit different QoS, BizInt needs to dynamically change its constituent services. \\
-\textbf{SkyCompute} is a new entrant to the field of Cloud Computing. It wants to compete with Amazon, 3Tera, Google, Microsoft and other established cloud-providers. In order to attract cost and QoS-conscious customers, SkyCompute will have to differentiate its cloud from the others. It plans to target the \textit{Software-As-A-Service} market. Instead of providing specialist infrastructural services (like Amazon) or application framework services (like Google and Microsoft),it is planning to provide generically useful services like indexing, clustering, sorting, etc. Like most cloud providers, it plans to provide services with different QoS levels, so that multiple types of clients can be attracted to use it. To differentiate itself, SkyCompute plans to provide an adaptive framework, so that companies like BizInt can change their constituent services, dynamically.
+\textbf{SkyCompute} is a new (fictional) entrant to the field of Cloud Computing. It wants to compete with Amazon, 3Tera, Google, Microsoft and other established cloud-providers. In order to attract cost and QoS-conscious customers, SkyCompute will have to differentiate its cloud from the others. It plans to target the \textit{Software-As-A-Service} market. Instead of providing specialist infrastructural services (like Amazon) or application framework services (like Google and Microsoft),it is planning to provide generically useful services like indexing, clustering, sorting, etc. Like most cloud providers, it plans to provide services with different QoS levels, so that multiple types of clients can be attracted to use it. To differentiate itself, SkyCompute plans to provide an adaptive framework, so that companies like BizInt can change their constituent services, dynamically.
 
 \subsection{Qualitative Criteria}
 Thus, \textit{clobmas} must fulfill the following criteria:
@@ -741,15 +741,15 @@ Since, SkyCompute is an ultra-large collection of services, clobmas must be able
 We summarize the operational ranges that clobmas is expected to deal with, in Table~\ref{tbl:scalability_targets}
 \begin{table}[H]
 \centering
-\renewcommand{\arraystretch}{1.5}
-\begin{tabular}{p{10cm}p{4cm}p{3cm}}
+%\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{p{4cm}p{2.5cm}p{2cm}}
 	\toprule
 	\textbf{Variable affecting performance} & \textbf{From Lit. Review} & \textbf{Target Goals}\\ 
 	\midrule
-	Number of AbstractServices in a workflow & \hspace{1.8cm} 10 & \hspace{1.5cm} 20 \\ 
-	CandidateServices per AbstractService & \hspace{1.8cm} 20 & \hspace{1.5cm} 50 \\ 
-	QoS attributes considered per CandidateService & \hspace{1.8cm} 3 & \hspace{1.5cm} 10 \\ 
-	Number of markets considered per CandidateService & \hspace{1.8cm} 1 & \hspace{1.5cm} 10 \\ 
+	Number of AbstractServices & \hspace{0.75cm}10 & \hspace{0.5cm}20 \\ 
+	Number of CandidateServices  & \hspace{0.75cm}20 & \hspace{0.5cm}50 \\ 
+	Number of QoS attributes & \hspace{0.75cm}3 & \hspace{0.5cm}10 \\ 
+	Number of markets & \hspace{0.75cm}1 & \hspace{0.5cm}10 \\ 
 	\bottomrule
 \end{tabular}
 \caption{Operational range for scalability goals \label{tbl:scalability_targets}}
