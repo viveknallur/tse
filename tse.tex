@@ -325,7 +325,7 @@ Latency & 99 \\
 
 \subsection{Decentralized Decision-Making Using Ask-Selection}\label{ask_selection}
 According to the market mechanism that we have outlined, a BuyerAgent can make multiple Bids. This is how it searches the space of possible services, for its stated budget. There might be multiple Asks in the market that match these multiple Bids. To deal with this, the market mechanism moves on to its second-stage, where the BuyerAgent has to select amongst the CandidateServices. Since the mechanism for Bid-generation precludes Bids that will violate hard constraints, none of the CandidateServices will violate the application's hard constraints either. The task facing the BuyerAgent, is to choose amongst the possible transactions, in such a way that the decision maximizes the possible benefits, while taking care to minimize the possible downsides. We use a multiple criteria decision making approach called PROMETHEE~\cite{Brans1985Preference}\\
-The BuyerAgent needs to rank all the CandidateServices, that have been returned by the MarketAgent, as a potential transaction. Thus, for a transaction set ($TS$), the BuyerAgent needs to select one CandidateService that it will actually transact with. The preference of CandidateService $a$ over CandidateService $b$ is calculated by aggregating the preferences over each QoS attribute (and its weightage). The preference value ($\pi$) of a CandidateService $a$ over CandidateService $b$ is calculated as:
+The BuyerAgent needs to rank all the CandidateServices, that have been returned by the MarketAgent as a potential transaction. Thus, for a transaction set ($TS$), the BuyerAgent needs to select one CandidateService that it will actually transact with. The preference of CandidateService $a$ over CandidateService $b$ is calculated by aggregating the preferences over each QoS attribute (and its weightage). The preference value ($\pi$) of a CandidateService $a$ over CandidateService $b$ is calculated as:
 \begin{equation}
 \pi(a,b) = \sum_{i=1}^{n} P_{i}(a,b)w_{i}
 \end{equation}
@@ -455,7 +455,7 @@ Table \ref{tbl:qos_promethee_mapping} effectively means that CandidateServices w
 			\label{pref_latency}
 	\end{equation}
 	
-Based on the preference equations \ref{pref_ssl}, \ref{pref_framerate} and \ref{pref_latency}, we can calculate the relative values of the 4 CandidateServices, as given Table \ref{tbl:outranking_table}
+Based on the preference functions given (equation \ref{pref_ssl}, \ref{pref_framerate} and \ref{pref_latency}), we can calculate the relative values of the 4 CandidateServices, as given Table \ref{tbl:outranking_table}
 	\begin{table}[htbp]
 		\centering
 		\caption{Values of $\pi(x_i, x_j)$ \label{tbl_ranking_values}}
@@ -606,7 +606,8 @@ Both these stimuli occur at different time scales. The external check for QoS vi
 
 \subsection{Design and Implementation}
 %In \citep{Cheng2009}, the authors comment on the engineering challenges of building a self-adaptive system, and emphasize the fact that the %feedback loop is of utmost importance. 
-We call our implementation of the proposed mechanism, \textit{clobmas} (Cloud-based Multi-Agent System). We document \textit{clobmas} using the object-oriented paradigm for all of the internal components of an agent. Thus, we show the static structure of the system through package, component and class diagrams. We show agent-interaction using Agent-UML (AUML). We envision our mechanism as a middleware, between service-based applications and multiple SaaS clouds.
+We call our implementation of the proposed mechanism, \textit{clobmas} (Cloud-based Multi-Agent System). We document \textit{clobmas} using the object-oriented paradigm for all of the internal components of an agent. Thus, we show the static structure of the system through package, component and class diagrams. We show agent-interaction using Agent-UML (AUML). We envision our mechanism as a middleware, between service-based applications and multiple SaaS clouds. In Figure~\ref{architectural_context}, we show clobmas as a middleware between two OpenStack-based clouds and SOA-based applications. Note that OpenStack is currently an IaaS cloud solution. We envision the addition of a UDDI-based Service Registry communicating with the Cloud Controller, to enable OpenStack to serve services as well. 
+%TODO: ADD SOAP MESSAGES BETWEEN CLOUD CONTROLLER AND SERVICE REGISTRY???
 \begin{figure*}[htbp]
     \centering
     \includegraphics[scale=0.5]{drawings/Overall_Structure.pdf}
@@ -621,7 +622,7 @@ We call our implementation of the proposed mechanism, \textit{clobmas} (Cloud-ba
 %\caption{Package diagram of entities \label{fig:package_diagram}}
 %\end{figure}
 
-\subsubsection{Architectural Style} The design of our implementation is based on the publish-subscribe architectural style. This style was chosen for its decoupling properties, such that each communicating entity in the system is independent of every other. This fits in well, with our notion of agents acting on the basis of their own goals and their environment, in a decentralized manner. Each type of agent described previously, is both an event publisher and an event subscriber. That is, each ApplicationAgent generates events that describe when the application's QoS constraints have changed, when the budget has changed, etc. These events are subscribed to, by BuyerAgents belonging to that application. The BuyerAgents, for their part, publish events relating to the market that they are registered with. Similarly, the MarketAgents publish events relating to the start of trading, transaction events, etc. The event-based paradigm fits well with the QoS monitoring schemes, as well. Both Zeng~\cite{Zeng2007Monitoring} and Michlmayer~\cite{Michlmayr2009Comprehensive} use events to monitor and communicate SLA violations. 
+\subsubsection{Architectural Style} The design of clobmas is based on the publish-subscribe architectural style. This style was chosen for its decoupling properties, such that each communicating entity in the system is independent of every other. This fits in well, with our notion of agents acting on the basis of their own goals and their environment, in a decentralized manner. Each type of agent is both an event publisher and an event subscriber. That is, each ApplicationAgent generates events that describe when the application's QoS constraints have changed, when the budget has changed, etc. These events are subscribed to, by BuyerAgents belonging to that application. The BuyerAgents, for their part, publish events relating to the market that they are registered with. Similarly, the MarketAgents publish events relating to the start of trading, transaction events, etc. The event-based paradigm fits well with the QoS monitoring schemes, as well. Both Zeng~\cite{Zeng2007Monitoring} and Michlmayer~\cite{Michlmayr2009Comprehensive} use events to monitor and communicate SLA violations. 
 %
 %\begin{figure}[ht]
 %	\centering
@@ -630,15 +631,15 @@ We call our implementation of the proposed mechanism, \textit{clobmas} (Cloud-ba
 %	\caption{Simplified class diagram of core entities}
 %\end{figure}
 
-\subsubsection{Component Diagram} A component diagram illustrates how a system is structurally organized, with communication and dependencies between entities. In Figure~\ref{fig:component_diagram}, we see a subset of the components, and their communication links. The component \textit{Service Registry} is depicted as a separate entity, since it is a third-party component, and we do not have any control over it. The communication link shown between \textit{Seller} and \textit{Service Registry} is therefore one that is likely to be different for every \textit{Service Registry}. The Market component can be easily replaced with another that implements a different auction strategy, without disrupting the architecture.
+%\subsubsection{Component Diagram} A component diagram illustrates how a system is structurally organized, with communication and dependencies between entities. In Figure~\ref{fig:component_diagram}, we see a subset of the components, and their communication links. The component \textit{Service Registry} is depicted as a separate entity, since it is a third-party component, and we do not have any control over it. The communication link shown between \textit{Seller} and \textit{Service Registry} is therefore one that is likely to be different for every \textit{Service Registry}. The Market component can be easily replaced with another that implements a different auction strategy, without disrupting the architecture.
+%
+%\begin{figure*}[htbp]
+%\centering
+%\includegraphics[scale=0.46]{drawings/Agent_Component_Diagram.pdf}
+%\caption{Component diagram of entities\label{fig:component_diagram}}
+%\end{figure*}
 
-\begin{figure*}[htbp]
-\centering
-\includegraphics[scale=0.46]{drawings/Agent_Component_Diagram.pdf}
-\caption{Component diagram of entities\label{fig:component_diagram}}
-\end{figure*}
-
-\subsubsection{Class Diagram} The class diagram shows the static relationships between the main entities in the MAS. The \textit{Bid} and \textit{Ask} interfaces shown in Figure~\ref{fig:class_diagram} are also shown in the component diagram (see Figure~\ref{fig:component_diagram}), with the \textit{Market} class implementing both of them. 
+\subsubsection{Class Diagram} The class diagram shows the static relationships between the main entities in the MAS. The \textit{Bid} and \textit{Ask} interfaces shown in Figure~\ref{fig:class_diagram} are implemented by the BuyerAgent and SellerAgent respectively, with the \textit{MarketAgent} implementing both of them. 
 
 \begin{figure*}[htbp]
 \centering
@@ -646,9 +647,11 @@ We call our implementation of the proposed mechanism, \textit{clobmas} (Cloud-ba
 \caption{Class diagram of entities \label{fig:class_diagram}}
 \end{figure*}
 
-\subsubsection{Activity Diagram} The most difficult part of getting all the agents in an MAS to solve a problem, is the problem of communication. The design of the communication protocol determines how much communication happens, at what times and how much computational effort it takes to communicate. If the agents communicate too little, then there is a danger of the MAS failing to solve the problem it was created for. On the other hand, if too much communication takes place, then a lot of wastage occurs, not only in terms of bandwidth but also in computational cycles and time. Thus, while communication is a fundamental activity in an MAS, depicting this in UML is difficult. The standard activity diagrams in UML are \textit{Sequence Diagrams} and \textit{Collaboration Diagrams}. However, the semantics in both these diagrams assumes a single thread of control, \textit{i.e.}, each object that sends or receives a message is assumed to be the only active object at that time instant. This is not true in the case of Clobmas.  Also, UML which does not provide for broadcast/multicast messages. To deal with these situations, the agent community has evolved AUML (Agent-UML) which modifies the semantics of a sequence diagram, to allow for the possibilities above. We document the communication steps of our mechanism through AUML diagrams.\\
-In the following figures, we show the communication for an application with two AbstractServices, \texttt{A} and \texttt{B}, and its corresponding BuyerAgents and the market agent. The \emph{Setup Phase} (Figure~\ref{fig:setup_phase}) is composed of two calculations done by the ApplicationAgent and, two multicast messages to the application's BuyerAgents. The two calculations involve decomposing the application's end-to-end constraints into local constraints and, computing the budget that each BuyerAgent will receive.
-\begin{figure*}[h]
+\subsubsection{Activity Diagram} The most difficult part of getting all the agents in an MAS to solve a problem, is the problem of communication. The design of the communication protocol determines how much communication happens, at what times and how much computational effort it takes to communicate. If the agents communicate too little, then there is a danger of the MAS failing to solve the problem it was created for. On the other hand, if too much communication takes place, then a lot of wastage occurs, not only in terms of bandwidth but also in computational cycles and time. Thus, while communication is a fundamental activity in an MAS, depicting this in UML is difficult. 
+%The standard activity diagrams in UML are \textit{Sequence Diagrams} and \textit{Collaboration Diagrams}. However, the semantics in both these diagrams assumes a single thread of control, \textit{i.e.}, each object that sends or receives a message is assumed to be the only active object at that time instant. This is not true in the case of Clobmas.  Also, UML which does not provide for broadcast/multicast messages. To deal with these situations, the agent community has evolved AUML (Agent-UML) which modifies the semantics of a sequence diagram, to allow for the possibilities above. 
+We document the communication steps of our mechanism through AUML diagrams.\\
+In the following figures, we show the communication for an application with two AbstractServices, \texttt{A} and \texttt{B}, and its corresponding BuyerAgents and the MarketAgent. The \emph{Setup Phase} (Figure~\ref{fig:setup_phase}) is composed of two calculations done by the ApplicationAgent and, two multicast messages to the application's BuyerAgents. The two calculations involve decomposing the application's end-to-end constraints into local constraints and, computing the budget that each BuyerAgent will receive.
+\begin{figure*}[htbp]
 \centering
 \includegraphics[scale=0.7]{drawings/setup_phase.pdf}
 \caption{Setup phase for an application with two AbstractServices A \& B \label{fig:setup_phase}}
@@ -779,7 +782,7 @@ From BizInt's perspective, a cloud provider that enabled applications to self-ad
 
 \textbf{Time to Satisfaction}: In the absence of a deterministic solution (and therefore a deterministic notion of time), we must contend ourselves with evaluating whether the adaptive algorithm is \textit{`fast-enough'}.  The natural unit of time in clobmas, is a \textit{trading round}.  We measure \textbf{how many trading rounds}, application takes to be satisfied, from the start of an adaptation event. An adaptation event occurs when an application notices that the \textit{quality gap} is beyond the tolerance level. Thus, the start of the simulation defines an adaptation event, since all applications start off without any \textit{achieved utility level}.
 	
-In Figure~\ref{fig:goodness_cda} we see an average application's achievement of QoS levels. The application starts off with a \textit{quality gap} of \textit{minus 3}, but it quickly adapts to the QoS demanded and reaches the tolerance zone, in about $20$ trading rounds. From this point on, the application stays satisfied. The application is satisfied for $280$ out of $300$ trading rounds. We see that the achieved utility level does not stay constant. Instead, internal adaptation events cause the application to seek out different services. However, it stays within the tolerance zone. In Figure~\ref{fig:goodness_cda}, we show the adaptation occurring  under conditions of normal distribution of QoS demand and supply in the cloud. 
+In Figure~\ref{fig:goodness_cda} we see an average application's achievement of QoS levels. The application starts off with a \textit{quality gap} of \textit{minus 3} (no services bought that satisfy all three QoS constraints). But it quickly adapts to the QoS demanded and reaches the tolerance zone, in about $20$ trading rounds. From this point on, the application stays satisfied. The application is satisfied for $280$ out of $300$ trading rounds. We see that the achieved utility level does not stay constant. Instead, internal adaptation events cause the application to seek out different services. However, it stays within the tolerance zone. In Figure~\ref{fig:goodness_cda}, we show the adaptation occurring  under conditions of normal distribution of QoS demand and supply in the cloud. 
  \begin{figure}[h]
  	\centering
     \includegraphics[scale=0.45]{graphs/Single_App_Self_Adaptation_Across_Rounds_With_QA_Change.png}
