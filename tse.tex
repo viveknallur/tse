@@ -606,12 +606,12 @@ Both these stimuli occur at different time scales. The external check for QoS vi
 
 \subsection{Design and Implementation}
 %In \citep{Cheng2009}, the authors comment on the engineering challenges of building a self-adaptive system, and emphasize the fact that the %feedback loop is of utmost importance. 
-We call our implementation of the proposed mechanism, \textit{clobmas} (Cloud-based Multi-Agent System). We document \textit{clobmas} using the object-oriented paradigm for all of the internal components of an agent. Thus, we show the static structure of the system through package, component and class diagrams. We show agent-interaction using Agent-UML (AUML). We envision our mechanism as a middleware, between service-based applications and multiple SaaS clouds. In Figure~\ref{architectural_context}, we show clobmas as a middleware between two OpenStack-based clouds and SOA-based applications. Note that OpenStack is currently an IaaS cloud solution. We envision the addition of a UDDI-based Service Registry communicating with the Cloud Controller, to enable OpenStack to serve services as well. 
+We call our implementation of the proposed mechanism, \textit{clobmas} (Cloud-based Multi-Agent System). We document \textit{clobmas} using the object-oriented paradigm for all of the internal components of an agent. Thus, we show the static structure of the system through package, component and class diagrams. We show agent-interaction using Agent-UML (AUML). We envision our mechanism as a middleware, between service-based applications and multiple SaaS clouds. In Figure~\ref{fig:architectural_context}, we show clobmas as a middleware between two OpenStack-based clouds and SOA-based applications. Note that OpenStack\footnote{www.openstack.org} is currently an IaaS cloud solution. We envision the addition of a UDDI-based Service Registry communicating with the Cloud Controller, to enable OpenStack to serve services as well. 
 
 \begin{figure*}[htbp]
     \centering
     \includegraphics[scale=0.36]{drawings/Overall_Structure.pdf}
-    \caption{Architecture diagram of Clobmas, based on cloud architecture of OpenStack \label{fig:architectural_context}}
+    \caption{Clobmas as middleware between SOA-based applications and two OpenStack-based clouds \label{fig:architectural_context}}
 \end{figure*}
 
 %\subsubsection{High level Package Diagram} A package diagram shows the coarse-level organization of code in a system, with the packages and sub-packages demarcating the encapsulation of concepts in the system. In figure \ref{fig:package_diagram}, we see that all the agents, \textit{viz.}, buyer, seller, application, market are created and maintained separately from concepts like \textbf{Strategy} and \textbf{Communication}. This independence of packaging also highlights the various axes along which behaviour could be changed. Thus, \textit{clobmas} could change its auction style from a continuous double auction to a double auction with a clearing house, with no effect on the other parts of the system. 
@@ -639,18 +639,18 @@ We call our implementation of the proposed mechanism, \textit{clobmas} (Cloud-ba
 %\caption{Component diagram of entities\label{fig:component_diagram}}
 %\end{figure*}
 
-\subsubsection{Class Diagram} The class diagram shows the static relationships between the main entities in the MAS. The \textit{Bid} and \textit{Ask} interfaces shown in Figure~\ref{fig:class_diagram} are implemented by the BuyerAgent and SellerAgent respectively, with the \textit{MarketAgent} implementing both of them. 
+\subsubsection{Class and Package Diagram} The class diagram shows the static relationships between the main entities in clobmas. The \textit{Bid} and \textit{Ask} interfaces shown in Figure~\ref{fig:class_diagram} are implemented by the BuyerAgent and SellerAgent respectively, with the \textit{MarketAgent} implementing both of them. The packages with the stereotype ``subsystems'', marked as Nova and Glance, belong to OpenStack.
 
-\begin{figure*}[htbp]
-\centering
-\includegraphics[scale=0.45]{drawings/Agent_Class_Diagram.pdf}
-\caption{Class diagram of entities \label{fig:class_diagram}}
-\end{figure*}
+%\begin{figure*}[htbp]
+%\centering
+%\includegraphics[scale=0.45]{drawings/Agent_Class_Diagram.pdf}
+%\caption{Class diagram of main agents in clobmas\label{fig:class_diagram}}
+%\end{figure*}
 
 \begin{figure*}[htbp]
 \centering
 \includegraphics[scale=0.75]{drawings/class_and_package_diagram.pdf}
-\caption{Package diagram of entities \label{fig:package_diagram}}
+\caption{Class and package diagram of clobmas and OpenStack subsystems\label{fig:package_diagram}}
 \end{figure*}
 
 \subsubsection{Activity Diagram} The most difficult part of getting all the agents in an MAS to solve a problem, is the problem of communication. The design of the communication protocol determines how much communication happens, at what times and how much computational effort it takes to communicate. If the agents communicate too little, then there is a danger of the MAS failing to solve the problem it was created for. On the other hand, if too much communication takes place, then a lot of wastage occurs, not only in terms of bandwidth but also in computational cycles and time. Thus, while communication is a fundamental activity in an MAS, depicting this in UML is difficult. 
@@ -663,39 +663,9 @@ In the following figures, we show the communication for an application with two 
 \caption{Setup phase for an application with two AbstractServices A \& B \label{fig:setup_phase}}
 \end{figure*}
 
-Decomposing constraints (Figure~\ref{fig:decompose_constraints}) involves communication between the BuyerAgents, their respective markets and the ApplicationAgent. The ApplicationAgent waits for the BuyerAgents to get data about previous transactions in the market, applies SWR~\cite{Cardoso2002Workflow} and checks whether the combination of QoS available in the market meets its end-to-end constraints. Based on the combinations that meet the end-to-end constraints, the ApplicationAgent creates local constraints for the individual BuyerAgents. These are then propagated to the BuyerAgents.
-\begin{figure*}[h]
-\centering
-\includegraphics[scale=0.7]{drawings/decompose_constraints.pdf}
-\caption{Application decomposes its constraints into local constraints \label{fig:decompose_constraints}}
-\end{figure*}
-
-The budget for the individual agents is split in the ratio of the transaction prices that are prevalent in the individual markets. Given historical price information in a market, the prices in the next trading rounds are likely to be around the same figure. Splitting the application's budget evenly across the BuyerAgents could possibly result in some agents getting excess endowment, and some agents too less. The ratio of their transaction prices allows the agents with expensive services to get a naturally higher share of the budget.
-\begin{figure*}[h]
-\centering
-\includegraphics[scale=0.7]{drawings/compute_endowment.pdf}
-\caption{Application computes endowment for its BuyerAgents}
-\end{figure*}
-
-%\begin{figure}
-%\includegraphics[scale=0.7]{figures/chapter4/distribute_budget.pdf}
-%\end{figure}
-
-In Figure~\ref{fig:trading_phase}, we show the communication that takes place during the trading phase. This phase is essentially a loop. It periodically evaluates the \textit{bids} and \textit{asks} in the orderbook, and tries to match them. If it is successful, the transaction moves into the second stage (see Figure~\ref{fig:cda_protocol}). Based on whether a trade occurs or not, the application evaluates whether it needs to re-distribute the endowments of its agents. It is possible that an agent is unable to find any potential transactions, simply because it does not have the budget to bid high enough.
-
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.8]{drawings/trading_phase.pdf}
-\caption{The trading phase of buying a service \label{fig:trading_phase}}
-\end{figure}
+More figures showing the various scenarios of communication between the agents are shown in \autoref{auml_appendix}.
 
 
-The trading proceeds in two stages. In the first stage, the MarketAgent matches the bids and asks based on their individual QoS values and shout prices. After matching, a provisional transaction is created. This provisional transaction enters the second stage. In the second stage, the BuyerAgent compares all the Asks returned as provisional transactions (see section \ref{ask_selection}). The top-ranked Ask is selected and the other Asks are rejected. The BuyerAgent enters into a transaction with the SellerAgent of the selected Ask.
-\begin{figure*}[h]
-\centering
-\includegraphics[scale=0.7]{drawings/cda_protocol.pdf}
-\caption{Two-stage CDA protocol \label{fig:cda_protocol}}
-\end{figure*}
 
 %\subsubsection{Implementation of double auction} The most computationally intensive aspect of the entire system is the implementation of the double auction mechanism. Storing the bids and asks as simple lists results in a huge amount of searching for matching purposes. We modify the 4-heap data structure, as suggested in \cite{Wurman1998Flexible}, to store our multi-attribute bids and asks. In our python implementation, we use the heapq module to store bids in a descending order and asks in an ascending order. This decision allows for bids that are willing to pay a higher price, get matched first. 
 
@@ -751,21 +721,21 @@ We summarize the operational ranges that clobmas is expected to deal with, in Ta
 \begin{table}[H]
 \centering
 %\renewcommand{\arraystretch}{1.5}
-\begin{tabular}{p{4cm}p{2.5cm}p{2cm}}
+\begin{tabular}{p{4cm}p{2.2cm}p{1.7cm}}
 	\toprule
 	\textbf{Variable affecting performance} & \textbf{From Lit. Review} & \textbf{Target Goals}\\ 
 	\midrule
-	Number of AbstractServices & \hspace{0.75cm}10 & \hspace{0.5cm}20 \\ 
-	Number of CandidateServices  & \hspace{0.75cm}20 & \hspace{0.5cm}50 \\ 
-	Number of QoS attributes & \hspace{0.75cm}3 & \hspace{0.5cm}10 \\ 
-	Number of markets & \hspace{0.75cm}1 & \hspace{0.5cm}10 \\ 
+	Number of AbstractServices & \hspace{0.45cm}10 & \hspace{0.2cm}20 \\ 
+	Number of CandidateServices  & \hspace{0.45cm}20 & \hspace{0.2cm}50 \\ 
+	Number of QoS attributes & \hspace{0.45cm}3 & \hspace{0.2cm}10 \\ 
+	Number of markets & \hspace{0.45cm}1 & \hspace{0.2cm}10 \\ 
 	\bottomrule
 \end{tabular}
 \caption{Operational range for scalability goals \label{tbl:scalability_targets}}
 \end{table}
 
 \subsection{Experimental Setup}
-Although open-source cloud implementations like OpenNebula\footnote{www.opennebula.org}, and Eucalyptus\footnote{http://www.eucalyptus.com/} are freely available for download, they are primarily targetted at the \textit{Infrastructure-As-A-Service} market. Also, modifying these implementations for our purposes (to introduce the notion of markets), would be cumbersome and expensive. In the same vein, using simulators such as CloudSim would require major modifications, to those toolkits. CloudSim is a fairly new toolkit, and does not have the ability to explore market mechanisms in a sophisticated manner~\cite{Breskovic2011Towards}. \\
+Although open-source cloud implementations like OpenStack\footnote{www.openstack.org}, and Eucalyptus\footnote{http://www.eucalyptus.com/} are freely available for download, they are primarily targetted at the \textit{Infrastructure-As-A-Service} market. Modifying these implementations for our purposes (to introduce the notion of markets, respond to transaction events, etc.), would be expensive in terms of time. In the same vein, using simulators such as CloudSim would require major modifications, to those toolkits. CloudSim is a fairly new toolkit, and does not have the ability to explore market mechanisms in a sophisticated manner~\cite{Breskovic2011Towards}. \\
 \textbf{Software}: In this scenario, we wrote our own simulator in Python (v. 2.6.5), using a discrete-event simulation library, SimPy\footnote{http://simpy.sourceforge.net/}. The operating system in use, was 64-bit Scientific Linux.\\
 \textbf{Hardware}: All experiments were run on an Intel Dual-cpu Quad-Core 1.5Ghz workstation, with 4MB of level-1 cache and 2GB of RAM.\\
 \subsection{Methodology}
@@ -808,12 +778,12 @@ In Figure~\ref{fig:goodness_posted_offer}, we see that the application is able t
 
 \begin{table}[H]\footnotesize
 \centering
-\begin{tabular}{p{5cm}p{2cm}p{2cm}}
+\begin{tabular}{p{4cm}p{1.2cm}p{1.2cm}}
  \toprule
 	& \textbf{CDA} & \textbf{PostedOffer} \\
  \midrule
-	Number of rounds satisfied & 282 & 160 \\ 
-	Time to reach QoS & 18 & 140 \\ 
+	Number of rounds satisfied & 282 & \hspace{0.5cm}160 \\ 
+	Time to reach QoS & 18 & \hspace{0.5cm}140 \\ 
 \bottomrule
 \end{tabular}
 \caption{Comparative performance of adaptation in CDA vis-a-vis Posted Offer \label{tbl:comparative_performance}}
@@ -1055,7 +1025,7 @@ Our mechanism implements a continuous adaptation scheme, thus leaving the system
 \subsubsection{Weaknesses}
 The introduction of decentralization in the adaptivity process, while increasing the robustness, also brings an increased cost in terms of time, and computation. There are two steps which are particularly affected. These are: 
 \begin{enumerate}
-    \item \textbf{Decomposition of Constraints}: Depending on the type of QoS constraints, the time complexity changes. If the constraints are boolean or categoric, then the time complexity for $k$ constraints in an application with $n$ AbstractServices, is $O(n \cdotp k)$. However, if the constraints are numeric, then the complexity of decomposition increases. Since each market is queried for its historical data of transactions. The complexity of decomposition now becomes $O(n \cdotp k \cdotp m) + O(SWR)$, where $m$ is the number of markets and $O(SWR)$ is the complexity of applying \textit{Stochastic Workflow Reduction} on the application structure.
+    \item \textbf{Decomposition of Constraints}: Depending on the type of QoS constraints, the time complexity changes. If the constraints are boolean or categoric, then the time complexity for $k$ constraints in an application with $n$ AbstractServices, is $O(n \cdotp k)$. However, if the constraints are numeric, then the complexity of decomposition increases. Since each market is queried for its historical data of transactions. The complexity of decomposition now becomes $O(n \cdotp k^{2} \cdotp m) + O(SWR)$, where $m$ is the number of markets and $O(SWR)$ is the complexity of applying \textit{Stochastic Workflow Reduction} on the application structure.
     \item \textbf{Calculation of achieved utility}: To calculate the total achieved utility, all the BuyerAgents communicate the QoS of the CandidateService that they selected, to the ApplicationAgent. The ApplicationAgent applies SWR to the numeric QoS attributes, to check if all constraints are met. This costs $O(n)$ in time, whereas the application of SWR depends on the structure of the application itself~\cite{Cardoso2004Quality}.
 \end{enumerate}
 As the number of BuyerAgents for an application increase, or the number of markets increase (more likely), the time complexity of decomposition will increase.
@@ -1113,20 +1083,6 @@ These approaches, while interesting, have not explicitly considered scale of ada
 Cloud-based service-oriented applications have the potential to self-adapt their QoS, depending on demand. Using a market-based mechanism maps nicely to the real-world situation of unpredictable change of QoS requirements, costs involved in adaptation and adaptation by competing applications. As the number of possible concrete services increase, the scalability of the self-adaptive mechanism becomes important. We see that the market-based mechanism consists of simple agents, is able to adapt well and yet scales linearly to the number of concrete services. We also see that it is robust in the presence of differences in demand and supply of QoS. Applications implemented as an ASN can thus scale and adapt to the changing business requirements of QoS.\\
 We have not modelled complex seller-side behaviour. Specifically, actions like deliberate violation of QoS to free up resources for making Asks with higher prices or mis-reporting of QoS available. Mechanisms like penalties and reputation management can be used to prevent seller agents from behaving dishonestly. Also, we have not modelled adaptation on the part of the market. Sellers that lie about their QoS or, are generally unattractive for transactions may lower the reputation of the marketplace. Hence, the market could take steps to ensure that it is populated, only with sellers that are likely to be sold. In future work, we aim to systematically add these modifications to observe their effect on the collective adaptation. \\
   
-%  DISCUSS CLOUD-SIM IMPLEMENTATION\\
-  
-
-% Agile Service Networks embody the kind of structure, that this mechanism would be applicable in. Agile Service Networks are formed when organizations, outsource a part of their function to other organizations. These organizations may, in turn, outsource a part of their function to yet other organizations. Thus, an application or a business process being instantiated by one organization, uses the services of many organizations. This has several benefits in terms of efficiency, agility in response to business fluctuations etc.
-
-
-
-
-
-
-
-    
-
-
 
 \bibliographystyle{plain}
 \IfFileExists{/home/pg/vxn851/work/bibtex/converted-mendeley.bib}{\bibliography{/home/pg/vxn851/work/bibtex/converted-mendeley}}{\bibliography{converted-mendeley}}
@@ -1138,5 +1094,43 @@ Dr. Vivek Nallur is a postdoc at the University of Birmingham. Prior to doing re
 \begin{IEEEbiographynophoto}{Rami Bahsoon}
 Dr. Rami Bahsoon is a Lecturer in Software Engineering at the School of Computer Science, the University of Birmingham, United Kingdom. He did his PhD from University College London (UCL), on evaluating software architectures for stability using real options theory. His research interests include Cloud Architectures, Security Software Engineering, Relating software requirements (non-functional requirements) to software architectures, testing and regression testing, software maintenance and evolution, software metrics, empirical evaluation, and economics-driven software engineering research.  
 \end{IEEEbiographynophoto}
+
+\begin{appendix}\label{auml_appendix}
+
+Decomposing constraints (Figure~\ref{fig:decompose_constraints}) involves communication between the BuyerAgents, their respective markets and the ApplicationAgent. The ApplicationAgent waits for the BuyerAgents to get data about previous transactions in the market, applies SWR~\cite{Cardoso2002Workflow} and checks whether the combination of QoS available in the market meets its end-to-end constraints. Based on the combinations that meet the end-to-end constraints, the ApplicationAgent creates local constraints for the individual BuyerAgents. These are then propagated to the BuyerAgents.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.7]{drawings/decompose_constraints.pdf}
+\caption{Application decomposes its constraints into local constraints \label{fig:decompose_constraints}}
+\end{figure}
+
+
+The budget for the individual agents is split in the ratio of the transaction prices that are prevalent in the individual markets. Given historical price information in a market, the prices in the next trading rounds are likely to be around the same figure. Splitting the application's budget evenly across the BuyerAgents could possibly result in some agents getting excess endowment, and some agents too less. The ratio of their transaction prices allows the agents with expensive services to get a naturally higher share of the budget.
+\begin{figure*}[h]
+\centering
+\includegraphics[scale=0.7]{drawings/compute_endowment.pdf}
+\caption{Application computes endowment for its BuyerAgents}
+\end{figure*}
+%\begin{figure}
+%\includegraphics[scale=0.7]{figures/chapter4/distribute_budget.pdf}
+%\end{figure}
+
+In Figure~\ref{fig:trading_phase}, we show the communication that takes place during the trading phase. This phase is essentially a loop. It periodically evaluates the \textit{bids} and \textit{asks} in the orderbook, and tries to match them. If it is successful, the transaction moves into the second stage (see Figure~\ref{fig:cda_protocol}). Based on whether a trade occurs or not, the application evaluates whether it needs to re-distribute the endowments of its agents. It is possible that an agent is unable to find any potential transactions, simply because it does not have the budget to bid high enough.
+
+\begin{figure*}[h]
+\centering
+\includegraphics[scale=0.8]{drawings/trading_phase.pdf}
+\caption{The trading phase of buying a service \label{fig:trading_phase}}
+\end{figure*}
+
+The trading proceeds in two stages. In the first stage, the MarketAgent matches the bids and asks based on their individual QoS values and shout prices. After matching, a provisional transaction is created. This provisional transaction enters the second stage. In the second stage, the BuyerAgent compares all the Asks returned as provisional transactions (see section \ref{ask_selection}). The top-ranked Ask is selected and the other Asks are rejected. The BuyerAgent enters into a transaction with the SellerAgent of the selected Ask.
+
+\begin{figure*}[h]
+\centering
+\includegraphics[scale=0.7]{drawings/cda_protocol.pdf}
+\caption{Two-stage CDA protocol \label{fig:cda_protocol}}
+\end{figure*}
+\end{appendix}
 
 \end{document}
