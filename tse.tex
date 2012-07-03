@@ -607,10 +607,10 @@ Both these stimuli occur at different time scales. The external check for QoS vi
 \subsection{Design and Implementation}
 %In \citep{Cheng2009}, the authors comment on the engineering challenges of building a self-adaptive system, and emphasize the fact that the %feedback loop is of utmost importance. 
 We call our implementation of the proposed mechanism, \textit{clobmas} (Cloud-based Multi-Agent System). We document \textit{clobmas} using the object-oriented paradigm for all of the internal components of an agent. Thus, we show the static structure of the system through package, component and class diagrams. We show agent-interaction using Agent-UML (AUML). We envision our mechanism as a middleware, between service-based applications and multiple SaaS clouds. In Figure~\ref{architectural_context}, we show clobmas as a middleware between two OpenStack-based clouds and SOA-based applications. Note that OpenStack is currently an IaaS cloud solution. We envision the addition of a UDDI-based Service Registry communicating with the Cloud Controller, to enable OpenStack to serve services as well. 
-%TODO: ADD SOAP MESSAGES BETWEEN CLOUD CONTROLLER AND SERVICE REGISTRY???
+
 \begin{figure*}[htbp]
     \centering
-    \includegraphics[scale=0.5]{drawings/Overall_Structure.pdf}
+    \includegraphics[scale=0.36]{drawings/Overall_Structure.pdf}
     \caption{Architecture diagram of Clobmas, based on cloud architecture of OpenStack \label{fig:architectural_context}}
 \end{figure*}
 
@@ -645,6 +645,12 @@ We call our implementation of the proposed mechanism, \textit{clobmas} (Cloud-ba
 \centering
 \includegraphics[scale=0.45]{drawings/Agent_Class_Diagram.pdf}
 \caption{Class diagram of entities \label{fig:class_diagram}}
+\end{figure*}
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[scale=0.75]{drawings/class_and_package_diagram.pdf}
+\caption{Package diagram of entities \label{fig:package_diagram}}
 \end{figure*}
 
 \subsubsection{Activity Diagram} The most difficult part of getting all the agents in an MAS to solve a problem, is the problem of communication. The design of the communication protocol determines how much communication happens, at what times and how much computational effort it takes to communicate. If the agents communicate too little, then there is a danger of the MAS failing to solve the problem it was created for. On the other hand, if too much communication takes place, then a lot of wastage occurs, not only in terms of bandwidth but also in computational cycles and time. Thus, while communication is a fundamental activity in an MAS, depicting this in UML is difficult. 
@@ -989,7 +995,8 @@ In the worst case, the polynomial describing the growth of Time-to-MSR ($y$) as 
     y =  -0.1103x^{4} +   2.3380x^{3} - 14.9209x^{2} +  42.0606x + 465.6389 \label{eq:qos_vs_mkt}
 \end{equation}
 
-The increase in QoS attributes causes Time-to-MSR rise in a biquadratic way, as opposed to increase in number of Markets (\autoref{eq:mkt_vs_qos} and \autoref{eq:qos_vs_mkt}). Again, the biquadratic term in the equation (\autoref{eq:qos_vs_mkt}) has a negative coefficient, so the scale of growth is actually cubic.\\
+The increase in QoS attributes causes Time-to-MSR rise in a biquadratic way, as opposed to increase in number of Markets (\autoref{eq:mkt_vs_qos} and \autoref{eq:qos_vs_mkt}). 
+% Again, the biquadratic term in the equation (\autoref{eq:qos_vs_mkt}) has a negative coefficient, so the scale of growth is actually cubic.\\
 
 \subsection{QoS Monitoring Engine}
 Monitoring the actual QoS exhibited during runtime by the CandidateService, is beyond the scope of the system. We assume that all the agents agree on the monitoring of a CandidateService, by a specific monitoring mechanism. This could be market-specific or domain specific. The monitoring of QoS cannot be done by our mechanism, since it needs to be neutral. The monitoring mechanism will be used by both parties: BuyerAgent and SellerAgent. The BuyerAgent needs to know whether the SellerAgent's service is providing the QoS that it promised. The SellerAgent needs to know that the BuyerAgent's application is not abusing the service. Zeng \cite{Zeng2007Monitoring}, and Michlmayer\cite{Michlmayr2009Comprehensive} are good examples of online QoS monitoring. Zeng et al. classify QoS metrics into three categories: (a) Provider-advertised (b) Consumer-rated, and (c) Observable metrics. They provide an event-driven, rule-based model where designers can define QoS metrics and their computation logic (in terms of Event-Condition-Action rules), for observable metrics. These are then compiled into executable statecharts, which provide execution efficiency in computing QoS metrics based on service-events that are observed. \\
@@ -1048,10 +1055,10 @@ Our mechanism implements a continuous adaptation scheme, thus leaving the system
 \subsubsection{Weaknesses}
 The introduction of decentralization in the adaptivity process, while increasing the robustness, also brings an increased cost in terms of time, and computation. There are two steps which are particularly affected. These are: 
 \begin{enumerate}
-    \item \textbf{Decomposition of Constraints}: Depending on the type of QoS constraints, the time complexity changes. If the constraints are boolean or categoric, then the time complexity for $k$ constraints in an application with $n$ AbstractServices, is $O(n \dot k)$. However, if the constraints are numeric, then the complexity of decomposition increases. 
-    \item Calculation of achieved utility
+    \item \textbf{Decomposition of Constraints}: Depending on the type of QoS constraints, the time complexity changes. If the constraints are boolean or categoric, then the time complexity for $k$ constraints in an application with $n$ AbstractServices, is $O(n \cdotp k)$. However, if the constraints are numeric, then the complexity of decomposition increases. Since each market is queried for its historical data of transactions. The complexity of decomposition now becomes $O(n \cdotp k \cdotp m) + O(SWR)$, where $m$ is the number of markets and $O(SWR)$ is the complexity of applying \textit{Stochastic Workflow Reduction} on the application structure.
+    \item \textbf{Calculation of achieved utility}: To calculate the total achieved utility, all the BuyerAgents communicate the QoS of the CandidateService that they selected, to the ApplicationAgent. The ApplicationAgent applies SWR to the numeric QoS attributes, to check if all constraints are met. This costs $O(n)$ in time, whereas the application of SWR depends on the structure of the application itself~\cite{Cardoso2004Quality}.
 \end{enumerate}
-
+As the number of BuyerAgents for an application increase, or the number of markets increase (more likely), the time complexity of decomposition will increase.
 
 \subsubsection{Threats to Validity}
 
