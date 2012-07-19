@@ -1,3 +1,332 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{10}
+
+\bibitem{Alrifai2010Selecting}
+Mohammad Alrifai, Dimitrios Skoutas, and Thomas Risse.
+\newblock Selecting skyline services for qos-based web service composition.
+\newblock {\em Proceedings of the 19th international conference on World wide
+  web - WWW '10}, page~11, 2010.
+
+\bibitem{Ardagna2005Global}
+Danilo Ardagna and Barbara Pernici.
+\newblock Global and local qos constraints guarantee in web service selection.
+\newblock pages 805--806, 2005.
+
+\bibitem{Baresi2008Towards}
+Luciano Baresi, Sam Guinea, and Giordano Tamburrelli.
+\newblock {Towards decentralized self-adaptive component-based systems}.
+\newblock {\em Proceedings of the 2008 international workshop on Software
+  engineering for adaptive and self-managing systems - SEAMS '08}, page~57,
+  2008.
+
+\bibitem{Benatallah2002Declarative}
+B.~Benatallah, M.~Dumas, Q.Z. Sheng, and A.H.H. Ngu.
+\newblock {Declarative composition and peer-to-peer provisioning of dynamic Web
+  services}.
+\newblock {\em Proceedings 18th International Conference on Data Engineering},
+  pages 297--308, 2002.
+
+\bibitem{Brans1985Preference}
+J.P. Brans and Ph. Vincke.
+\newblock A preference ranking organisation method: The promethee method for
+  multiple criteria decision-making.
+\newblock {\em Management Science}, 31(6):647--656, June 1985.
+
+\bibitem{Breskovic2011Towards}
+Ivan Breskovic, Christian Haas, Simon Caton, and Ivona Brandic.
+\newblock Towards self-awareness in cloud markets: A monitoring methodology.
+\newblock pages 81 --88, dec. 2011.
+
+\bibitem{Buyya2009Cloudbus}
+R~Buyya and S~Pandey.
+\newblock {Cloudbus toolkit for market-oriented cloud computing}.
+\newblock In {\em Proceedings First International Conference, CloudCom 2009},
+  pages 22--44, 2009.
+
+\bibitem{Buyya2008Market-Oriented}
+Rajkumar Buyya, Chee~Shin Yeo, and Srikumar Venugopal.
+\newblock {Market-Oriented Cloud Computing: Vision, Hype, and Reality for
+  Delivering IT Services as Computing Utilities}.
+\newblock {\em 2008 10th IEEE International Conference on High Performance
+  Computing and Communications}, pages 5--13, September 2008.
+
+\bibitem{Canfora2005approach}
+Gerardo Canfora, Massimiliano {Di Penta}, Raffaele Esposito, and Maria~Luisa
+  Villani.
+\newblock {An approach for QoS-aware service composition based on genetic
+  algorithms}.
+\newblock {\em Proceedings of the 2005 conference on Genetic and evolutionary
+  computation - GECCO '05}, page 1069, 2005.
+
+\bibitem{Cardoso2002Workflow}
+Jorge Cardoso, Amit Sheth, and John Miller.
+\newblock Workflow quality of service.
+\newblock Technical report, University of Georgia, Athens, Georgia, USA, March
+  2002.
+
+\bibitem{Cardoso2004Quality}
+Jorge Cardoso, Amit Sheth, John Miller, Jonathan Arnold, and Krys Kochut.
+\newblock {Quality of service for workflows and web service processes}.
+\newblock {\em Web Semantics: Science, Services and Agents on the World Wide
+  Web}, 1(3):281--308, April 2004.
+
+\bibitem{Cheng2009Software}
+B~Cheng, R~De Lemos, Holger Giese, and Paola Inverardi.
+\newblock {Software engineering for self-adaptive systems: A research roadmap}.
+\newblock {\em Software Engineering}, pages 1--26, 2009.
+
+\bibitem{Cheng2006Architecture-based}
+Shang-Wen Cheng, David Garlan, and Bradley Schmerl.
+\newblock {Architecture-based self-adaptation in the presence of multiple
+  objectives}.
+\newblock {\em Proceedings of the 2006 international workshop on
+  Self-adaptation and self-managing systems - SEAMS '06}, page~2, 2006.
+
+\bibitem{Cheng2005Making}
+SW~Cheng and David Garlan.
+\newblock {Making self-adaptation an engineering reality}.
+\newblock {\em Self-star Properties in Complex Information Systems: Conceptual
+  and Practical Foundations}, 3460:158--173, 2005.
+
+\bibitem{Clearwater1996Saving}
+Scott~H. Clearwater, Rick Costanza, Mike Dixon, and Brian Schroeder.
+\newblock Saving energy using market-based control.
+\newblock pages 253--273, 1996.
+
+\bibitem{Cliff1998Simple}
+D~Cliff.
+\newblock {Simple bargaining agents for decentralized market-based control}.
+\newblock {\em HP Laboratories Technical Report}, 1998.
+
+\bibitem{2011CloudHarmonyStudy}
+CloudHarmony.
+\newblock Do slas really matter? {1-year Case Study}.
+\newblock {\em
+  http://blog.cloudharmony.com/2011/01/do-slas-really-matter-1-year-case-study%
+.html}.
+
+\bibitem{Di2005Self-organization}
+Giovanna Di~Marzo~Serugendo, Marie-Pierre Gleizes, and Anthony Karageorgos.
+\newblock Self-organization in multi-agent systems.
+\newblock {\em The Knowledge Engineering Review}, 20(02):165--189, June 2005.
+
+\bibitem{DiNitto2008journey}
+Elisabetta {DiNitto}, Carlo Ghezzi, Andreas Metzger, Mike Papazoglou, and Klaus
+  Pohl.
+\newblock {A journey to highly dynamic, self-adaptive service-based
+  applications}.
+\newblock {\em Automated Software Engineering}, 15(3-4):313--341, September
+  2008.
+
+\bibitem{Duboc2007framework}
+Leticia Duboc, David Rosenblum, and Tony Wicks.
+\newblock {A framework for characterization and analysis of software system
+  scalability}.
+\newblock {\em Proceedings of the the 6th joint meeting of the European
+  software engineering conference and the ACM SIGSOFT symposium on The
+  foundations of software engineering - ESEC-FSE '07}, page 375, 2007.
+
+\bibitem{Eymann2003Decentralized}
+Torsten Eymann, Michael Reinicke, Oscar Ardaiz, Pau Artigas, Luis~D\'{\i}az
+  de~Cerio, Felix Freitag, Roc Messeguer, Leandro Navarro, Dolors Royo, and
+  Kana Sanjeevan.
+\newblock Decentralized vs. centralized economic coordination of resource
+  allocation in grids.
+\newblock In {\em European Across Grids Conference}, volume 2970 of {\em
+  Lecture Notes in Computer Science}, pages 9--16. Springer, 2003.
+
+\bibitem{Freidman1993Double}
+Daniel Freidman.
+\newblock The double auction market institution: A survey.
+\newblock 1993.
+
+\bibitem{Gode1993Allocative}
+Dhananjay~K. Gode and Shyam Sunder.
+\newblock Allocative efficiency of markets with zero-intelligence traders:
+  Market as a partial substitute for individual rationality.
+\newblock {\em The Journal of Political Economy}, 101(1):119--137, 1993.
+
+\bibitem{Gupta1999economics}
+Alok Gupta and DO~Stahl.
+\newblock {The economics of network management}.
+\newblock {\em Communications of the ACM}, 42(9):57--63, 1999.
+
+\bibitem{Harty1996market}
+Kieran Harty and David Cheriton.
+\newblock A market approach to operating system memory allocation.
+\newblock pages 126--155, 1996.
+
+\bibitem{He2003SouthamptonTAC}
+Minghua He and Nicholas~R. Jennings.
+\newblock Southamptontac: An adaptive autonomous trading agent.
+\newblock {\em ACM Trans. Internet Technol.}, 3:218--235, August 2003.
+
+\bibitem{He2003agent-mediated}
+Minghua He, N.R. Jennings, and Ho-Fung Leung.
+\newblock On agent-mediated electronic commerce.
+\newblock {\em Knowledge and Data Engineering, IEEE Transactions on}, 15(4):985
+  -- 1003, july-aug. 2003.
+
+\bibitem{Ho1980class}
+Y.~C. Ho, L.~Servi, and R.~Suri.
+\newblock A class of center-free resource allocation algorithms.
+\newblock {\em Large Scale Systems}, 1:51, 1980.
+
+\bibitem{IBM2006Architectural}
+IBM.
+\newblock An architectural blueprint for autonomic computing.
+\newblock June 2006.
+
+\bibitem{Amazon2010SpotInstance}
+Amazon Inc.
+\newblock Amazon spot-instances.
+\newblock December 2009.
+\newblock http://aws.amazon.com/ec2/spot-instances/.
+
+\bibitem{Jennings2000Automated}
+Nick Jennings.
+\newblock Automated haggling: building artificial negotiators.
+\newblock pages 1--1, 2000.
+
+\bibitem{Kephart2003Vision}
+Jeffrey~O. Kephart and David~M. Chess.
+\newblock The vision of autonomic computing.
+\newblock {\em Computer}, 36(1):41--50, January 2003.
+
+\bibitem{Klemperer1999Auction}
+Paul Klemperer.
+\newblock Auction theory: A guide to the literature.
+\newblock {\em Journal of Economic Surveys}, 13(3), 1999.
+
+\bibitem{Koestler1990Ghost}
+Arthur Koestler.
+\newblock The ghost in the machine.
+\newblock 1989.
+\newblock ISBN 0-14-019192-5.
+
+\bibitem{Kokar1999Control}
+MM~Kokar and K~Baclawski.
+\newblock {Control theory-based foundations of self-controlling software}.
+\newblock {\em Self-Adaptive Software and their Applications, IEEE Intelligent
+  Systems}, 1999.
+
+\bibitem{Laddaga1999Creating}
+Robert Laddaga.
+\newblock Creating robust software through self-adaptation.
+\newblock {\em IEEE Intelligent Systems}, 14:26--29, May 1999.
+
+\bibitem{Matsumoto1998Mersenne}
+Makoto Matsumoto and Takuji Nishimura.
+\newblock Mersenne twister: a 623-dimensionally equidistributed uniform
+  pseudo-random number generator.
+\newblock {\em ACM Trans. Model. Comput. Simul.}, 8:3--30, January 1998.
+
+\bibitem{Michlmayr2009Comprehensive}
+Anton Michlmayr, Florian Rosenberg, Philipp Leitner, and Schahram Dustdar.
+\newblock Comprehensive qos monitoring of web services and event-based sla
+  violation detection.
+\newblock pages 1--6, 2009.
+
+\bibitem{Nallur2010Design}
+Vivek Nallur and Rami Bahsoon.
+\newblock {Design of a Market-Based Mechanism for Quality Attribute Tradeoff of
+  Services in the Cloud }.
+\newblock In {\em Proceedings of the 25th Symposium of Applied Computing(ACM
+  SAC)}. ACM, 2010.
+
+\bibitem{Niu2008Characterizing}
+Jinzhong Niu, Kai Cai, Simon Parsons, Enrico Gerding, and Peter McBurney.
+\newblock Characterizing effective auction mechanisms: insights from the 2007
+  tac market design competition.
+\newblock pages 1079--1086, 2008.
+
+\bibitem{Niu2010What}
+Jinzhong Niu, Kai Cai, Simon Parsons, Peter McBurney, and Enrico Gerding.
+\newblock What the 2007 tac market design game tells us about effective auction
+  mechanisms.
+\newblock {\em Autonomous Agents and Multi-Agent Systems}, 21:172--203, 2010.
+\newblock 10.1007/s10458-009-9110-0.
+
+\bibitem{Oreizy1998Architecture-based}
+P.~Oreizy, N.~Medvidovic, and R.N. Taylor.
+\newblock {Architecture-based runtime software evolution}.
+\newblock {\em Proceedings of the 20th International Conference on Software
+  Engineering}, pages 177--186, 1998.
+
+\bibitem{Roth1995Learning}
+Alvin~E. Roth and Ido Erev.
+\newblock {Learning in extensive-form games: Experimental data and simple
+  dynamic models in the intermediate term}.
+\newblock {\em Games and Economic Behavior}, 8(1):164--212, 1995.
+
+\bibitem{Salehie2009Self-adaptive}
+Mazeiar Salehie and Ladan Tahvildari.
+\newblock {Self-adaptive software}.
+\newblock {\em ACM Transactions on Autonomous and Adaptive Systems},
+  4(2):1--42, May 2009.
+
+\bibitem{Stonebraker1994Economic}
+Michael Stonebraker, Robert Devine, Marcel Kornacker, Witold Litwin, Avi
+  Pfeffer, Adam Sah, and Carl Staelin.
+\newblock An economic paradigm for query processing and data migration in
+  mariposa.
+\newblock pages 58--67, 1994.
+
+\bibitem{Vytelingum2006Structure}
+Perukrishnen Vytelingum.
+\newblock {\em {The Structure and Behaviour of the Continuous Double Auction}}.
+\newblock PhD thesis, 2006.
+
+\bibitem{Waldspurger1992Spawn}
+Carl~A. Waldspurger, T.~Hogg, B.A. Huberman, J.O. Kephart, and W.S. Stornetta.
+\newblock Spawn: a distributed computational economy.
+\newblock {\em Software Engineering, IEEE Transactions on}, 18(2):103--117,
+  feb. 1992.
+
+\bibitem{Waldspurger1994Lottery}
+Carl~A. Waldspurger and William~E. Weihl.
+\newblock Lottery scheduling: flexible proportional-share resource management.
+\newblock page~1, 1994.
+
+\bibitem{Wellman1993market-oriented}
+Michael~P. Wellman.
+\newblock A market-oriented programming environment and its application to
+  distributed multicommodity flow problems.
+\newblock {\em J. Artif. Int. Res.}, 1(1):1--23, 1993.
+
+\bibitem{Weyns2010decentralized}
+Danny Weyns, Sam Malek, and J.~Andersson.
+\newblock {On decentralized self-adaptation: lessons from the trenches and
+  challenges for the future}.
+\newblock In {\em Proceedings of the 2010 ICSE Workshop on Software Engineering
+  for Adaptive and Self-Managing Systems}, pages 84--93. ACM, 2010.
+
+\bibitem{Wurman2001Parametrization}
+Peter~R. Wurman.
+\newblock {A Parametrization of the Auction Design Space}.
+\newblock {\em Games and Economic Behavior}, 35(1-2):304--338, April 2001.
+
+\bibitem{Zeng2003Quality}
+Liangzhao Zeng, Boualem Benatallah, Marlon Dumas, Jayant Kalagnanam, and
+  Quan~Z. Sheng.
+\newblock {Quality driven web services composition}.
+\newblock {\em Proceedings of the twelfth international conference on World
+  Wide Web - WWW '03}, page 411, 2003.
+
+\bibitem{Zeng2001AgFlow}
+Liangzhao Zeng, Boualem Benatallah, Phuong Nguyen, and Anne H.~H. Ngu.
+\newblock Agflow: Agent-based cross-enterprise workflow management system.
+\newblock pages 697--698, 2001.
+
+\bibitem{Zeng2007Monitoring}
+Liangzhao Zeng, Hui Lei, and Henry Chang.
+\newblock Monitoring the qos for web services.
+\newblock pages 132--144, 2007.
+
+\bibitem{Zhang2010QoS-Based}
+Wei Zhang, Carl~K. Chang, Taiming Feng, and Hsin-yi Jiang.
+\newblock {QoS-Based Dynamic Web Service Composition with Ant Colony
+  Optimization}.
+\newblock {\em 2010 IEEE 34th Annual Computer Software and Applications
+  Conference}, pages 493--502, July 2010.
 
 \end{thebibliography}
