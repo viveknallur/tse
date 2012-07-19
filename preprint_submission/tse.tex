@@ -181,7 +181,7 @@ There are three types of QoS constraints that we consider in our services:
 	\end{enumerate}
 We also allow each constraint to be tagged as \textit{hard} or \textit{soft}. This allows the application to indicate that it prefers a certain QoS attribute value, but that the value is not critical. For example, an application might specify a boolean QoS attribute, say \textit{SSL support = yes}, as a soft constraint. This means that given a choice, it would prefer a CandidateService which has SSL support, but it is not an essential criterion. On the other hand, an application in the banking domain could specify SSL as a hard constraint, which means that a ConcreteService that does not support SSL, is not a CandidateService at all.
 
-\textbf{Stochastic Workflow Reduction\label{swr}:} Depending on the pattern of the Workflow involved in the application, the same individual services with their corresponding QoS values, could result in differing end-to-end QoS exhibited by the application. To compute the QoS metrics for the entire application, we employ \textit{Stochastic Workflow Reduction}~\cite{Cardoso2002Workflow}. Using this method, the Workflow is viewed as a graph which is reduced using a series of reduction steps. Each time a reduction rule is applied, the structure of the graph changes, and the QoS metrics for the affected nodes are aggregated. The reduction continues in an iterative manner, until only one task remains in the graph. The QoS metrics aggregated for this task represents the QoS metrics corresponding to the application Workflow. In Figure \ref{fig:parallel_reduction}, we see that a set of parallel tasks $t_{1}, t_{2}, t_{3}...t{n}$, a \textit{split task ($t_{a}$)} and a \textit{join task ($t_{b}$)} can be reduced to a sequence of three tasks, $t_{a}, t_{N}, t_{b}$. The incoming transitions of task $t_{a}$ and the outgoing transitions of task $t_{b}$ remain the same. The reduction for the QoS of the parallel tasks is computed as follows:
+\textbf{Stochastic Workflow Reduction\label{swr}:} Depending on the pattern of the Workflow involved in the application, the same individual services with their corresponding QoS values, could result in differing end-to-end QoS exhibited by the application. To compute the QoS metrics for the entire application, we employ \textit{Stochastic Workflow Reduction}(SWR)~\cite{Cardoso2002Workflow}. Using this method, the Workflow is viewed as a graph which is reduced using a series of reduction steps. Each time a reduction rule is applied, the structure of the graph changes, and the QoS metrics for the affected nodes are aggregated. The reduction continues in an iterative manner, until only one task remains in the graph. The QoS metrics aggregated for this task represents the QoS metrics corresponding to the application Workflow. In Figure \ref{fig:parallel_reduction}, we see that a set of parallel tasks $t_{1}, t_{2}, t_{3}...t{n}$, a \textit{split task ($t_{a}$)} and a \textit{join task ($t_{b}$)} can be reduced to a sequence of three tasks, $t_{a}, t_{N}, t_{b}$. The incoming transitions of task $t_{a}$ and the outgoing transitions of task $t_{b}$ remain the same. The reduction for the QoS of the parallel tasks is computed as follows:
 
 \begin{equation}
 Cost(t_{N}) = \sum_{1 \leq i \leq n} Cost(t_{i})
@@ -1118,10 +1118,11 @@ We have not modelled complex seller-side behaviour. Specifically, actions like d
   
 
 \bibliographystyle{plain}
-\IfFileExists{/home/pg/vxn851/work/bibtex/converted-mendeley.bib}{\bibliography{/home/pg/vxn851/work/bibtex/converted-mendeley}}{\bibliography{converted-mendeley}}
+\input{journal_tse.bib}
+
 
 \begin{IEEEbiographynophoto}{Vivek Nallur}
-Dr. Vivek Nallur is a postdoc at the University of Birmingham. Prior to doing research, he used to work with VMware Inc. His research interests are complex systems, decentralized self-adaptation and communication in multi-agent systems.
+Dr. Vivek Nallur is a postdoc at the University of Birmingham. Prior to doing research, he used to work with VMware Inc. His research interests are complex systems, decentralized self-adaptation, ultra-large scale systems, and communication and decision-making in multi-agent systems.
 \end{IEEEbiographynophoto}
 
 \begin{IEEEbiographynophoto}{Rami Bahsoon}
